@@ -1,0 +1,165 @@
+version: '3.5'
+# Things to do to install:
+# Put export uid commands in profiles.d
+# Generate certs
+# Put CA into browsers or use lets encrypt
+# Add domains to hosts file.
+
+# Todo:
+# Install certs in mqtt
+# Secure HA <-> EMQtt 
+# Install certs in node red
+# Secure NR <-> EMQtt
+# Install certs on devices -- Bleeds into config nicely.
+# Secure devices <-> EMQtt
+# Other misc security cleanup. 
+#   Have postgres do full varification on clients, and visversa.
+# Figure out how to save setup in DB that can be migrated maybe?
+services:
+  vault:
+    build:
+      ports:
+        # Fill in some ports.
+      dockerfile: ${PWD}/vault/Dockerfile
+      context: ./vault
+      args:
+        #Args go here
+        # I think I can put the vault config here! 
+    cap_add:
+      - IPC_LOCK
+    image: sff/vault
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - vault:/vault/file
+      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - web
+    secrets:
+      #Yep, they go here. 
+  mqtt:
+    image: emqttd-docker-v2.3-2.3.4
+    ports:
+      - "1883:1883"
+      - "8083-8084:8083-8084"
+      - "8883:8883"
+      - "18083:18083"
+      - "4369"
+#      - "6000-6999"
+      - "8080"
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    networks:
+      - web
+  ha_db:
+    image: ha_db
+    build:
+      dockerfile: ${PWD}/ha_db/Dockerfile
+      context: ./ha_db
+      args:
+        - userid=${UID}
+        - username=postgres
+    restart: always
+    user: ${UID}
+    volumes:
+      - ./ha_db/data/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=homeassistant
+      - SSL_CERT_FILE=/run/secrets/ha_db-cert
+      - SSL_KEY_FILE=/run/secrets/ha_db-key
+      - SSL_CA_FILE=/run/secrets/ca
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    networks:
+      - web
+    secrets:
+      - source: ha_db-cert
+        uid: ${UID}
+        mode: 0400
+      - source: ha_db-key
+        uid: ${UID}
+        mode: 0400
+      - ca
+  ha:
+    #image: homeassistant/home-assistant
+    image: althing_ha
+    build: 
+      dockerfile: ${PWD}/ha/Dockerfile
+      context: ./ha
+      args:
+        - userid=${UID}
+        - username=docker
+    volumes:
+      - ./ha/data/:/config 
+      #- /etc/group:/etc/group:ro 
+      #- /etc/passwd:/etc/passwd:ro
+      #- /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8123:8123"
+    depends_on:
+      - mqtt
+      - ha_db
+    user: ${UID}
+    secrets:
+      - source: ha-cert
+        uid: ${UID}
+        mode: 0400
+      - source: ha-key
+        uid: ${UID}
+        mode: 0400
+      - ca
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    networks:
+      - web
+  nr:
+    image: nodered/node-red-docker 
+    ports:
+      - "1880:1880"
+    depends_on:
+      - mqtt
+      - ha
+    volumes:
+      - "./nr/data:/data"
+    user: ${UID}
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    networks:
+      - web
+    secrets:
+      - source: nr-cert
+        uid: ${UID}
+        mode: 0600
+      - source: nr-key
+        uid: ${UID}
+        mode: 0600
+networks:
+  web:
+# Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
+secrets:
+  ha-cert:
+    file: ha/certs/cert.pem
+  ha-key:
+    file: ha/certs/key.pem
+  ha_db-cert:
+    file: ha_db/certs/cert.pem
+  ha_db-key:
+    file: ha_db/certs/key.pem
+  ca:
+    file: ha/certs/ca.pem
+  nr-cert:
+    file: nr/certs/cert.pem
+  nr-key:
+    file: nr/certs/key.pem
+  #mqtt-cert:
+  #  file: imqtt/
