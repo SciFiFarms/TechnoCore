@@ -1,4 +1,9 @@
 
 omgwtfssl/
-**/data/*
+ha_db/data/*
 **/certs/*
+nr/data/flows_cred.json
+ha/data/.*
+ha/data/*.log
+ha/data/*.db
+ha/data/secrets.yaml
