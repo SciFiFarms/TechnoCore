@@ -1,0 +1,3 @@
+[submodule "vault/src"]
+	path = vault/src
+	url = git@github.com:hashicorp/docker-vault.git
