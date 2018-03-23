@@ -1,41 +1,24 @@
 version: '3.5'
-# Todo:
-# Modify Vault entryscript to install tls certs if they don't exist. Also store unseal key as secret.
-# Sort the lines.
-# Clean up work in the installer
-# Install certs in mqtt
-# Secure HA <-> EMQtt 
-# Secure NR <-> EMQtt
-# Install certs on devices -- Bleeds into config nicely.
-# Secure devices <-> EMQtt
-# Other misc security cleanup. 
-#   Have postgres do full varification on clients, and visversa.
-#   Have to restrict users in emqttt
-#
-# Figure out how to save setup in DB that can be migrated maybe?
-
 services:
   vault:
     build:
       dockerfile: ${PWD}/vault/Dockerfile
       context: ./vault
-      #args:
-        #If Swarm mode doesn't support it, you can set SKIP_SETCAP to skip the setcap call (and disable mlock in your Vault configuration).
-        # I think I can put the vault config here! 
-    #cap_add:
-    #  - IPC_LOCK
     deploy:
       mode: global
       restart_policy:
         condition: on-failure
+    environment:
+      - SKIP_SETCAP=true
     image: althing/vault
     networks:
       - web
-    #secrets:
-      #Yep, they go here. 
+    secrets:
+     - vault-key
+     - vault-cert 
     volumes:
+      - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
-      - /usr/bin/docker:/usr/bin/docker
   ha:
     build: 
       dockerfile: ${PWD}/ha/Dockerfile
@@ -67,9 +50,6 @@ services:
     user: ${UID}
     volumes:
       - ./ha/data/:/config 
-      #- /etc/group:/etc/group:ro 
-      #- /etc/passwd:/etc/passwd:ro
-      #- /etc/localtime:/etc/localtime:ro
   ha_db:
     build:
       dockerfile: ${PWD}/ha_db/Dockerfile
@@ -91,7 +71,6 @@ services:
     image: althing/ha_db
     networks:
       - web
-    #restart: always
     secrets:
       - source: ha_db-cert
         uid: ${UID}
@@ -162,6 +141,10 @@ secrets:
     file: nr/certs/cert.pem
   nr-key:
     file: nr/certs/key.pem
+  vault-cert:
+    external: true
+  vault-key:
+    external: true
   #mqtt-cert:
   #  file: imqtt/
 volumes:
