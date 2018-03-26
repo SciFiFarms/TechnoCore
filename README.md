@@ -18,16 +18,16 @@ sudo ./install.sh
 
 ## How to use Althing
 Once it is running, you should be able to view the containers by visiting the following locations in your browser.
-- Home Assistant [https://127.0.0.1:8123]
+- Home Assistant [https://127.0.0.1:8123](https://127.0.0.1:8123)
     - Displays current sensor statuses.
     - Displays sensor histories.
     - Turn switches on and off.
     - The default password is "welcome". 
     - [Home Assistant Documentation](https://www.home-assistant.io/docs/)
-- Node-RED [https://127.0.0.1:1880]
+- Node-RED [https://127.0.0.1:1880](https://127.0.0.1:1880)
     - The business logic is built with Node-RED. 
     - [Node-RED Documentation](https://nodered.org/docs/)
-- EMQTT [https://127.0.0.1:8080]
+- EMQTT [https://127.0.0.1:8080](https://127.0.0.1:8080)
     - [EMQTT Documentation](http://emqtt.io/docs/v2/index.html)
 
 Althing should start automatically. If it does not, you can start it with the following command.
