@@ -7,7 +7,7 @@ Althing is a 100% open source IoT platform for DIYers and businesses that care a
 2. Althing isn't feature complete, so it may be worth checking out the [ROADMAP.md](ROADMAP.md) to see what is coming. 
 
 ## Where to ask questions
-One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a new issue with the [helpme] tag with your question or issue. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com. 
+One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a new issue with your question or problem. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com. 
 
 ## How to install Althing
 ~~~
@@ -18,9 +18,17 @@ sudo ./install.sh
 
 ## How to use Althing
 Once it is running, you should be able to view the applications by visiting the following locations in your browser.
-Home Assistant [[127.0.0.1:8123]]. The default password is "welcome".
-Node-RED [[127.0.0.1:1880]]
-EMQTT [[127.0.0.1:8080]]
+- Home Assistant [[https://127.0.0.1:8123]]
+    - Displays current sensor statuses.
+    - Displays sensor histories.
+    - Turn switches on and off.
+    - The default password is "welcome". 
+    - [Home Assistant Documentation](https://www.home-assistant.io/docs/)
+- Node-RED [[https://127.0.0.1:1880]]
+    - The business logic is built with Node-RED. 
+    - [Node-RED Documentation](https://nodered.org/docs/)
+- EMQTT [[https://127.0.0.1:8080]]
+    - [EMQTT Documentation](http://emqtt.io/docs/v2/index.html)
 
 Althing should start automatically. If it does not, you can start it with the following command.
 ~~~
@@ -28,15 +36,12 @@ docker stack deploy --compose-file docker-compose.yaml althing
 ~~~
 
 ## Come help!
-I am excited about Althing and would love it if you joined me in building it. It's a pretty new project so there is a lot to do, and many things that don't involve code. Below is a list of pages to check out if you're interested in helping out. If you have an idea that isn't addressed, please open an issue with the [idea] tag. I'd love to hear about it! 
-[PUT TABLE OF CONTENTS HERE]
-- CONTRIBUTE 
-- [Road map][ROADMAP.md)
-
- Please check out the [ROADMAP.md](ROADMAP.mp) file for what kinds of things can be done. If you have an idea that isn't on the road map, please open an issue with the [featurerequest] tag. I'd love to hear about it!
+I am excited about Althing and would love it if you joined me in building it. It's a pretty new project so there is a lot to do, and many things that don't involve code. Below is a list of pages to check out if you're interested in helping out. If you have an idea that isn't addressed, please open an issue; I'd love to hear about it! 
+- **[Contributing](CONTRIBUTING.md)** - 
+- **[Road map](ROADMAP.md)** - Check out [ROADMAP.md](ROADMAP.md) for the list of upcoming features. 
 
 ## Bug reporting
-If you run into a bug, please open an issue with the [bug] tag. In that issue, please include answers to the following questions:
+If you run into a bug, please open an issue. In that issue, please include answers to the following questions:
 >    1. What version of Docker are you using?
 >    2. What OS are you using?
 >    3. What steps are required to reproduce the issue?
