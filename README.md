@@ -17,17 +17,17 @@ sudo ./install.sh
 ~~~
 
 ## How to use Althing
-Once it is running, you should be able to view the applications by visiting the following locations in your browser.
-- Home Assistant [[https://127.0.0.1:8123]]
+Once it is running, you should be able to view the containers by visiting the following locations in your browser.
+- Home Assistant [https://127.0.0.1:8123]
     - Displays current sensor statuses.
     - Displays sensor histories.
     - Turn switches on and off.
     - The default password is "welcome". 
     - [Home Assistant Documentation](https://www.home-assistant.io/docs/)
-- Node-RED [[https://127.0.0.1:1880]]
+- Node-RED [https://127.0.0.1:1880]
     - The business logic is built with Node-RED. 
     - [Node-RED Documentation](https://nodered.org/docs/)
-- EMQTT [[https://127.0.0.1:8080]]
+- EMQTT [https://127.0.0.1:8080]
     - [EMQTT Documentation](http://emqtt.io/docs/v2/index.html)
 
 Althing should start automatically. If it does not, you can start it with the following command.
@@ -37,8 +37,9 @@ docker stack deploy --compose-file docker-compose.yaml althing
 
 ## Come help!
 I am excited about Althing and would love it if you joined me in building it. It's a pretty new project so there is a lot to do, and many things that don't involve code. Below is a list of pages to check out if you're interested in helping out. If you have an idea that isn't addressed, please open an issue; I'd love to hear about it! 
-- **[Contributing](CONTRIBUTING.md)** - 
-- **[Road map](ROADMAP.md)** - Check out [ROADMAP.md](ROADMAP.md) for the list of upcoming features. 
+- **[Contributing](CONTRIBUTING.md)** 
+- **[Road map](ROADMAP.md)**
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** 
 
 ## Bug reporting
 If you run into a bug, please open an issue. In that issue, please include answers to the following questions:
