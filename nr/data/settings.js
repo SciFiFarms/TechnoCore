@@ -137,8 +137,8 @@ module.exports = {
     // this setting.
     //
     https: {
-        key: fs.readFileSync('/run/secrets/nr-key'),
-        cert: fs.readFileSync('/run/secrets/nr-cert')
+        key: fs.readFileSync('/run/secrets/nr_key'),
+        cert: fs.readFileSync('/run/secrets/nr_cert')
     },
 
     // The following property can be used to cause insecure HTTP connections to

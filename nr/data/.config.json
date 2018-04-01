@@ -443,7 +443,7 @@
   },
   "node-red-node-feedparser": {
    "name": "node-red-node-feedparser",
-   "version": "0.1.8",
+   "version": "0.1.10",
    "local": false,
    "nodes": {
     "feedparse": {

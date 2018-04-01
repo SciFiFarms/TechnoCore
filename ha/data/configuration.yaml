@@ -23,8 +23,8 @@ frontend:
 config:
 
 http:
-  ssl_certificate: /run/secrets/ha-cert
-  ssl_key: /run/secrets/ha-key
+  ssl_certificate: /run/secrets/ha_cert
+  ssl_key: /run/secrets/ha_key
   # Secrets are defined in the file secrets.yaml
   # api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
@@ -84,7 +84,7 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 
 mqtt:
-  broker: 192.168.1.106
+  broker: mqtt.local
 
 recorder:
-  db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha-cert&sslkey=/run/secrets/ha-key&sslrootcert=/run/secrets/ca
+  db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha_pem&sslkey=/run/secrets/ha_key&sslrootcert=/run/secrets/ca
