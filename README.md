@@ -2,9 +2,9 @@
 Althing is a 100% open source IoT platform for DIYers and businesses that care about security and privacy. Althing does this by utilizing existing open source IoT microservices in a Docker swarm. Ultimately, Althing is being designed to support an autonomous farm.
 
 ## What to know before getting started
-1. What you see is a working proof of concept; it takes some manual configuration to get the containers set up appropriately, and those steps have not been documented. Instead, they are being worked into the installer. 
+1. What you see is a working proof of concept; it hasn't been tested. But if you try it and run into issues, feel free to reach out. I'd love to help get it working. 
 1. Althing depends on Docker being installed. 
-2. Althing isn't feature complete, so it may be worth checking out the [ROADMAP.md](ROADMAP.md) to see what is coming. 
+1. Althing isn't feature complete, so it may be worth checking out the [issues](https://github.com/SciFiFarms/althing/issues) to see what is coming. 
 
 ## Where to ask questions
 One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a new issue with your question or problem. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com. 
