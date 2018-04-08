@@ -69,16 +69,16 @@ See also the list of [contributors](https://github.com/SciFiFarms/althing/contri
 ## Acknowledgements 
 If you were to compare the number of lines of code unique to Althing vs the projects that make up Althing, it would be clear my contribution has been a drop in the ocean. The real credit has to go to all the folks creating open source software; without which, Althing would not be possible. 
 More specifically, I'd like to thank everyone who has worked on the following projects:
-- **Docker** for being the glue that brings everything together. Without Docker, sharing this project would not be feasible and be tricky to maintain. Docker makes Althing possible. 
-- **Open Ag** - When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. It was the blueprint that got me started. Althing is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
-- **EMQTT** for being the communication backbone of Althing.  
-- **Node-RED** for allowing an intuitive way to program the Internet of Things. Because of this, Node-RED is used to implement all the business logic. 
-- **Home Assistant** for making Althing user friendly. Home Assistant makes seeing current statuses, history, and interacting with the devices easy. 
-- **Postgres** for storing the data; in the world today, data is worth more than gold.
-- **Vault** for the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
-- **Linux** for being the OS running Althing.
-- **Espressif/ESP8266** for being the easiest and cheapest way to run many sensors. 
-- **Homie** for running my ESP8266s. \*Homie and/or ESP8266s are not *necessary* for Althing. All that is required are devices that can communicate using the MQTT protocol. 
+- **[Docker](https://www.docker.com/)** for being the glue that brings everything together. Without Docker, sharing this project would not be feasible and be tricky to maintain. Docker makes Althing possible. 
+- **[Open Agriculture Initiative](https://www.media.mit.edu/groups/open-agriculture-openag/overview/)** - When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. It was the blueprint that got me started. Althing is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
+- **[EMQTT](http://emqtt.io/)** for being the communication backbone of Althing.  
+- **[Node-RED](https://nodered.org/)** for allowing an intuitive way to program the Internet of Things. Because of this, Node-RED is used to implement all the business logic. 
+- **[Home Assistant](https://www.home-assistant.io/)** for making Althing user friendly. Home Assistant makes seeing current statuses, history, and interacting with the devices easy. 
+- **[PostgreSQL](https://www.postgresql.org/)** for storing the data; in the world today, data is worth more than gold.
+- **[Vault](https://www.vaultproject.io/)** for the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
+- **[Linux](https://www.linux.org/)** for being the OS running Althing.
+- **[Espressif/ESP8266](https://www.espressif.com/)** for being the easiest and cheapest way to run many sensors. 
+- **[Homie for ESP8266](https://github.com/marvinroger/homie-esp8266)** for running my ESP8266s. \*Homie and/or ESP8266s are not *necessary* for Althing. All that is required are devices that can communicate using the MQTT protocol. 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

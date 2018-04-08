@@ -69,14 +69,14 @@ To support this, please begin your commit messages with:
 ## Development
 ### Overview 
 The open source projects that are currently being used are:
-- **Docker** - Althing would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-- **EMQTT** - MQTT is the communication backbone of Althing. It is what enables sensors to talk with services and services to talk with each other. 
-- **Node-RED** - Can be thought of as the brain of Althing. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
-- **Home Assistant** - For viewing current status of sensors as well as their history. 
-- **Postgres** - Database back end for Home Assistant.
-- **Vault** - Is the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
-- **Homie** - This is the framework being used to run the ESP8266s. Homie and/or ESP8266s are not *necessary* for Althing. All that is required are devices that can communicate using the MQTT protocol. 
-- **ESP8266** The ESP8266 is a $5 WiFi chip that you can connect senors to.
+- **[Docker](https://www.docker.com/)** - Althing would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
+- **[EMQTT](http://emqtt.io/)** - MQTT is the communication backbone of Althing. It is what enables sensors to talk with services and services to talk with each other. 
+- **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of Althing. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
+- **[Home Assistant](https://www.home-assistant.io/)** - For viewing current status of sensors as well as their history. 
+- **[PostgreSQL](https://www.home-assistant.io/)** - Database back end for Home Assistant.
+- **[Vault](https://www.vaultproject.io/)** - Is the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
+- **[Homie for ESP8266](https://github.com/marvinroger/homie-esp8266)** - This is the framework being used to run the ESP8266s. Homie and/or ESP8266s are not *necessary* for Althing. All that is required are devices that can communicate using the MQTT protocol. 
+- **[espressif/ESP8266](https://espressif.com)** - The ESP8266 is a $5 WiFi chip that you can connect senors to.
 
 ### Developer Environment 
 Right now, the only way to run Althing is by building the images yourself. This gives you access to everything you'll need to work on Althing. This will not always be the case: [#11](https://github.com/SciFiFarms/althing/issues/11)
