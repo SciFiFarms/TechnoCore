@@ -1,13 +1,22 @@
 # Althing
 Althing is a 100% open source IoT platform for DIYers and businesses that care about security and privacy. Althing does this by utilizing existing open source IoT microservices in a Docker swarm. Ultimately, Althing is being designed to support an autonomous farm.
 
+#### Table of contents:
+- [What to know before getting started](#what-to-know-before-getting-started)
+- [Where to ask questions](#where-to-ask-questions)
+- [How to install Althing](#how-to-install-althing)
+- [How to use Althing](#how-to-use-althing)
+- [Come help!](#come-help)
+- [Authors](#authors)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
 ## What to know before getting started
-1. What you see is a working proof of concept; it hasn't been tested. But if you try it and run into issues, feel free to reach out. I'd love to help get it working. 
+1. What you see is a working proof of concept; it hasn't been tested. But if you try it and run into issues, feel free to open a [new issue](https://github.com/SciFiFarms/althing/issues/new). I'd love to help get it working. 
 1. Althing depends on Docker being installed. 
 1. Althing isn't feature complete, so it may be worth checking out the [issues](https://github.com/SciFiFarms/althing/issues) to see what is coming. 
 
 ## Where to ask questions
-One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a new issue with your question or problem. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com. 
+One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a [new issue](https://github.com/SciFiFarms/althing/issues/new) with your question or problem. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com. 
 
 ## How to install Althing
 ~~~
@@ -37,17 +46,21 @@ docker stack deploy --compose-file docker-compose.yaml althing
 
 ## Come help!
 I am excited about Althing and would love it if you joined me in building it. It's a pretty new project so there is a lot to do, and many things that don't involve code. Below is a list of pages to check out if you're interested in helping out. If you have an idea that isn't addressed, please open an issue; I'd love to hear about it! 
-- **[Contributing](CONTRIBUTING.md)** 
-- **[Road map](ROADMAP.md)**
+- **[Contributing](CONTRIBUTING.md#contributing)**
+    - **[Creating an issue](CONTRIBUTING.md#creating-an-issue)**
+        - **[Labels](CONTRIBUTING.md#labels)**
+    - **[Report a bug](CONTRIBUTING.md#report-a-bug)**
+    - **[Working on an issue](CONTRIBUTING.md#working-on-an-issue)**
+    - **[Code review process](CONTRIBUTING.md#code-review-process)**
+    - **[Committing code](CONTRIBUTING.md#committing-code)**
+    - **[Conventions](CONTRIBUTING.md#conventions)**
+- **[Development](CONTRIBUTING.md#development)**
+    - **[Overview](CONTRIBUTING.md#overview)**
+    - **[Developer Environment](CONTRIBUTING.md#developer-environment)**
+    - **[Debug](CONTRIBUTING.md#debug)**
+    - **[Run tests](CONTRIBUTING.md#run-tests)**
+- **[Community](CONTRIBUTING.md#community)**
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** 
-
-## Bug reporting
-If you run into a bug, please open an issue. In that issue, please include answers to the following questions:
->    1. What version of Docker are you using?
->    2. What OS are you using?
->    3. What steps are required to reproduce the issue?
->    4. What actually happened?
->    5. What did you expect to happen?
 
 ## Authors
 * **Spencer Hachmeister** - *Initial work*
