@@ -24,6 +24,9 @@ do
     fi
 done
 
+# Make profile.d dir first
+mkdir -p /etc/profile.d
+
 # Put export uid commands in profiles.d
 if [ ! -f /etc/profile.d/docker-uid.sh ]; then
     echo "export UID" >> /etc/profile.d/docker-uid.sh
@@ -73,8 +76,12 @@ create_tls(){
 
  
 # Initilize Vault
-# I have to pass in a custom config to start vault without TLS. 
-if [ ! $(docker volume ls | grep ${stackname}_vault) ]; then
+# I have to pass in a custom config to start vault without TLS.
+echo $(docker volume ls | grep ${stackname}_vault) 
+if $(docker volume ls | grep -Fq ${stackname}_vault) ; then
+    echo "Vault Initialized";
+else
+    echo "Initializing Vault"
     docker volume create ${stackname}_vault
     containerId=$(docker run -d -p 8200:8200 -e "VAULT_LOCAL_CONFIG=$vaultConfig" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file althing/vault)
     sleep 1
