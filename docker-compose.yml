@@ -14,8 +14,12 @@ services:
     networks:
       - web
     secrets:
-     - vault-key
-     - vault-cert 
+      - source: althing_dev_vault_key
+        target: /run/secrets/vault_key
+      - source: althing_dev_vault_cert 
+        target: /run/secrets/vault_cert
+      - source: althing_dev_ca
+        target: /run/secrets/ca.pem
     volumes:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
@@ -40,13 +44,18 @@ services:
     ports:
       - "8123:8123"
     secrets:
-      - source: ha-cert
+      - source: althing_dev_ha_cert
+        target: ha_cert
+        uid: ${UID}
+        mode: 0440
+      - source: althing_dev_ha_key
+        target: ha_key
         uid: ${UID}
         mode: 0400
-      - source: ha-key
-        uid: ${UID}
-        mode: 0400
-      - ca
+      - source: althing_dev_ca
+        target: ca
+      - source: althing_dev_ha_pem
+        target: ha_pem
     user: ${UID}
     volumes:
       - ./ha/data/:/config 
@@ -65,20 +74,23 @@ services:
         condition: on-failure
     environment:
       - POSTGRES_DB=homeassistant
-      - SSL_CERT_FILE=/run/secrets/ha_db-cert
-      - SSL_KEY_FILE=/run/secrets/ha_db-key
+      - SSL_CERT_FILE=/run/secrets/ha_db_cert
+      - SSL_KEY_FILE=/run/secrets/ha_db_key
       - SSL_CA_FILE=/run/secrets/ca
     image: althing/ha_db
     networks:
       - web
     secrets:
-      - source: ha_db-cert
+      - source: althing_dev_ha_db_pem
+        target: ha_db_cert
+        uid: ${UID}
+        mode: 0440
+      - source: althing_dev_ha_db_key
+        target: ha_db_key
         uid: ${UID}
         mode: 0400
-      - source: ha_db-key
-        uid: ${UID}
-        mode: 0400
-      - ca
+      - source: althing_dev_ca
+        target: ca
     user: ${UID}
     volumes:
       - ./ha_db/data/:/var/lib/postgresql/data
@@ -89,10 +101,10 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: emqttd-docker-v2.3-2.3.4
-    networks:
-      - web
+    image: rabbitmq:3.7.4-management
     ports:
+      - "15672:15672"
+      # EMQTT ports
       - "1883:1883"
       - "8083-8084:8083-8084"
       - "8883:8883"
@@ -100,6 +112,15 @@ services:
       - "4369"
 #      - "6000-6999"
       - "8080"
+    secrets:
+      - source: althing_dev_mqtt_cert
+        target: mqtt_cert
+      - source: althing_dev_mqtt_key
+        target: mqtt_key
+      - source: althing_dev_ca
+        target: ca
+    volumes:
+        - "./mqtt/config/:/etc/rabbitmq/"
   nr:
     depends_on:
       - ha
@@ -115,10 +136,12 @@ services:
     ports:
       - "1880:1880"
     secrets:
-      - source: nr-cert
+      - source: althing_dev_nr_cert
+        target: nr_cert
         uid: ${UID}
         mode: 0600
-      - source: nr-key
+      - source: althing_dev_nr_key
+        target: nr_key
         uid: ${UID}
         mode: 0600
     user: ${UID}
@@ -127,23 +150,31 @@ services:
 networks:
   web:
 secrets:
-  ca:
-    file: ha/certs/ca.pem
-  ha-cert:
-    file: ha/certs/cert.pem
-  ha-key:
-    file: ha/certs/key.pem
-  ha_db-cert:
-    file: ha_db/certs/cert.pem
-  ha_db-key:
-    file: ha_db/certs/key.pem
-  nr-cert:
-    file: nr/certs/cert.pem
-  nr-key:
-    file: nr/certs/key.pem
-  vault-cert:
+  althing_dev_ca:
     external: true
-  vault-key:
+  althing_dev_ha_cert:
+    external: true
+  althing_dev_ha_key:
+    external: true
+  althing_dev_ha_pem:
+    external: true
+  althing_dev_ha_db_cert:
+    external: true
+  althing_dev_ha_db_key:
+    external: true
+  althing_dev_ha_db_pem:
+    external: true
+  althing_dev_mqtt_cert:
+    external: true
+  althing_dev_mqtt_key:
+    external: true
+  althing_dev_nr_cert:
+    external: true
+  althing_dev_nr_key:
+    external: true
+  althing_dev_vault_cert:
+    external: true
+  althing_dev_vault_key:
     external: true
   #mqtt-cert:
   #  file: imqtt/

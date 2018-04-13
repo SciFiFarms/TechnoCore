@@ -84,7 +84,7 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 
 mqtt:
-  broker: mqtt.local
+  broker: mqtt
 
 recorder:
   db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha_pem&sslkey=/run/secrets/ha_key&sslrootcert=/run/secrets/ca

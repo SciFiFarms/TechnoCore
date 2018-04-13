@@ -117,6 +117,7 @@ fi
 
 docker stack deploy --compose-file docker-compose.yml $stackname
 
+# I'm pretty sure I'll need to do something with the unseal key every reboot. Put it in the vault entry script.
 # Put CA into browsers or use lets encrypt.
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
