@@ -70,7 +70,7 @@ To support this, please begin your commit messages with:
 ### Overview 
 The open source projects that are currently being used are:
 - **[Docker](https://www.docker.com/)** - Althing would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-- **[EMQTT](http://emqtt.io/)** - MQTT is the communication backbone of Althing. It is what enables sensors to talk with services and services to talk with each other. 
+- **[Rabbit MQ](https://www.rabbitmq.com/)** - MQTT is the communication backbone of Althing. It is what enables sensors to talk with services and services to talk with each other. 
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of Althing. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
 - **[Home Assistant](https://www.home-assistant.io/)** - For viewing current status of sensors as well as their history. 
 - **[PostgreSQL](https://www.home-assistant.io/)** - Database back end for Home Assistant.

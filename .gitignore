@@ -1,4 +1,5 @@
 
+.vscode/*
 omgwtfssl/
 ha_db/data/*
 **/certs/*

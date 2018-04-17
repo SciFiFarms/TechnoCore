@@ -36,8 +36,8 @@ Once it is running, you should be able to view the containers by visiting the fo
 - Node-RED [https://127.0.0.1:1880](https://127.0.0.1:1880)
     - The business logic is built with Node-RED. 
     - [Node-RED Documentation](https://nodered.org/docs/)
-- EMQTT [https://127.0.0.1:8080](https://127.0.0.1:8080)
-    - [EMQTT Documentation](http://emqtt.io/docs/v2/index.html)
+- Rabbit MQ [https://127.0.0.1:15672](https://127.0.0.1:15672)
+    - [Rabbit MQ Documentation](https://www.rabbitmq.com/documentation.html)
 
 Althing should start automatically. If it does not, you can start it with the following command.
 ~~~
@@ -71,7 +71,7 @@ If you were to compare the number of lines of code unique to Althing vs the proj
 More specifically, I'd like to thank everyone who has worked on the following projects:
 - **[Docker](https://www.docker.com/)** for being the glue that brings everything together. Without Docker, sharing this project would not be feasible and be tricky to maintain. Docker makes Althing possible. 
 - **[Open Agriculture Initiative](https://www.media.mit.edu/groups/open-agriculture-openag/overview/)** - When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. It was the blueprint that got me started. Althing is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
-- **[EMQTT](http://emqtt.io/)** for being the communication backbone of Althing.  
+- **[Rabbit MQ](https://www.rabbitmq.com)** for being the communication backbone of Althing.  
 - **[Node-RED](https://nodered.org/)** for allowing an intuitive way to program the Internet of Things. Because of this, Node-RED is used to implement all the business logic. 
 - **[Home Assistant](https://www.home-assistant.io/)** for making Althing user friendly. Home Assistant makes seeing current statuses, history, and interacting with the devices easy. 
 - **[PostgreSQL](https://www.postgresql.org/)** for storing the data; in the world today, data is worth more than gold.
