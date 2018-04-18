@@ -101,7 +101,6 @@ else
     vault_i write ca/roles/tls key_bits=2048 max_ttl=8760h allow_any_name=true enforce_hostnames=false
     caPem=$(curl -s http://127.0.0.1:8200/v1/rootca/ca/pem)
     docker secret rm "${stackname}_ca"
-    echo "creating docker secret"
     docker secret create "${stackname}_ca" - <<< $caPem
 fi
 
