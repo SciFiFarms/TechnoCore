@@ -2,7 +2,6 @@ version: '3.5'
 services:
   vault:
     build:
-      dockerfile: ${PWD}/vault/Dockerfile
       context: ./vault
     deploy:
       mode: global
@@ -16,7 +15,7 @@ services:
     secrets:
       - source: althing_dev_vault_key
         target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert 
+      - source: althing_dev_vault_cert
         target: /run/secrets/vault_cert
       - source: althing_dev_ca
         target: /run/secrets/ca.pem
@@ -24,8 +23,7 @@ services:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
   ha:
-    build: 
-      dockerfile: ${PWD}/ha/Dockerfile
+    build:
       context: ./ha
       args:
         - userid=${UID}
@@ -58,10 +56,9 @@ services:
         target: ha_pem
     user: ${UID}
     volumes:
-      - ./ha/data/:/config 
+      - ./ha/data/:/config
   ha_db:
     build:
-      dockerfile: ${PWD}/ha_db/Dockerfile
       context: ./ha_db
       args:
         - userid=${UID}
@@ -130,7 +127,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: nodered/node-red-docker 
+    image: nodered/node-red-docker
     networks:
       - web
     ports:
