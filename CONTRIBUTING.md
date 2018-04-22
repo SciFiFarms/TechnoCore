@@ -50,7 +50,6 @@ For something that is bigger than a one or two line fix:
 1. Create your own fork of the code
 2. Do the changes in your fork
 3. If you like the change and think the project could use it, send a pull request.
-    - Each pull request should implement one feature or bugfix.
 
 ### Code review process
 I will review pull requests regularly. If the project grows, I will form a more formal review process and involve others who wish to help maintain Althing. 
@@ -90,3 +89,7 @@ There aren't currently any tests written. I'd love to change that [#6](https://g
 
 ## Community
 Currently, Althing's only community is seen in the issues. While it is small, that works well. But if you have an interest in creating a place for chat or discussion, feel free to get ahold of me SpencerIsSuperAwesome@gmail.com
+
+## Development Tips and Tricks
+- To increase logging verbosity in Node-RED, change nr/data/settings.js logging: console: level to "trace".
+- To increase logging verbosity in RabbitMQ, uncomment "log.console.level = debug" in mqtt/data/rabbitmq.conf.

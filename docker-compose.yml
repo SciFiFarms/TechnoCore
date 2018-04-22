@@ -10,16 +10,25 @@ services:
         condition: on-failure
     environment:
       - SKIP_SETCAP=true
+      - VAULT_ADDR=https://vault.local:8200
+      - VAULT_CACERT=/run/secrets/ca
     image: althing/vault
     networks:
-      - web
+      web:
+        aliases:
+          - vault.local
+          - vault.scifi.farm
     secrets:
       - source: althing_dev_vault_key
         target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert 
+      - source: althing_dev_vault_cert_bundle
         target: /run/secrets/vault_cert
       - source: althing_dev_ca
-        target: /run/secrets/ca.pem
+        target: /run/secrets/ca
+      - source: althing_dev_vault_unseal
+        target: /run/secrets/vault_unseal
+    ports:
+      - "8200:8200"
     volumes:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
@@ -44,7 +53,7 @@ services:
     ports:
       - "8123:8123"
     secrets:
-      - source: althing_dev_ha_cert
+      - source: althing_dev_ha_cert_bundle
         target: ha_cert
         uid: ${UID}
         mode: 0440
@@ -54,8 +63,6 @@ services:
         mode: 0400
       - source: althing_dev_ca
         target: ca
-      - source: althing_dev_ha_pem
-        target: ha_pem
     user: ${UID}
     volumes:
       - ./ha/data/:/config 
@@ -81,10 +88,10 @@ services:
     networks:
       - web
     secrets:
-      - source: althing_dev_ha_db_pem
+      - source: althing_dev_ha_db_cert_bundle
         target: ha_db_cert
         uid: ${UID}
-        mode: 0440
+        mode: 0400
       - source: althing_dev_ha_db_key
         target: ha_db_key
         uid: ${UID}
@@ -102,18 +109,23 @@ services:
       restart_policy:
         condition: on-failure
     image: rabbitmq:3.7.4-management
+    networks:
+      web:
+        aliases:
+          - mqtt.local
+          - mqtt.scifi.farm
     ports:
       - "15672:15672"
       # EMQTT ports
-      - "1883:1883"
-      - "8083-8084:8083-8084"
+      #- "1883:1883"
+      #- "8083-8084:8083-8084"
       - "8883:8883"
-      - "18083:18083"
-      - "4369"
+      #- "18083:18083"
+      #- "4369"
 #      - "6000-6999"
-      - "8080"
+      #- "8080"
     secrets:
-      - source: althing_dev_mqtt_cert
+      - source: althing_dev_mqtt_cert_bundle
         target: mqtt_cert
       - source: althing_dev_mqtt_key
         target: mqtt_key
@@ -122,6 +134,8 @@ services:
     volumes:
         - "./mqtt/config/:/etc/rabbitmq/"
   nr:
+    #environment:
+    #  - npm_config_cafile=/run/secrets/ca
     depends_on:
       - ha
       - mqtt
@@ -136,12 +150,16 @@ services:
     ports:
       - "1880:1880"
     secrets:
-      - source: althing_dev_nr_cert
+      - source: althing_dev_nr_cert_bundle
         target: nr_cert
         uid: ${UID}
         mode: 0600
       - source: althing_dev_nr_key
         target: nr_key
+        uid: ${UID}
+        mode: 0600
+      - source: althing_dev_ca
+        target: ca
         uid: ${UID}
         mode: 0600
     user: ${UID}
@@ -152,29 +170,27 @@ networks:
 secrets:
   althing_dev_ca:
     external: true
-  althing_dev_ha_cert:
+  althing_dev_ha_cert_bundle:
     external: true
   althing_dev_ha_key:
     external: true
-  althing_dev_ha_pem:
-    external: true
-  althing_dev_ha_db_cert:
+  althing_dev_ha_db_cert_bundle:
     external: true
   althing_dev_ha_db_key:
     external: true
-  althing_dev_ha_db_pem:
-    external: true
-  althing_dev_mqtt_cert:
+  althing_dev_mqtt_cert_bundle:
     external: true
   althing_dev_mqtt_key:
     external: true
-  althing_dev_nr_cert:
+  althing_dev_nr_cert_bundle:
     external: true
   althing_dev_nr_key:
     external: true
-  althing_dev_vault_cert:
+  althing_dev_vault_cert_bundle:
     external: true
   althing_dev_vault_key:
+    external: true
+  althing_dev_vault_unseal:
     external: true
   #mqtt-cert:
   #  file: imqtt/

@@ -58,18 +58,18 @@ map:
 sun:
 
 # Weather prediction
-sensor:
-  - platform: yr
-  - platform: mqtt
-    name: "Humidity"
-    state_topic: "planteyes/pe001/humidity/relative"
-    unit_of_measurement: "%"
-    #value_template: '{{ value_json.humid }}'
-  - platform: mqtt
-    name: "Temp"
-    state_topic: "planteyes/pe001/temperature/degrees"
-    unit_of_measurement: "c"
-    #value_template: '{{ value_json.temp }}'
+#sensor:
+#  - platform: yr
+#  - platform: mqtt
+#    name: "Humidity"
+#    state_topic: "planteyes/pe001/humidity/relative"
+#    unit_of_measurement: "%"
+#    #value_template: '{{ value_json.humid }}'
+#  - platform: mqtt
+#    name: "Temp"
+#    state_topic: "planteyes/pe001/temperature/degrees"
+#    unit_of_measurement: "c"
+#    #value_template: '{{ value_json.temp }}'
 
 
 # Text to speech
@@ -83,8 +83,8 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 
-mqtt:
-  broker: mqtt
+#mqtt:
+#  broker: mqtt
 
 recorder:
-  db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha_pem&sslkey=/run/secrets/ha_key&sslrootcert=/run/secrets/ca
+  db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha_cert&sslkey=/run/secrets/ha_key&sslrootcert=/run/secrets/ca

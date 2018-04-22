@@ -374,7 +374,7 @@
   },
   "node-red-node-rbe": {
    "name": "node-red-node-rbe",
-   "version": "0.2.1",
+   "version": "0.2.3",
    "local": false,
    "nodes": {
     "rbe": {
@@ -425,7 +425,7 @@
   },
   "node-red-node-email": {
    "name": "node-red-node-email",
-   "version": "0.1.24",
+   "version": "0.1.29",
    "local": false,
    "nodes": {
     "email": {
@@ -443,7 +443,7 @@
   },
   "node-red-node-feedparser": {
    "name": "node-red-node-feedparser",
-   "version": "0.1.10",
+   "version": "0.1.12",
    "local": false,
    "nodes": {
     "feedparse": {
@@ -494,7 +494,7 @@
   },
   "node-red-node-twitter": {
    "name": "node-red-node-twitter",
-   "version": "0.1.12",
+   "version": "0.1.13",
    "local": false,
    "nodes": {
     "twitter": {
