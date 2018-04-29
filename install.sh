@@ -69,13 +69,7 @@ create_tls(){
     fi
 
     echo -e "$tlsKey" | docker secret create "${stackname}_${1}_key" -
-    echo -e "${tlsCert}\n${tlsCa}\n${caPem}" | docker secret create "${stackname}_${1}_cert_bundle" -
-    echo -e "${caPem}\n${tlsCa}\n${tlsCert}" > certs/${1}_cert_bundle
-    #echo -e "${caPem}\n${tlsCa}\n${tlsCert}" | docker secret create "${stackname}_${1}_cert_bundle" -
-    #echo -e "-----------------------Certs for ${1}-------------------------"
-    #echo -e "$tlsResponse"
-    #echo -e "${caPem}\n${tlsCa}\n${tlsCert}"
-    #echo -e "-----------------------END ${1}-------------------------"
+    echo -e "${tlsCert}\n${tlsCa}" | docker secret create "${stackname}_${1}_cert_bundle" -
 }
 
 # Initilize Vault
@@ -110,7 +104,10 @@ else
     vault_i write ca/intermediate/set-signed certificate="$(echo -e "$certResponse\n$caPem")"
     vault_i write ca/config/urls issuing_certificates="https://vault.scifi.farm:8200/v1/ca/ca" crl_distribution_points="https://vault.scifi.farm:8200/v1/ca/crl" ocsp_servers="https://vault.scifi.farm:8200/v1/ca/ocsp" 
     vault_i write ca/roles/tls key_bits=2048 max_ttl=8760h allow_any_name=true enforce_hostnames=false
+    caIntPem=$(curl -s http://127.0.0.1:8200/v1/ca/ca/pem)
 
+    docker secret rm "${stackname}_ca_bundle"
+    echo -e "$caPem\n$caIntPem" | docker secret create "${stackname}_ca_bundle" - 
     docker secret rm "${stackname}_ca"
     echo -e "$caPem" | docker secret create "${stackname}_ca" - 
 

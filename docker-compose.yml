@@ -113,14 +113,7 @@ services:
           - mqtt.scifi.farm
     ports:
       - "15672:15672"
-      # EMQTT ports
-      #- "1883:1883"
-      #- "8083-8084:8083-8084"
       - "8883:8883"
-      #- "18083:18083"
-      #- "4369"
-#      - "6000-6999"
-      #- "8080"
     secrets:
       - source: althing_dev_mqtt_cert_bundle
         target: mqtt_cert
@@ -131,8 +124,6 @@ services:
     volumes:
         - "./mqtt/config/:/etc/rabbitmq/"
   nr:
-    #environment:
-    #  - npm_config_cafile=/run/secrets/ca
     depends_on:
       - ha
       - mqtt
@@ -146,6 +137,9 @@ services:
       - web
     ports:
       - "1880:1880"
+      # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
+      # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
+      #- "9229:9229"
     secrets:
       - source: althing_dev_nr_cert_bundle
         target: nr_cert
@@ -155,17 +149,22 @@ services:
         target: nr_key
         uid: ${UID}
         mode: 0600
-      - source: althing_dev_ca
+      - source: althing_dev_ca_bundle
         target: ca
         uid: ${UID}
         mode: 0600
-    user: ${UID}
+    user: "0" #${UID}
     volumes:
       - "./nr/data:/data"
+      # If you docker cp [container hash]:/usr/src/node-red nr/src/
+      # You can work with live running code by uncommenting the following volume>
+      #- "./nr/src:/usr/src/node-red"
 networks:
   web:
 secrets:
   althing_dev_ca:
+    external: true
+  althing_dev_ca_bundle:
     external: true
   althing_dev_ha_cert_bundle:
     external: true
@@ -189,8 +188,6 @@ secrets:
     external: true
   althing_dev_vault_unseal:
     external: true
-  #mqtt-cert:
-  #  file: imqtt/
 volumes:
   vault:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
