@@ -59,7 +59,7 @@ services:
         target: ha_key
         uid: ${UID}
         mode: 0400
-      - source: althing_dev_ca
+      - source: althing_dev_ca_bundle
         target: ca
     user: ${UID}
     volumes:
