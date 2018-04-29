@@ -135,8 +135,6 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
-    #environment:
-    #  - npm_config_cafile=/run/secrets/ca
     depends_on:
       - ha
       - mqtt
