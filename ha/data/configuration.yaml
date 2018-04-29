@@ -58,18 +58,18 @@ map:
 sun:
 
 # Weather prediction
-#sensor:
-#  - platform: yr
-#  - platform: mqtt
-#    name: "Humidity"
-#    state_topic: "planteyes/pe001/humidity/relative"
-#    unit_of_measurement: "%"
-#    #value_template: '{{ value_json.humid }}'
-#  - platform: mqtt
-#    name: "Temp"
-#    state_topic: "planteyes/pe001/temperature/degrees"
-#    unit_of_measurement: "c"
-#    #value_template: '{{ value_json.temp }}'
+sensor:
+  - platform: yr
+  - platform: mqtt
+    name: "Humidity"
+    state_topic: "planteyes/pe001/humidity/relative"
+    unit_of_measurement: "%"
+    #value_template: '{{ value_json.humid }}'
+  - platform: mqtt
+    name: "Temp"
+    state_topic: "planteyes/pe001/temperature/degrees"
+    unit_of_measurement: "c"
+    #value_template: '{{ value_json.temp }}'
 
 
 # Text to speech
