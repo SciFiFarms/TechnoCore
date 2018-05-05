@@ -2,7 +2,6 @@ version: '3.5'
 services:
   vault:
     build:
-      dockerfile: ${PWD}/vault/Dockerfile
       context: ./vault
     deploy:
       mode: global
@@ -33,8 +32,7 @@ services:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
   ha:
-    build: 
-      dockerfile: ${PWD}/ha/Dockerfile
+    build:
       context: ./ha
       args:
         - userid=${UID}
@@ -65,10 +63,9 @@ services:
         target: ca
     user: ${UID}
     volumes:
-      - ./ha/data/:/config 
+      - ./ha/data/:/config
   ha_db:
     build:
-      dockerfile: ${PWD}/ha_db/Dockerfile
       context: ./ha_db
       args:
         - userid=${UID}
@@ -144,7 +141,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: nodered/node-red-docker 
+    image: nodered/node-red-docker
     networks:
       - web
     ports:

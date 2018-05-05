@@ -1,19 +1,19 @@
 #!/bin/bash
 # Test that docker exists.
-# Test that your installing as root or sudo. 
-# Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible. 
+# Test that your installing as root or sudo.
+# Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
 # Maybe /etc/tls/althing
 stackname=althing_dev
 domain=scifi.farm
 forceUpdate=1
 
-# List of services 
+# List of services
 vault=vault
 ha=ha
 mqtt=mqtt
 ha_db=ha_db
 nr=nr
-declare -a services=($vault $ha $mqtt $ha_db $nr) 
+declare -a services=($vault $ha $mqtt $ha_db $nr)
 
 # Add domains to hosts file.
 for service in "${services[@]}"
@@ -23,6 +23,9 @@ do
         echo "127.0.0.1 ${service}.$domain" >> /etc/hosts
     fi
 done
+
+# Make profile.d dir first
+mkdir -p /etc/profile.d
 
 # Put export uid commands in profiles.d
 if [ ! -f /etc/profile.d/docker-uid.sh ]; then
@@ -36,8 +39,8 @@ docker-compose build
 
 vaultConfig='
     {
-        "disable_mlock": 1, 
-        "storage": { 
+        "disable_mlock": 1,
+        "storage": {
             "file": {
                 "path": "/vault/file"
             }
@@ -50,21 +53,21 @@ vaultConfig='
         }
     }
 '
-vault_i() { 
+vault_i() {
     docker exec $containerId vault "$@"
 }
 # First argment should be the service name. Examples are "vault", "emq"
 create_tls(){
     tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}.${domain}" alt_names="${1}.local,${1}" ttl=720h format=pem)
-    tlsCert=$(grep -Po '"certificate":.*?[^\\]",' <<< $tlsResponse | cut -d \" -f 4)
-    tlsKey=$(grep -Po '"private_key":.*?[^\\]",' <<< $tlsResponse | cut -d \" -f 4)
-    tlsCa=$(grep -Po '"issuing_ca":.*?[^\\]",' <<< $tlsResponse | cut -d \" -f 4)
+    tlsCert=$(grep -Eo '"certificate":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
+    tlsKey=$(grep -Eo '"private_key":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
+    tlsCa=$(grep -Eo '"issuing_ca":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
 
     if [ $2 ]; then
         docker secret rm "${stackname}_${1}_key"
         docker secret rm "${stackname}_${1}_cert_bundle"
     fi
-    
+
     echo -e "$tlsKey" | docker secret create "${stackname}_${1}_key" -
     echo -e "${tlsCert}\n${tlsCa}\n${caPem}" | docker secret create "${stackname}_${1}_cert_bundle" -
     echo -e "${caPem}\n${tlsCa}\n${tlsCert}" > certs/${1}_cert_bundle
@@ -76,19 +79,20 @@ create_tls(){
 }
 
 # Initilize Vault
-# I have to pass in a custom config to start vault without TLS. 
-if [ ! $(docker volume ls | grep ${stackname}_vault) ]; then
-    # Initilize Vault
+# I have to pass in a custom config to start vault without TLS.
+echo $(docker volume ls | grep ${stackname}_vault)
+if [[ ! $(docker volume ls | grep -Fq ${stackname}_vault) == '' ]] ; then
+    echo "Vault Initialized";
+else
+    echo "Initializing Vault"
     docker volume create ${stackname}_vault
     containerId=$(docker run -d -p 8200:8200 -e "VAULT_LOCAL_CONFIG=$vaultConfig" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file althing/vault)
     sleep 1
-    initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1) 
-    unsealKey=$(grep "Unseal Key" <<< $initResponse | cut -d : -f 2 | xargs)
-    rootToken=$(grep "Root Token" <<< $initResponse | cut -d : -f 2 | xargs)
+    initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1)
+    unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs)
+    rootToken=$(grep -C 1 "Root Token" <<< "$initResponse" | cut -d : -f 2 | xargs)
     docker secret rm "${stackname}_vault_unseal"
     echo -e "$unsealKey" | docker secret create "${stackname}_vault_unseal" - 
-    echo "Unseal key:$unsealKey:"
-    echo "Root token:$rootToken:"
     vault_i operator unseal $unsealKey
     vault_i login $rootToken
 
@@ -102,10 +106,7 @@ if [ ! $(docker volume ls | grep ${stackname}_vault) ]; then
     #Configure intermediate CA
     vault_i secrets enable -path=ca -description="$stackname Ops Intermediate CA" -max-lease-ttl=26280h pki
     csr=$(vault_i write -field=csr ca/intermediate/generate/internal common_name="${stackname} Intermediate CA" alt_names="vault" ip_sans="127.0.0.1" ttl=26280h key_bits=4096 exclude_cn_from_sans=true)
-    #csr=$(vault_i write ca/intermediate/generate/internal common_name="${stackname} Intermediate Authority" alt_names="127.0.0.1,vault,vault:8200,vault:8200/v1/ca/ca/pem" ip_sans="127.0.0.1" ttl=26280h key_bits=4096 exclude_cn_from_sans=true)
     certResponse=$(vault_i write -field=certificate rootca/root/sign-intermediate csr="$csr" common_name="vault" ttl=8760h format=pem_bundle)
-    #certResponse=$(vault_i write rootca/root/sign-intermediate csr="$csr" common_name="vault" ttl=8760h format=pem_bundle)
-    #echo "Cert Repsonse:\n$certResponse"
     vault_i write ca/intermediate/set-signed certificate="$(echo -e "$certResponse\n$caPem")"
     vault_i write ca/config/urls issuing_certificates="https://vault.scifi.farm:8200/v1/ca/ca" crl_distribution_points="https://vault.scifi.farm:8200/v1/ca/crl" ocsp_servers="https://vault.scifi.farm:8200/v1/ca/ocsp" 
     vault_i write ca/roles/tls key_bits=2048 max_ttl=8760h allow_any_name=true enforce_hostnames=false
@@ -125,12 +126,12 @@ if [ ! $(docker volume ls | grep ${stackname}_vault) ]; then
     done
 fi
 
-# Create TLS certs for services. 
+# Create TLS certs for services.
 secrets=$(docker secret ls --format "table {{.Name}}")
 echo $secrets
 for service in "${services[@]}"
 do
-    # If the secret doesn't exist, create it. 
+    # If the secret doesn't exist, create it.
     if [[ ! "$secrets" =~ .*${stackname}_$service.* ]] || [ $forceUpdate ]; then
         echo "Creating TLS certs for ${stackname}_$service"
         create_tls $service $forceUpdate
