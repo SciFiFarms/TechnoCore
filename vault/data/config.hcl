@@ -10,6 +10,6 @@ listener "tcp" {
     tls_disable = 0
     tls_cert_file = "/run/secrets/vault_cert"
     tls_key_file = "/run/secrets/vault_key"
-    tls_client_ca_file = "/run/secrets/ca.pem"
+    tls_client_ca_file = "/run/secrets/ca"
 }
 disable_mlock = true
