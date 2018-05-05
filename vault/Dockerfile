@@ -1,5 +1,5 @@
 FROM vault
-COPY docker-entrypoint.sh usr/local/bin/docker-entrypoint.sh
+#COPY docker-entrypoint.sh usr/local/bin/docker-entrypoint.sh
 
 # export VAULT_ADDR='http://0.0.0.0:8200'
 # vault login token=a9712570-1711-acf7-2a27-edf9253e52b7

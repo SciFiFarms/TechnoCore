@@ -8,5 +8,4 @@ ha/data/.*
 ha/data/*.log
 ha/data/*.db
 ha/data/secrets.yaml
-vault/data
 vault/src
