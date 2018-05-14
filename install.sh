@@ -1,4 +1,8 @@
 #!/bin/bash
+source install_functions.sh
+for file in ./installer/bash*; do
+   source $file
+done
 # Test that docker exists.
 # Test that your installing as root or sudo.
 # Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
