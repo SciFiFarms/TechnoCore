@@ -1,11 +1,16 @@
 #!/bin/bash
+source install_functions.sh
+for file in ./installer/bash*; do
+   source $file
+done
 # Test that docker exists.
 # Test that your installing as root or sudo.
+# Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
 # Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
 # Maybe /etc/tls/althing
 stackname=althing_dev
 domain=scifi.farm
-forceUpdate=1
+force=1
 
 # List of services
 vault=vault
@@ -53,9 +58,6 @@ vaultConfig='
         }
     }
 '
-vault_i() {
-    docker exec $containerId vault "$@"
-}
 # First argment should be the service name. Examples are "vault", "emq"
 create_tls(){
     tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}.${domain}" alt_names="${1}.local,${1}" ttl=720h format=pem)
@@ -70,6 +72,10 @@ create_tls(){
 
     echo -e "$tlsKey" | docker secret create "${stackname}_${1}_key" -
     echo -e "${tlsCert}\n${tlsCa}" | docker secret create "${stackname}_${1}_cert_bundle" -
+}
+
+add_volume(){
+    echo stuff
 }
 
 # Initilize Vault
@@ -111,7 +117,7 @@ else
     docker secret rm "${stackname}_ca"
     echo -e "$caPem" | docker secret create "${stackname}_ca" - 
 
-    # Install CA cert into firefox. 
+    # Install CA cert into firefox. Eventually, put into other browsers too. 
     # There is a powershell implementation of this on this page: https://stackoverflow.com/questions/1435000/programmatically-install-certificate-into-mozilla
     for certDB in $(find  /home/*/.mozilla* -name "cert8.db")
     do
@@ -121,6 +127,8 @@ else
       # For more info, checkout: https://askubuntu.com/questions/244582/add-certificate-authorities-system-wide-on-firefox/792806#792806
       certutil -A -n "${stackname} Root CA" -t "TCu,Cuw,Tuw" -d sql:${certDir} -i ca.pem
     done
+
+    #
 fi
 
 # Create TLS certs for services.
@@ -129,9 +137,9 @@ echo $secrets
 for service in "${services[@]}"
 do
     # If the secret doesn't exist, create it.
-    if [[ ! "$secrets" =~ .*${stackname}_$service.* ]] || [ $forceUpdate ]; then
+    if [[ ! "$secrets" =~ .*${stackname}_$service.* ]] || [ $force ]; then
         echo "Creating TLS certs for ${stackname}_$service"
-        create_tls $service $forceUpdate
+        create_tls $service $force
     fi
 done
 
@@ -143,8 +151,6 @@ fi
 
 docker stack deploy --compose-file docker-compose.yml $stackname
 
-# I'm pretty sure I'll need to do something with the unseal key every reboot. Put it in the vault entry script.
-# Put CA into browsers or use lets encrypt.
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
 # docker service update --publish-rm 8200 althing_vault
