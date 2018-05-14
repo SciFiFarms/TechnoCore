@@ -1,8 +1,4 @@
 #!/bin/bash
-source install_functions.sh
-for file in ./installer/bash*; do
-   source $file
-done
 # Test that docker exists.
 # Test that your installing as root or sudo.
 # Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
@@ -27,6 +23,12 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $platformio)
 #docker swarm init
 #docker swarm join localhost
 # had to add user to docker group: usermod -a -G docker spencer 
+
+# TODO: Should check that the stack is up before bringing it down.
+if [ $reinstall -eq 1 ] ; then
+    docker stack rm $stackname
+    sleep 10
+fi
 
 # TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
@@ -75,6 +77,7 @@ if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
 else
     create_volume ha_db
     initialize_ha_db
+    add_CA_to_firefox
 fi
 
 create_TLS_certs
