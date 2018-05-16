@@ -219,4 +219,5 @@ volumes:
   ha_db:
   mqtt:
   vault:
+  mqtt:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html

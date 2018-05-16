@@ -75,6 +75,7 @@ docker network rm $stackname
 
 docker stack deploy --compose-file docker-compose.yml $stackname
 
+
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
 # docker service update --publish-rm 8200 althing_vault
