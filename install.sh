@@ -80,6 +80,13 @@ else
     add_CA_to_firefox
 fi
 
+if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
+    echo "MQTT Initialized";
+else
+    create_volume mqtt
+    initialize_mqtt
+fi
+
 create_TLS_certs
 
 remove_temp_containers
