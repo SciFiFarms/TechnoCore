@@ -123,6 +123,9 @@ services:
         target: ca
     volumes:
         - "./mqtt/config/:/etc/rabbitmq/"
+        - mqtt:/var/lib/rabbitmq/
+    # Hostname is needed to persist data. 
+    hostname: mqtt
   nr:
     depends_on:
       - ha
@@ -190,4 +193,5 @@ secrets:
     external: true
 volumes:
   vault:
+  mqtt:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html

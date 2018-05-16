@@ -42,6 +42,10 @@ remove_temp_containers(){
         docker stop $containerId
         docker rm $containerId
     fi
+    if [ $containerId2 ]; then
+        docker stop $containerId2
+        docker rm $containerId2
+    fi
 }
 
 volume_exists(){
@@ -69,4 +73,12 @@ create_volume(){
         remove_volume ${stackname}_$1
     fi
     docker volume create ${stackname}_$1
+}
+
+# $1: The name of the secret.
+# $2: The value of the secret.
+create_secret(){
+    # TODO: Only remove the secret if it exists.
+    docker secret rm "${stackname}_$1"
+    echo -e "$2" | docker secret create "${stackname}_$1" - 
 }

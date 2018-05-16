@@ -43,11 +43,19 @@ else
     add_CA_to_firefox
 fi
 
+if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
+    echo "MQTT Initialized";
+else
+    create_volume mqtt
+    initialize_mqtt
+fi
+
 create_TLS_certs
 
 remove_temp_containers
 
 docker stack deploy --compose-file docker-compose.yml $stackname
+
 
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
