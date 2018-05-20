@@ -34,6 +34,8 @@ export_UID_to_env
 # Build docker images
 docker-compose build
 
+docker network create $stackname
+
 if volume_exists vault && [ $reinstall -ne 1 ] ; then
     echo "Vault Initialized";
 else
@@ -48,11 +50,15 @@ if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
 else
     create_volume mqtt
     initialize_mqtt
+    create_vault_and_mqtt_user home_assistant
+    create_vault_and_mqtt_user node_red
+fi
 fi
 
 create_TLS_certs
 
 remove_temp_containers
+docker network rm $stackname
 
 docker stack deploy --compose-file docker-compose.yml $stackname
 
