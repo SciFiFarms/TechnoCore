@@ -96,5 +96,6 @@ if [ "$1" = 'vault' ]; then
     fi
 fi
 
-sleep 3 && vault operator unseal $(cat /run/secrets/vault_unseal) &
+# TODO: Make this try until the vault is unsealed. While $? !=0, sleep 1; unseal;
+sleep 5 && vault operator unseal $(cat /run/secrets/vault_unseal) &
 exec "$@"

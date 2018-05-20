@@ -26,6 +26,8 @@ services:
         target: /run/secrets/ca
       - source: althing_dev_vault_unseal
         target: /run/secrets/vault_unseal
+      - source: althing_dev_vault_token
+        target: /run/secrets/vault_token
     ports:
       - "8200:8200"
     volumes:
@@ -190,6 +192,8 @@ secrets:
   althing_dev_vault_key:
     external: true
   althing_dev_vault_unseal:
+    external: true
+  althing_dev_vault_token:
     external: true
 volumes:
   vault:
