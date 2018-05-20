@@ -90,6 +90,12 @@ else
     create_vault_and_mqtt_user home_assistant
     create_vault_and_mqtt_user node_red
 fi
+
+if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
+    echo "Home Assistant database Initialized";
+else
+    create_volume ha_db
+    initialize_ha_db
 fi
 
 create_TLS_certs
