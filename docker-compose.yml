@@ -185,6 +185,10 @@ secrets:
     external: true
   althing_dev_ha_key:
     external: true
+  althing_dev_home_assistant_mqtt_username:
+    external: true
+  althing_dev_home_assistant_mqtt_password:
+    external: true
   althing_dev_ha_db_cert_bundle:
     external: true
   althing_dev_home_assistant_mqtt_username:
@@ -219,5 +223,4 @@ volumes:
   ha_db:
   mqtt:
   vault:
-  mqtt:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
