@@ -50,6 +50,8 @@ docker-compose build
 network_name="${stackname}"
 docker network create --attachable $network_name
 
+docker network create $stackname
+
 if volume_exists vault && [ $reinstall -ne 1 ] ; then
     echo "Vault Initialized";
 else
@@ -85,6 +87,9 @@ if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
 else
     create_volume mqtt
     initialize_mqtt
+    create_vault_and_mqtt_user home_assistant
+    create_vault_and_mqtt_user node_red
+fi
 fi
 
 create_TLS_certs
