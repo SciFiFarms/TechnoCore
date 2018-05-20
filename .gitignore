@@ -12,3 +12,5 @@ nr/src/*
 omgwtfssl/
 vault/data
 vault/src
+*_old
+*.backup

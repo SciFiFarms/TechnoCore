@@ -68,6 +68,7 @@ remove_volume(){
     done
 }
 
+# $1: The name of the volume to create.
 create_volume(){
     if [ $reinstall -eq 1 ] ; then
         remove_volume ${stackname}_$1
@@ -81,4 +82,18 @@ create_secret(){
     # TODO: Only remove the secret if it exists.
     docker secret rm "${stackname}_$1"
     echo -e "$2" | docker secret create "${stackname}_$1" - 
+} $1: The name of the secret.
+# $2: The JSON string.
+# $2: The value of the secret.
+create_secret(){
+    # TODO: Only remove the secret if it exists.
+    docker secret rm "${stackname}_$1"
+    echo -e "$2" | docker secret create "${stackname}_$1" - 
+}
+
+# $1: The field to extract. 
+# $2: The JSON string.
+extract_from_json(){
+# $2: The JSON string.
+    grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
 }
