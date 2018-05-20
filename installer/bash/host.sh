@@ -46,6 +46,11 @@ remove_temp_containers(){
         docker stop $containerId2
         docker rm $containerId2
     fi
+    if [ $containerId3 ]; then
+        docker stop $containerId3
+        docker rm $containerId3
+    fi
+
 }
 
 volume_exists(){
@@ -82,18 +87,10 @@ create_secret(){
     # TODO: Only remove the secret if it exists.
     docker secret rm "${stackname}_$1"
     echo -e "$2" | docker secret create "${stackname}_$1" - 
-} $1: The name of the secret.
-# $2: The JSON string.
-# $2: The value of the secret.
-create_secret(){
-    # TODO: Only remove the secret if it exists.
-    docker secret rm "${stackname}_$1"
-    echo -e "$2" | docker secret create "${stackname}_$1" - 
 }
 
 # $1: The field to extract. 
 # $2: The JSON string.
 extract_from_json(){
-# $2: The JSON string.
     grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
 }
