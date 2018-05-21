@@ -2,7 +2,7 @@
  "nodes": {
   "node-red": {
    "name": "node-red",
-   "version": "0.18.4",
+   "version": "0.18.6",
    "local": false,
    "nodes": {
     "sentiment": {
@@ -408,7 +408,7 @@
   },
   "node-red-node-base64": {
    "name": "node-red-node-base64",
-   "version": "0.1.1",
+   "version": "0.1.3",
    "local": false,
    "nodes": {
     "base64": {
