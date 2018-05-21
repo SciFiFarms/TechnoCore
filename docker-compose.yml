@@ -105,13 +105,15 @@ services:
     volumes:
       - ha_db:/var/lib/postgresql/data
   mqtt:
+    build:
+      context: ./mqtt
     depends_on:
       - vault
     deploy:
       mode: global
       restart_policy:
         condition: on-failure
-    image: rabbitmq:3.7.4-management
+    image: althing/mqtt
     networks:
       web:
         aliases:
