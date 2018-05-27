@@ -16,6 +16,12 @@ ha_db=ha_db
 nr=nr
 declare -a services=($vault $ha $mqtt $ha_db $nr)
 
+# Todo: only do this if not inited already.
+# I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
+# I also had to install docker-compose seperaately. 
+#docker swarm init
+#docker swarm join localhost
+
 # TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
     docker stack rm $stackname
@@ -42,6 +48,7 @@ else
     create_volume vault
     initialize_vault
     configure_CAs
+    # In ubuntu, that needs to install libnss3-tools, which provides certutil
     add_CA_to_firefox
 fi
 
