@@ -252,6 +252,10 @@ secrets:
     external: true
   althing_dev_vault_token:
     external: true
+  althing_dev_wiki_cert_bundle:
+    external: true
+  althing_dev_wiki_key:
+    external: true
 volumes:
   ha_db:
   mqtt:
