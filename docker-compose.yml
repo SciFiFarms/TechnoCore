@@ -170,6 +170,32 @@ services:
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
       #- "./nr/src:/usr/src/node-red"
+  wiki:
+    build:
+      context: ./wiki
+    deploy:
+        mode: global
+        restart_policy:
+          condition: on-failure
+    environment:
+      - WWW_DATA_UID=${UID}
+    image: althing/wiki
+    ports:
+      - "88:80"
+    secrets:
+      - source: althing_dev_wiki_cert_bundle
+        target: wiki_cert
+      - source: althing_dev_wiki_key
+        target: wiki_key
+      - source: althing_dev_ca
+        target: ca
+    volumes:
+      - ./docs:/dokuwiki/data/pages/wiki
+      - ./wiki/conf:/dokuwiki/conf
+      - ./wiki/data:/dokuwiki/data
+      - ./wiki/logs:/var/log
+      - ./wiki/plugins:/dokuwiki/lib/plugins
+      - ./wiki/tpl:/dokuwiki/lib/tpl
 networks:
   web:
 secrets:
@@ -204,6 +230,10 @@ secrets:
   althing_dev_vault_unseal:
     external: true
   althing_dev_vault_token:
+    external: true
+  althing_dev_wiki_cert_bundle:
+    external: true
+  althing_dev_wiki_key:
     external: true
 volumes:
   ha_db:

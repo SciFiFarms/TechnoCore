@@ -14,7 +14,8 @@ ha=ha
 mqtt=mqtt
 ha_db=ha_db
 nr=nr
-declare -a services=($vault $ha $mqtt $ha_db $nr)
+wiki=wiki
+declare -a services=($vault $ha $mqtt $ha_db $nr $wiki)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
