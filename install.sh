@@ -30,6 +30,12 @@ if [ $reinstall -eq 1 ] ; then
     sleep 10
 fi
 
+# Todo: only do this if not inited already.
+# I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
+# I also had to install docker-compose seperaately. 
+#docker swarm init
+#docker swarm join localhost
+
 # TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
     docker stack rm $stackname
