@@ -1,3 +1,3 @@
-FROM mprasil/dokuwiki
+FROM suttang/gollum
 
-COPY docker-startup.sh /startup.sh
+#COPY docker-startup.sh /startup.sh
