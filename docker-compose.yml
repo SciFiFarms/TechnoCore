@@ -135,6 +135,8 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
+    build:
+      context: ./nr
     depends_on:
       - ha
       - mqtt
@@ -143,14 +145,14 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: nodered/node-red-docker
+    image: althing/node-red
     networks:
       - web
     ports:
       - "1880:1880"
       # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
       # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
-      #- "9229:9229"
+      - "9229:9229"
     secrets:
       - source: althing_dev_nr_cert_bundle
         target: nr_cert
@@ -164,12 +166,20 @@ services:
         target: ca
         uid: ${UID}
         mode: 0600
+      - source: althing_dev_node_red_mqtt_username
+        target: mqtt_username
+        uid: ${UID}
+        mode: 0600
+      - source: althing_dev_node_red_mqtt_password
+        target: mqtt_password
+        uid: ${UID}
+        mode: 0600
     user: "0" #${UID}
     volumes:
       - "./nr/data:/data"
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
-      #- "./nr/src:/usr/src/node-red"
+      - "./node-red:/usr/src/node-red"
   wiki:
     build:
       context: ./wiki
@@ -177,8 +187,6 @@ services:
         mode: global
         restart_policy:
           condition: on-failure
-    environment:
-      - WWW_DATA_UID=${UID}
     image: althing/wiki
     ports:
       - "88:80"
@@ -190,12 +198,7 @@ services:
       - source: althing_dev_ca
         target: ca
     volumes:
-      - ./docs:/dokuwiki/data/pages/wiki
-      - ./wiki/conf:/dokuwiki/conf
-      - ./wiki/data:/dokuwiki/data
-      - ./wiki/logs:/var/log
-      - ./wiki/plugins:/dokuwiki/lib/plugins
-      - ./wiki/tpl:/dokuwiki/lib/tpl
+      - ./wiki/data:/root/wikidata
 networks:
   web:
 secrets:
@@ -222,6 +225,10 @@ secrets:
   althing_dev_nr_cert_bundle:
     external: true
   althing_dev_nr_key:
+    external: true
+  althing_dev_node_red_mqtt_username:
+    external: true
+  althing_dev_node_red_mqtt_password:
     external: true
   althing_dev_vault_cert_bundle:
     external: true
