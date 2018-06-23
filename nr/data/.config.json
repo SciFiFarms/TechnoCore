@@ -510,6 +510,23 @@
      "file": "/usr/src/node-red/node_modules/node-red-node-twitter/27-twitter.js"
     }
    }
+  },
+  "node-red-contrib-json": {
+   "name": "node-red-contrib-json",
+   "version": "0.2.0",
+   "local": true,
+   "nodes": {
+    "contrib-json": {
+     "name": "contrib-json",
+     "types": [
+      "contrib-json"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-json",
+     "file": "/data/node_modules/node-red-contrib-json/json.js"
+    }
+   }
   }
  },
  "_credentialSecret": "bbd8360c9bfa998bf2ec79e79e6cc0e2153d9e7d9c595ec37f4518625b934e07",
