@@ -9,16 +9,27 @@ services:
         condition: on-failure
     environment:
       - SKIP_SETCAP=true
+      - VAULT_ADDR=https://vault.local:8200
+      - VAULT_CACERT=/run/secrets/ca
     image: althing/vault
     networks:
-      - web
+      web:
+        aliases:
+          - vault.local
+          - vault.scifi.farm
     secrets:
       - source: althing_dev_vault_key
         target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert
+      - source: althing_dev_vault_cert_bundle
         target: /run/secrets/vault_cert
       - source: althing_dev_ca
-        target: /run/secrets/ca.pem
+        target: /run/secrets/ca
+      - source: althing_dev_vault_unseal
+        target: /run/secrets/vault_unseal
+      - source: althing_dev_vault_token
+        target: /run/secrets/vault_token
+    ports:
+      - "8200:8200"
     volumes:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
@@ -42,7 +53,7 @@ services:
     ports:
       - "8123:8123"
     secrets:
-      - source: althing_dev_ha_cert
+      - source: althing_dev_ha_cert_bundle
         target: ha_cert
         uid: ${UID}
         mode: 0440
@@ -50,10 +61,12 @@ services:
         target: ha_key
         uid: ${UID}
         mode: 0400
-      - source: althing_dev_ca
+      - source: althing_dev_ca_bundle
         target: ca
-      - source: althing_dev_ha_pem
-        target: ha_pem
+      - source: althing_dev_home_assistant_mqtt_username
+        target: mqtt_username
+      - source: althing_dev_home_assistant_mqtt_password
+        target: mqtt_password
     user: ${UID}
     volumes:
       - ./ha/data/:/config
@@ -78,10 +91,10 @@ services:
     networks:
       - web
     secrets:
-      - source: althing_dev_ha_db_pem
+      - source: althing_dev_ha_db_cert_bundle
         target: ha_db_cert
         uid: ${UID}
-        mode: 0440
+        mode: 0400
       - source: althing_dev_ha_db_key
         target: ha_db_key
         uid: ${UID}
@@ -90,27 +103,27 @@ services:
         target: ca
     user: ${UID}
     volumes:
-      - ./ha_db/data/:/var/lib/postgresql/data
+      - ha_db:/var/lib/postgresql/data
   mqtt:
+    build:
+      context: ./mqtt
     depends_on:
       - vault
     deploy:
       mode: global
       restart_policy:
         condition: on-failure
-    image: rabbitmq:3.7.4-management
+    image: althing/mqtt
+    networks:
+      web:
+        aliases:
+          - mqtt.local
+          - mqtt.scifi.farm
     ports:
       - "15672:15672"
-      # EMQTT ports
-      - "1883:1883"
-      - "8083-8084:8083-8084"
       - "8883:8883"
-      - "18083:18083"
-      - "4369"
-#      - "6000-6999"
-      - "8080"
     secrets:
-      - source: althing_dev_mqtt_cert
+      - source: althing_dev_mqtt_cert_bundle
         target: mqtt_cert
       - source: althing_dev_mqtt_key
         target: mqtt_key
@@ -118,6 +131,9 @@ services:
         target: ca
     volumes:
         - "./mqtt/config/:/etc/rabbitmq/"
+        - mqtt:/var/lib/rabbitmq/
+    # Hostname is needed to persist data. 
+    hostname: mqtt
   nr:
     depends_on:
       - ha
@@ -132,8 +148,11 @@ services:
       - web
     ports:
       - "1880:1880"
+      # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
+      # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
+      #- "9229:9229"
     secrets:
-      - source: althing_dev_nr_cert
+      - source: althing_dev_nr_cert_bundle
         target: nr_cert
         uid: ${UID}
         mode: 0600
@@ -141,40 +160,61 @@ services:
         target: nr_key
         uid: ${UID}
         mode: 0600
-    user: ${UID}
+      - source: althing_dev_node_red_mqtt_username
+        target: mqtt_username
+      - source: althing_dev_node_red_mqtt_password
+        target: mqtt_password
+      - source: althing_dev_ca_bundle
+        target: ca
+        uid: ${UID}
+        mode: 0600
+    user: "0" #${UID}
     volumes:
       - "./nr/data:/data"
+      # If you docker cp [container hash]:/usr/src/node-red nr/src/
+      # You can work with live running code by uncommenting the following volume>
+      #- "./nr/src:/usr/src/node-red"
 networks:
   web:
 secrets:
   althing_dev_ca:
     external: true
-  althing_dev_ha_cert:
+  althing_dev_ca_bundle:
+    external: true
+  althing_dev_ha_cert_bundle:
     external: true
   althing_dev_ha_key:
     external: true
-  althing_dev_ha_pem:
+  althing_dev_home_assistant_mqtt_username:
     external: true
-  althing_dev_ha_db_cert:
+  althing_dev_home_assistant_mqtt_password:
+    external: true
+  althing_dev_ha_db_cert_bundle:
     external: true
   althing_dev_ha_db_key:
     external: true
-  althing_dev_ha_db_pem:
-    external: true
-  althing_dev_mqtt_cert:
+  althing_dev_mqtt_cert_bundle:
     external: true
   althing_dev_mqtt_key:
     external: true
-  althing_dev_nr_cert:
+  althing_dev_nr_cert_bundle:
     external: true
   althing_dev_nr_key:
     external: true
-  althing_dev_vault_cert:
+  althing_dev_node_red_mqtt_username:
+    external: true
+  althing_dev_node_red_mqtt_password:
+    external: true
+  althing_dev_vault_cert_bundle:
     external: true
   althing_dev_vault_key:
     external: true
-  #mqtt-cert:
-  #  file: imqtt/
+  althing_dev_vault_unseal:
+    external: true
+  althing_dev_vault_token:
+    external: true
 volumes:
+  ha_db:
+  mqtt:
   vault:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
