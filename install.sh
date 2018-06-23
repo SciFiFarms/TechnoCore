@@ -14,13 +14,15 @@ ha=ha
 mqtt=mqtt
 ha_db=ha_db
 nr=nr
-declare -a services=($vault $ha $mqtt $ha_db $nr)
+platformio=platformio
+declare -a services=($vault $ha $mqtt $ha_db $nr $platformio)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
 # I also had to install docker-compose seperaately. 
 #docker swarm init
 #docker swarm join localhost
+# had to add user to docker group: usermod -a -G docker spencer 
 
 # TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
@@ -39,8 +41,8 @@ export_UID_to_env
 
 # Build docker images
 docker-compose build
-
-docker network create $stackname
+network_name="${stackname}"
+docker network create --attachable $network_name
 
 if volume_exists vault && [ $reinstall -ne 1 ] ; then
     echo "Vault Initialized";
@@ -59,6 +61,9 @@ else
     initialize_mqtt
     create_vault_and_mqtt_user home_assistant
     create_vault_and_mqtt_user node_red
+    create_vault_and_mqtt_user platformio
+    platformio_token=$(create_token platformio)
+    create_secret platformio_token  $platformio_token
 fi
 
 if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
@@ -71,10 +76,16 @@ fi
 create_TLS_certs
 
 remove_temp_containers
-docker network rm $stackname
+docker network rm $network_name
 
 docker stack deploy --compose-file docker-compose.yml $stackname
 
+sleep 15
+docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault login $rootToken
+docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault write rabbitmq/config/connection \
+    connection_uri="https://mqtt:15672" \
+    username="vault" \
+    password="$mqtt_password" 
 
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port

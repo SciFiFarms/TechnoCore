@@ -52,7 +52,7 @@ create_TLS_certs(){
 initialize_vault(){
     echo "Initializing Vault"
     # I have to pass in a custom config to start vault without TLS.
-    containerId=$(docker run -d -p 8200:8200 --name vault --network ${stackname} -e "VAULT_LOCAL_CONFIG=$vaultConfig" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file althing/vault)
+    containerId=$(docker run -d -p 8200:8200 --name vault --network $network_name -e "VAULT_LOCAL_CONFIG=$vaultConfig" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file althing/vault)
     sleep 1
     initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1)
     unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs)
@@ -61,6 +61,12 @@ initialize_vault(){
     create_secret vault_token $rootToken
     vault_i operator unseal $unsealKey
     vault_i login $rootToken
+    vault_i audit enable file file_path=stdout
+}
+
+# $1 = policy name. 
+create_token(){ 
+    vault_i token create -policy=$1 -ttl="720h" -display-name="$1" -field="token"
 }
 
 configure_CAs(){
@@ -93,10 +99,10 @@ create_vault_and_mqtt_user(){
     vault_i write rabbitmq/roles/$1 \
         vhosts="$(cat vault/${1}_permissions.json)"
         #vhosts='{"/":{"write": ".*", "read": ".*"}}'
-    local token=$(vault_i token create -policy=$1 -ttl="1m" -field="token")
+    local token=$(vault_i token create -policy=$1 -ttl="720h" -display-name=$1 -field="token")
     vault_i login $token
     local creds=$(vault_i read -format=json rabbitmq/creds/$1)
     vault_i login $rootToken
-    create_secret ${1}_mqtt_username $(extract_from_json username "$creds")
-    create_secret ${1}_mqtt_password $(extract_from_json password "$creds")
+    create_secret ${1}_mqtt_username "$(extract_from_json username "$creds")"
+    create_secret ${1}_mqtt_password "$(echo -n "$(extract_from_json password "$creds")")"
 }

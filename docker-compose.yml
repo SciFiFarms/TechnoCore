@@ -10,7 +10,11 @@ services:
     environment:
       - SKIP_SETCAP=true
       - VAULT_ADDR=https://vault.local:8200
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- CONTAINER_HOSTNAME=vault
       - VAULT_CACERT=/run/secrets/ca
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- VAULT_CA=true
     image: althing/vault
     networks:
       web:
@@ -22,7 +26,7 @@ services:
         target: /run/secrets/vault_key
       - source: althing_dev_vault_cert_bundle
         target: /run/secrets/vault_cert
-      - source: althing_dev_ca
+      - source: althing_dev_ca_bundle
         target: /run/secrets/ca
       - source: althing_dev_vault_unseal
         target: /run/secrets/vault_unseal
@@ -122,6 +126,7 @@ services:
     ports:
       - "15672:15672"
       - "8883:8883"
+      - "1883:1883"
     secrets:
       - source: althing_dev_mqtt_cert_bundle
         target: mqtt_cert
@@ -173,9 +178,35 @@ services:
       - "./nr/data:/data"
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
-      #- "./nr/src:/usr/src/node-red"
+      #- "./node-red:/usr/src/node-red"
+  platformio:
+    command: ["sh","-c","docker run --rm --name pio -t --network althing_dev_web -p 3000:3000 -v /home/spencer/src/althing/platformio/entrypoint.py:/workspace/entrypoint.py -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 althing/platformio"]
+    deploy:
+        mode: global
+        restart_policy:
+          condition: on-failure
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    image: docker
+    networks:
+      - web
+    secrets:
+      - source: althing_dev_ca_bundle
+        target: ca
+      - source: althing_dev_platformio_mqtt_username
+        target: mqtt_username
+      - source: althing_dev_platformio_mqtt_password
+        target: mqtt_password
+      - source: althing_dev_platformio_token
+        target: token
+    user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
+    volumes:
+      - ./platformio/entrypoint.py:/workspace/entrypoint.py
+      - /var/run/docker.sock:/var/run/docker.sock
+
 networks:
   web:
+    attachable: true
 secrets:
   althing_dev_ca:
     external: true
@@ -207,9 +238,11 @@ secrets:
     external: true
   althing_dev_nr_key:
     external: true
-  althing_dev_node_red_mqtt_username:
+  althing_dev_platformio_mqtt_username:
     external: true
-  althing_dev_node_red_mqtt_password:
+  althing_dev_platformio_mqtt_password:
+    external: true
+  althing_dev_platformio_token:
     external: true
   althing_dev_vault_cert_bundle:
     external: true
