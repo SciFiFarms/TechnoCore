@@ -2,7 +2,7 @@
  "nodes": {
   "node-red": {
    "name": "node-red",
-   "version": "0.18.4",
+   "version": "0.18.7",
    "local": false,
    "nodes": {
     "sentiment": {
@@ -408,7 +408,7 @@
   },
   "node-red-node-base64": {
    "name": "node-red-node-base64",
-   "version": "0.1.1",
+   "version": "0.1.3",
    "local": false,
    "nodes": {
     "base64": {
@@ -494,7 +494,7 @@
   },
   "node-red-node-twitter": {
    "name": "node-red-node-twitter",
-   "version": "0.1.13",
+   "version": "0.1.15",
    "local": false,
    "nodes": {
     "twitter": {
@@ -508,6 +508,23 @@
      "local": false,
      "module": "node-red-node-twitter",
      "file": "/usr/src/node-red/node_modules/node-red-node-twitter/27-twitter.js"
+    }
+   }
+  },
+  "node-red-contrib-json": {
+   "name": "node-red-contrib-json",
+   "version": "0.2.0",
+   "local": true,
+   "nodes": {
+    "contrib-json": {
+     "name": "contrib-json",
+     "types": [
+      "contrib-json"
+     ],
+     "enabled": true,
+     "local": true,
+     "module": "node-red-contrib-json",
+     "file": "/data/node_modules/node-red-contrib-json/json.js"
     }
    }
   }

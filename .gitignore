@@ -1,11 +1,16 @@
 
 .vscode/*
-omgwtfssl/
-ha_db/data/*
 **/certs/*
-nr/data/flows_cred.json
+ca.pem
+ha_db/data/*
 ha/data/.*
-ha/data/*.log
 ha/data/*.db
+ha/data/*.log
 ha/data/secrets.yaml
 vault/src
+nr/src/*
+omgwtfssl/
+vault/data
+vault/src
+*_old
+*.backup

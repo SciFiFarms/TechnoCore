@@ -83,8 +83,14 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 
-#mqtt:
-#  broker: mqtt
+mqtt:
+  broker: mqtt
+  port: 8883
+  certificate: /run/secrets/ca
+  client_key: /run/secrets/ha_key
+  client_cert: /run/secrets/ha_cert
+  username: !include /run/secrets/mqtt_username
+  password: !include /run/secrets/mqtt_password
 
 recorder:
   db_url: postgresql://homeassistant@ha_db/homeassistant?sslmode=require&sslcert=/run/secrets/ha_cert&sslkey=/run/secrets/ha_key&sslrootcert=/run/secrets/ca
