@@ -15,7 +15,8 @@ mqtt=mqtt
 ha_db=ha_db
 nr=nr
 platformio=platformio
-declare -a services=($vault $ha $mqtt $ha_db $nr $platformio)
+wiki=wiki
+declare -a services=($vault $ha $mqtt $ha_db $nr $wiki $platformio)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
