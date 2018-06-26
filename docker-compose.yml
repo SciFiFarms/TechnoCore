@@ -37,6 +37,26 @@ services:
     volumes:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
+  docs:
+    build:
+      context: ./wiki
+    command: jekyll serve
+    deploy:
+        mode: global
+        restart_policy:
+          condition: on-failure
+    image: althing/wiki
+    ports:
+      - "4000:4000"
+    secrets:
+      - source: althing_dev_wiki_cert_bundle
+        target: wiki_cert
+      - source: althing_dev_wiki_key
+        target: wiki_key
+      - source: althing_dev_ca
+        target: ca
+    volumes:
+      - ./docs:/srv/jekyll
   ha:
     build:
       context: ./ha
