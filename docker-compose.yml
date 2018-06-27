@@ -39,19 +39,19 @@ services:
       - vault:/vault/file
   docs:
     build:
-      context: ./wiki
+      context: ./docs
     command: jekyll serve
     deploy:
         mode: global
         restart_policy:
           condition: on-failure
-    image: althing/wiki
+    image: althing/docs
     ports:
       - "4000:4000"
     secrets:
-      - source: althing_dev_wiki_cert_bundle
+      - source: althing_dev_docs_cert_bundle
         target: wiki_cert
-      - source: althing_dev_wiki_key
+      - source: althing_dev_docs_key
         target: wiki_key
       - source: althing_dev_ca
         target: ca
@@ -97,7 +97,7 @@ services:
   ha_db:
     build:
       context: ./ha_db
-      args:
+      args: 
         - userid=${UID}
         - username=postgres
     depends_on:
@@ -286,9 +286,9 @@ secrets:
     external: true
   althing_dev_vault_token:
     external: true
-  althing_dev_wiki_cert_bundle:
+  althing_dev_docs_cert_bundle:
     external: true
-  althing_dev_wiki_key:
+  althing_dev_docs_key:
     external: true
 volumes:
   ha_db:
