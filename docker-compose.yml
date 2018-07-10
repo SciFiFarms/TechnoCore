@@ -37,6 +37,26 @@ services:
     volumes:
       - ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
+  docs:
+    build:
+      context: ./docs
+    command: jekyll serve
+    deploy:
+        mode: global
+        restart_policy:
+          condition: on-failure
+    image: althing/docs
+    ports:
+      - "4000:4000"
+    secrets:
+      - source: althing_dev_docs_cert_bundle
+        target: wiki_cert
+      - source: althing_dev_docs_key
+        target: wiki_key
+      - source: althing_dev_ca
+        target: ca
+    volumes:
+      - ./docs:/srv/jekyll
   ha:
     build:
       context: ./ha
@@ -77,7 +97,7 @@ services:
   ha_db:
     build:
       context: ./ha_db
-      args:
+      args: 
         - userid=${UID}
         - username=postgres
     depends_on:
@@ -140,6 +160,8 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
+    build:
+      context: ./nr
     depends_on:
       - ha
       - mqtt
@@ -148,14 +170,14 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: nodered/node-red-docker
+    image: althing/node-red
     networks:
       - web
     ports:
       - "1880:1880"
       # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
       # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
-      #- "9229:9229"
+      - "9229:9229"
     secrets:
       - source: althing_dev_nr_cert_bundle
         target: nr_cert
@@ -171,6 +193,14 @@ services:
         target: mqtt_password
       - source: althing_dev_ca_bundle
         target: ca
+        uid: ${UID}
+        mode: 0600
+      - source: althing_dev_node_red_mqtt_username
+        target: mqtt_username
+        uid: ${UID}
+        mode: 0600
+      - source: althing_dev_node_red_mqtt_password
+        target: mqtt_password
         uid: ${UID}
         mode: 0600
     user: "0" #${UID}
@@ -244,6 +274,10 @@ secrets:
     external: true
   althing_dev_platformio_token:
     external: true
+  althing_dev_node_red_mqtt_username:
+    external: true
+  althing_dev_node_red_mqtt_password:
+    external: true
   althing_dev_vault_cert_bundle:
     external: true
   althing_dev_vault_key:
@@ -251,6 +285,10 @@ secrets:
   althing_dev_vault_unseal:
     external: true
   althing_dev_vault_token:
+    external: true
+  althing_dev_docs_cert_bundle:
+    external: true
+  althing_dev_docs_key:
     external: true
 volumes:
   ha_db:

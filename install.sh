@@ -15,7 +15,8 @@ mqtt=mqtt
 ha_db=ha_db
 nr=nr
 platformio=platformio
-declare -a services=($vault $ha $mqtt $ha_db $nr $platformio)
+wiki=wiki
+declare -a services=($vault $ha $mqtt $ha_db $nr $wiki $platformio)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
@@ -23,6 +24,18 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $platformio)
 #docker swarm init
 #docker swarm join localhost
 # had to add user to docker group: usermod -a -G docker spencer 
+
+# TODO: Should check that the stack is up before bringing it down.
+if [ $reinstall -eq 1 ] ; then
+    docker stack rm $stackname
+    sleep 10
+fi
+
+# Todo: only do this if not inited already.
+# I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
+# I also had to install docker-compose seperaately. 
+#docker swarm init
+#docker swarm join localhost
 
 # TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
@@ -44,6 +57,8 @@ docker-compose build
 network_name="${stackname}"
 docker network create --attachable $network_name
 
+docker network create $stackname
+
 if volume_exists vault && [ $reinstall -ne 1 ] ; then
     echo "Vault Initialized";
 else
@@ -64,6 +79,23 @@ else
     create_vault_and_mqtt_user platformio
     platformio_token=$(create_token platformio)
     create_secret platformio_token  $platformio_token
+fi
+
+if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
+    echo "Home Assistant database Initialized";
+else
+    create_volume ha_db
+    initialize_ha_db
+    add_CA_to_firefox
+fi
+
+if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
+    echo "MQTT Initialized";
+else
+    create_volume mqtt
+    initialize_mqtt
+    create_vault_and_mqtt_user home_assistant
+    create_vault_and_mqtt_user node_red
 fi
 
 if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
