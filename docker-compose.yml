@@ -1,42 +1,5 @@
 version: '3.5'
 services:
-  vault:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: on-failure
-    environment:
-      - SKIP_SETCAP=true
-      - VAULT_ADDR=https://vault.local:8200
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- CONTAINER_HOSTNAME=vault
-      - VAULT_CACERT=/run/secrets/ca
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- VAULT_CA=true
-    image: allthing/vault
-    networks:
-      web:
-        aliases:
-          - vault.local
-          - vault.scifi.farm
-    secrets:
-      - source: althing_dev_vault_key
-        target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert_bundle
-        target: /run/secrets/vault_cert
-      - source: althing_dev_ca_bundle
-        target: /run/secrets/ca
-      - source: althing_dev_ca_bundle
-        target: /etc/ssl/certs/ca-certificates.crt
-      - source: althing_dev_vault_unseal
-        target: /run/secrets/vault_unseal
-      - source: althing_dev_vault_token
-        target: /run/secrets/vault_token
-    ports:
-      - "8200:8200"
-    volumes:
-      #- ./vault/data/config.hcl:/vault/config/config.hcl
-      - vault:/vault/file
   docs:
     command: jekyll serve
     deploy:
@@ -229,6 +192,43 @@ services:
     volumes:
       #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
+  vault:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    environment:
+      - SKIP_SETCAP=true
+      - VAULT_ADDR=https://vault.local:8200
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- CONTAINER_HOSTNAME=vault
+      - VAULT_CACERT=/run/secrets/ca
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- VAULT_CA=true
+    image: allthing/vault
+    networks:
+      web:
+        aliases:
+          - vault.local
+          - vault.scifi.farm
+    secrets:
+      - source: althing_dev_vault_key
+        target: /run/secrets/vault_key
+      - source: althing_dev_vault_cert_bundle
+        target: /run/secrets/vault_cert
+      - source: althing_dev_ca_bundle
+        target: /run/secrets/ca
+      - source: althing_dev_ca_bundle
+        target: /etc/ssl/certs/ca-certificates.crt
+      - source: althing_dev_vault_unseal
+        target: /run/secrets/vault_unseal
+      - source: althing_dev_vault_token
+        target: /run/secrets/vault_token
+    ports:
+      - "8200:8200"
+    volumes:
+      #- ./vault/data/config.hcl:/vault/config/config.hcl
+      - vault:/vault/file
 
 networks:
   web:
