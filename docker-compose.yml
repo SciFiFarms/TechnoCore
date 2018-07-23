@@ -1,8 +1,6 @@
 version: '3.5'
 services:
   vault:
-    build:
-      context: ./vault
     deploy:
       mode: global
       restart_policy:
@@ -15,7 +13,7 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: althing/vault
+    image: allthing/vault
     networks:
       web:
         aliases:
@@ -37,7 +35,7 @@ services:
     ports:
       - "8200:8200"
     volumes:
-      - ./vault/data/config.hcl:/vault/config/config.hcl
+      #- ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
   docs:
     command: jekyll serve
