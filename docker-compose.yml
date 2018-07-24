@@ -21,11 +21,11 @@ services:
       # TODO: Make this built into the image when built. 
       - "../AllThing/docs:/src"
   ha:
-    build:
-      context: ./ha
-      args:
-        - userid=${UID}
-        - username=docker
+    #build:
+    #  context: ./ha
+    #  args:
+    #    - userid=${UID}
+    #    - username=docker
     depends_on:
       - vault
       - mqtt
@@ -34,7 +34,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: althing/ha
+    image: allthing/home-assistant
     networks:
       - web
     ports:
@@ -54,9 +54,10 @@ services:
         target: mqtt_username
       - source: althing_dev_home_assistant_mqtt_password
         target: mqtt_password
-    user: ${UID}
-    volumes:
-      - ./ha/data/:/config
+    # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
+    #user: ${UID}
+    #volumes:
+      #- ./ha/data/:/config
   ha_db:
     build:
       context: ./ha_db
