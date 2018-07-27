@@ -84,15 +84,13 @@ services:
       - home-assistant-db:/var/lib/postgresql/data
       - home-assistant-db-migrations:/shell-migrations/logs/
   mqtt:
-    build:
-      context: ./mqtt
     depends_on:
       - vault
     deploy:
       mode: global
-      restart_policy:
-        condition: on-failure
-    image: althing/mqtt
+      #restart_policy:
+      #  condition: -failure
+    image: allthing/rabbitmq
     networks:
       web:
         aliases:
@@ -110,7 +108,7 @@ services:
       - source: althing_dev_ca_bundle
         target: ca
     volumes:
-        - "./mqtt/config/:/etc/rabbitmq/"
+        #- "./mqtt/config/:/etc/rabbitmq/"
         - mqtt:/var/lib/rabbitmq/
     # Hostname is needed to persist data. 
     hostname: mqtt
