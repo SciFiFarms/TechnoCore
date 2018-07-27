@@ -59,39 +59,30 @@ services:
     #volumes:
       #- ./ha/data/:/config
   ha_db:
-    build:
-      context: ./ha_db
-      args: 
-        - userid=${UID}
-        - username=postgres
     depends_on:
       - vault
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
-    environment:
-      - POSTGRES_DB=homeassistant
-      - SSL_CERT_FILE=/run/secrets/ha_db_cert
-      - SSL_KEY_FILE=/run/secrets/ha_db_key
-      - SSL_CA_FILE=/run/secrets/ca
-    image: althing/ha_db
+        max_attempts: 20
+    image: allthing/home-assistant-db
     networks:
       - web
     secrets:
       - source: althing_dev_ha_db_cert_bundle
         target: ha_db_cert
-        uid: ${UID}
+        uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
       - source: althing_dev_ha_db_key
         target: ha_db_key
-        uid: ${UID}
+        uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
       - source: althing_dev_ca
         target: ca
-    user: ${UID}
+    user: postgres 
     volumes:
-      - ha_db:/var/lib/postgresql/data
+      - home-assistant-db:/var/lib/postgresql/data
+      - home-assistant-db-migrations:/shell-migrations/logs/
   mqtt:
     build:
       context: ./mqtt
@@ -282,7 +273,8 @@ secrets:
   althing_dev_docs_key:
     external: true
 volumes:
-  ha_db:
+  home-assistant-db:
+  home-assistant-db-migrations:
   mqtt:
   vault:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
