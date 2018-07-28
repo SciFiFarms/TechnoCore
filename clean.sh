@@ -14,7 +14,9 @@ remove_volume() {
             response=$(docker volume rm $1)
         fi
     done
+    echo "Removed volume $1."
 }
 
 remove_volume althing_dev_home-assistant-db 
 remove_volume althing_dev_home-assistant-db-migrations
+remove_volume althing_dev_node-red

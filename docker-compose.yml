@@ -113,8 +113,6 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
-    build:
-      context: ./nr
     depends_on:
       - ha
       - mqtt
@@ -123,7 +121,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: althing/node-red
+    image: allthing/node-red
     networks:
       - web
     ports:
@@ -154,7 +152,7 @@ services:
         mode: 0600
     user: "0" #${UID}
     volumes:
-      - "./nr/data:/data"
+      - node-red:/data
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
@@ -274,5 +272,6 @@ volumes:
   home-assistant-db:
   home-assistant-db-migrations:
   mqtt:
+  node-red:
   vault:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
