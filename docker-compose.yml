@@ -19,7 +19,7 @@ services:
         target: ca
     volumes:
       # TODO: Make this built into the image when built. 
-      - "../AllThing/docs:/src"
+      - "../docs:/src"
   ha:
     #build:
     #  context: ./ha
@@ -56,7 +56,9 @@ services:
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
-    #volumes:
+    volumes:
+      # TODO: This is the location for where Home Assistant connects to the MQTT network. Make it less brittle.
+      - ../home-assistant/server.py:/usr/src/app/homeassistant/components/mqtt/server.py
       #- ./ha/data/:/config
   ha_db:
     depends_on:
