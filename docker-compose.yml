@@ -1,44 +1,5 @@
 version: '3.5'
 services:
-  vault:
-    build:
-      context: ./vault
-    deploy:
-      mode: global
-      restart_policy:
-        condition: on-failure
-    environment:
-      - SKIP_SETCAP=true
-      - VAULT_ADDR=https://vault.local:8200
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- CONTAINER_HOSTNAME=vault
-      - VAULT_CACERT=/run/secrets/ca
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- VAULT_CA=true
-    image: althing/vault
-    networks:
-      web:
-        aliases:
-          - vault.local
-          - vault.scifi.farm
-    secrets:
-      - source: althing_dev_vault_key
-        target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert_bundle
-        target: /run/secrets/vault_cert
-      - source: althing_dev_ca_bundle
-        target: /run/secrets/ca
-      - source: althing_dev_ca_bundle
-        target: /etc/ssl/certs/ca-certificates.crt
-      - source: althing_dev_vault_unseal
-        target: /run/secrets/vault_unseal
-      - source: althing_dev_vault_token
-        target: /run/secrets/vault_token
-    ports:
-      - "8200:8200"
-    volumes:
-      - ./vault/data/config.hcl:/vault/config/config.hcl
-      - vault:/vault/file
   docs:
     command: jekyll serve
     deploy:
@@ -58,13 +19,13 @@ services:
         target: ca
     volumes:
       # TODO: Make this built into the image when built. 
-      - "../AllThing/docs:/src"
+      - "../docs:/src"
   ha:
-    build:
-      context: ./ha
-      args:
-        - userid=${UID}
-        - username=docker
+    #build:
+    #  context: ./ha
+    #  args:
+    #    - userid=${UID}
+    #    - username=docker
     depends_on:
       - vault
       - mqtt
@@ -73,7 +34,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: althing/ha
+    image: allthing/home-assistant
     networks:
       - web
     ports:
@@ -93,53 +54,45 @@ services:
         target: mqtt_username
       - source: althing_dev_home_assistant_mqtt_password
         target: mqtt_password
-    user: ${UID}
+    # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
+    #user: ${UID}
     volumes:
-      - ./ha/data/:/config
+      # TODO: This is the location for where Home Assistant connects to the MQTT network. Make it less brittle.
+      - ../home-assistant/server.py:/usr/src/app/homeassistant/components/mqtt/server.py
+      #- ./ha/data/:/config
   ha_db:
-    build:
-      context: ./ha_db
-      args: 
-        - userid=${UID}
-        - username=postgres
     depends_on:
       - vault
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
-    environment:
-      - POSTGRES_DB=homeassistant
-      - SSL_CERT_FILE=/run/secrets/ha_db_cert
-      - SSL_KEY_FILE=/run/secrets/ha_db_key
-      - SSL_CA_FILE=/run/secrets/ca
-    image: althing/ha_db
+        max_attempts: 20
+    image: allthing/home-assistant-db
     networks:
       - web
     secrets:
       - source: althing_dev_ha_db_cert_bundle
         target: ha_db_cert
-        uid: ${UID}
+        uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
       - source: althing_dev_ha_db_key
         target: ha_db_key
-        uid: ${UID}
+        uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
       - source: althing_dev_ca
         target: ca
-    user: ${UID}
+    user: postgres 
     volumes:
-      - ha_db:/var/lib/postgresql/data
+      - home-assistant-db:/var/lib/postgresql/data
+      - home-assistant-db-migrations:/shell-migrations/logs/
   mqtt:
-    build:
-      context: ./mqtt
     depends_on:
       - vault
     deploy:
       mode: global
-      restart_policy:
-        condition: on-failure
-    image: althing/mqtt
+      #restart_policy:
+      #  condition: -failure
+    image: allthing/rabbitmq
     networks:
       web:
         aliases:
@@ -157,13 +110,11 @@ services:
       - source: althing_dev_ca_bundle
         target: ca
     volumes:
-        - "./mqtt/config/:/etc/rabbitmq/"
+        #- "./mqtt/config/:/etc/rabbitmq/"
         - mqtt:/var/lib/rabbitmq/
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
-    build:
-      context: ./nr
     depends_on:
       - ha
       - mqtt
@@ -172,7 +123,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: althing/node-red
+    image: allthing/node-red
     networks:
       - web
     ports:
@@ -203,7 +154,7 @@ services:
         mode: 0600
     user: "0" #${UID}
     volumes:
-      - "./nr/data:/data"
+      - node-red:/data
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
@@ -231,6 +182,43 @@ services:
     volumes:
       #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
+  vault:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+    environment:
+      - SKIP_SETCAP=true
+      - VAULT_ADDR=https://vault.local:8200
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- CONTAINER_HOSTNAME=vault
+      - VAULT_CACERT=/run/secrets/ca
+      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
+      #- VAULT_CA=true
+    image: allthing/vault
+    networks:
+      web:
+        aliases:
+          - vault.local
+          - vault.scifi.farm
+    secrets:
+      - source: althing_dev_vault_key
+        target: /run/secrets/vault_key
+      - source: althing_dev_vault_cert_bundle
+        target: /run/secrets/vault_cert
+      - source: althing_dev_ca_bundle
+        target: /run/secrets/ca
+      - source: althing_dev_ca_bundle
+        target: /etc/ssl/certs/ca-certificates.crt
+      - source: althing_dev_vault_unseal
+        target: /run/secrets/vault_unseal
+      - source: althing_dev_vault_token
+        target: /run/secrets/vault_token
+    ports:
+      - "8200:8200"
+    volumes:
+      #- ./vault/data/config.hcl:/vault/config/config.hcl
+      - vault:/vault/file
 
 networks:
   web:
@@ -283,7 +271,9 @@ secrets:
   althing_dev_docs_key:
     external: true
 volumes:
-  ha_db:
+  home-assistant-db:
+  home-assistant-db-migrations:
   mqtt:
+  node-red:
   vault:
 # Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html

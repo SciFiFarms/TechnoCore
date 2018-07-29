@@ -28,6 +28,7 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio)
 if [ $reinstall -eq 1 ] ; then
     docker stack rm $stackname
     sleep 10
+    source clean.sh
 fi
 
 # Load the installer functions. 
@@ -39,8 +40,6 @@ done
 add_althing_services_to_hosts_file
 export_UID_to_env
 
-# Build docker images
-docker-compose build
 network_name="${stackname}"
 docker network create --attachable $network_name
 
@@ -64,13 +63,6 @@ else
     create_vault_and_mqtt_user platformio
     platformio_token=$(create_token platformio)
     create_secret platformio_token  $platformio_token
-fi
-
-if volume_exists ha_db && [ $reinstall -ne 1 ] ; then
-    echo "Home Assistant database Initialized";
-else
-    create_volume ha_db
-    initialize_ha_db
 fi
 
 create_TLS_certs
