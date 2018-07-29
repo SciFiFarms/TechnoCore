@@ -40,8 +40,6 @@ done
 add_althing_services_to_hosts_file
 export_UID_to_env
 
-# Build docker images
-docker-compose build
 network_name="${stackname}"
 docker network create --attachable $network_name
 
