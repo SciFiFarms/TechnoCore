@@ -21,11 +21,8 @@ services:
       # TODO: Make this built into the image when built. 
       - "../docs:/src"
   ha:
-    #build:
-    #  context: ./ha
-    #  args:
-    #    - userid=${UID}
-    #    - username=docker
+    # This is useful to skip the timeout.
+    #entrypoint: "python -m homeassistant --config /config"
     depends_on:
       - vault
       - mqtt
@@ -60,10 +57,9 @@ services:
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
-    volumes:
-      # TODO: This is the location for where Home Assistant connects to the MQTT network. Make it less brittle.
-      - ../home-assistant/server.py:/usr/src/app/homeassistant/components/mqtt/server.py
-      #- ./ha/data/:/config
+    #volumes:
+      # This allows for realtime editing of Home Assistant configs and scripts. 
+      #- ../home-assistant/config/:/config
   ha_db:
     depends_on:
       - vault
