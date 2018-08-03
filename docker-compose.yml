@@ -36,7 +36,11 @@ services:
         condition: on-failure
     image: allthing/home-assistant
     networks:
-      - web
+      web:
+        # This was nessesary in order to get Node-RED to connect with Home Assistant.
+        aliases:
+          - ha.local
+          - ha.scifi.farm
     ports:
       - "8123:8123"
     secrets:
@@ -115,6 +119,9 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nr:
+    environment:
+      # Needed to be able to connect with Home Assistant
+      - NODE_EXTRA_CA_CERTS=/run/secrets/ca
     depends_on:
       - ha
       - mqtt
