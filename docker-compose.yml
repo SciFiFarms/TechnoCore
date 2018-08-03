@@ -85,6 +85,15 @@ services:
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
       - home-assistant-db-migrations:/shell-migrations/logs/
+  # I may use this at some point, but I'm going to try using Home Assistant first.
+  #homie-ota:
+  #  deploy:
+  #    mode: global
+  #  image: allthing/homie-ota
+  #  #volumes:
+  #    #- /home/pirate/firmwares:/app/firmwares
+  #  ports:
+  #    - "9080:9080"
   mqtt:
     depends_on:
       - vault
