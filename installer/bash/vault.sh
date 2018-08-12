@@ -1,20 +1,3 @@
-vaultConfig='
-    {
-        "disable_mlock": 1,
-        "storage": {
-            "file": {
-                "path": "/vault/file"
-            }
-        },
-        "listener": {
-            "tcp": {
-                "address": "0.0.0.0:8200",
-                "tls_disable": 1
-            }
-        }
-    }
-'
-
 vault_i() {
     docker exec -i $containerId vault "$@"
 }
@@ -52,7 +35,7 @@ create_TLS_certs(){
 initialize_vault(){
     echo "Initializing Vault"
     # I have to pass in a custom config to start vault without TLS.
-    containerId=$(docker run -d -p 8200:8200 --name vault --network $network_name -e "VAULT_LOCAL_CONFIG=$vaultConfig" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file althing/vault)
+    containerId=$(docker run -d -p 8200:8200 --name vault --network $network_name -e "VAULT_CONFIG_DIR=/vault/setup" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stackname}_vault:/vault/file allthing/vault)
     sleep 1
     initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1)
     unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs)
