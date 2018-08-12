@@ -6,7 +6,7 @@ services:
         mode: global
         restart_policy:
           condition: on-failure
-    image: allthing/docs
+    image: allthing/docs:${TAG}
     ports:
       - "4000:4000"
       - 35729:35729
@@ -31,7 +31,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: allthing/home-assistant
+    image: allthing/home-assistant:${TAG}
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
@@ -67,7 +67,7 @@ services:
       mode: global
       restart_policy:
         max_attempts: 20
-    image: allthing/home-assistant-db
+    image: allthing/home-assistant-db:${TAG}
     networks:
       - web
     secrets:
@@ -101,7 +101,7 @@ services:
       mode: global
       #restart_policy:
       #  condition: -failure
-    image: allthing/rabbitmq
+    image: allthing/rabbitmq:${TAG}
     networks:
       web:
         aliases:
@@ -135,7 +135,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: allthing/node-red
+    image: allthing/node-red:${TAG}
     networks:
       - web
     ports:
@@ -171,7 +171,7 @@ services:
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
   platformio:
-    command: ["sh","-c","docker run --rm --name pio -t --network althing_dev_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 allthing/platformio"]
+    command: ["sh","-c","docker run --rm --name pio -t --network althing_dev_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 allthing/platformio:${TAG}"]
     deploy:
         mode: global
         restart_policy:
@@ -207,7 +207,7 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: allthing/vault
+    image: allthing/vault:${TAG}
     networks:
       web:
         aliases:

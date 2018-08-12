@@ -70,7 +70,7 @@ create_TLS_certs
 remove_temp_containers
 docker network rm $network_name
 
-docker stack deploy --compose-file docker-compose.yml $stackname
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stackname
 
 # TODO: Make this check every # of seconds until it works. 
 sleep 30
