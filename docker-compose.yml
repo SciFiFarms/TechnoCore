@@ -98,11 +98,47 @@ services:
   #    #- /home/pirate/firmwares:/app/firmwares
   #  ports:
   #    - "9080:9080"
+  mqtt2:
+    depends_on:
+      - vault
+      - portainer
+    deploy:
+      #mode: global
+      replicas: 1
+      #restart_policy:
+      #  condition: -failure
+    image: allthing/vernemq:${TAG}
+    #networks:
+    #  web:
+    #    aliases:
+    #      - mqtt.local
+    #      - mqtt.scifi.farm
+    ports:
+    #  - "8883:8883"
+      - "1883:1883"
+    secrets:
+      - source: althing_dev_mqtt_mqtt_username
+        target: mqtt_username
+      - source: althing_dev_mqtt_mqtt_password
+        target: mqtt_password
+      - source: althing_dev_mqtt_cert_bundle
+        target: mqtt_cert
+      - source: althing_dev_mqtt_key
+        target: mqtt_key
+      - source: althing_dev_ca_bundle
+        target: ca
+    volumes:
+        #- "./mqtt/config/:/etc/rabbitmq/"
+        - mqtt2:/etc/vernemq/
+    # Hostname is needed to persist data. 
+    hostname: mqtt
+    #user: vernemq
   mqtt:
     depends_on:
       - vault
     deploy:
-      mode: global
+      #mode: global
+      replicas: 1
       #restart_policy:
       #  condition: -failure
     image: allthing/rabbitmq:${TAG}
@@ -114,7 +150,7 @@ services:
     ports:
       - "15672:15672"
       - "8883:8883"
-      - "1883:1883"
+    #  - "1883:1883"
     secrets:
       - source: althing_dev_mqtt_cert_bundle
         target: mqtt_cert
@@ -199,12 +235,13 @@ services:
       #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
   portainer:
+    command: -H unix:///var/run/docker.sock
     deploy:
       #mode: global
       replicas: 1
       restart_policy:
         condition: any
-    image: portainer/portainer
+    image: allthing/portainer:${TAG}
     networks:
       - web
     ports:
@@ -221,6 +258,7 @@ services:
       - source: althing_dev_portainer_mqtt_password
         target: mqtt_password
     volumes:
+      - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
       - /var/run/docker.sock:/var/run/docker.sock 
       - portainer:/data
   vault:
@@ -285,6 +323,10 @@ secrets:
     external: true
   althing_dev_mqtt_key:
     external: true
+  althing_dev_mqtt_mqtt_username:
+    external: true
+  althing_dev_mqtt_mqtt_password:
+    external: true
   althing_dev_nr_cert_bundle:
     external: true
   althing_dev_nr_key:
@@ -326,6 +368,7 @@ volumes:
   # TODO: Implement migrations on the actual volume instead. 
   home-assistant-db-migrations:
   mqtt:
+  mqtt2:
   node-red:
   portainer:
   vault:

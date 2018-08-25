@@ -16,6 +16,9 @@ initialize_mqtt() {
     create_secret mqtt_vault_username vault
     create_secret mqtt_vault_password $mqtt_password
 
+    create_secret mqtt_mqtt_username admin
+    create_secret mqtt_mqtt_password $mqtt_password
+
     vault_i secrets enable rabbitmq
     vault_i write rabbitmq/config/connection \
         connection_uri="http://mqtt:15672" \
