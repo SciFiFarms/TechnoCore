@@ -28,9 +28,13 @@ services:
       - mqtt
       - ha_db
     deploy:
-      mode: global
+      # I'm usinsg replicas set to 1 instead of global because I can't seem to 
+      # reboot the Home Assistant service consistantly. Setting replication to 
+      # 0, then 1 seems to work though. 
+      #mode: global
+      replicas: 1
       restart_policy:
-        condition: on-failure
+        condition: any
     image: allthing/home-assistant:${TAG}
     networks:
       web:
