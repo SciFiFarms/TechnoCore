@@ -98,7 +98,7 @@ services:
   #    #- /home/pirate/firmwares:/app/firmwares
   #  ports:
   #    - "9080:9080"
-  mqtt2:
+  mqtt:
     depends_on:
       - vault
       - portainer
@@ -108,13 +108,13 @@ services:
       #restart_policy:
       #  condition: -failure
     image: allthing/vernemq:${TAG}
-    #networks:
-    #  web:
-    #    aliases:
-    #      - mqtt.local
-    #      - mqtt.scifi.farm
+    networks:
+      web:
+        aliases:
+          - mqtt.local
+          - mqtt.scifi.farm
     ports:
-    #  - "8883:8883"
+      - "8883:8883"
       - "1883:1883"
     secrets:
       - source: althing_dev_mqtt_mqtt_username
@@ -127,42 +127,20 @@ services:
         target: mqtt_key
       - source: althing_dev_ca_bundle
         target: ca
+      - source: althing_dev_mqtt_token
+        target: token
+      - source: althing_dev_portainer_mqtt_username
+        target: portainer_mqtt_username
+      - source: althing_dev_portainer_mqtt_password
+        target: portainer_mqtt_password
     volumes:
         #- "./mqtt/config/:/etc/rabbitmq/"
         - mqtt2:/etc/vernemq/
+        # Used for creating migrations.
+        #- ../vernemq/shell-migrations:/usr/share/dogfish/shell-migrations
     # Hostname is needed to persist data. 
     hostname: mqtt
     #user: vernemq
-  mqtt:
-    depends_on:
-      - vault
-    deploy:
-      #mode: global
-      replicas: 1
-      #restart_policy:
-      #  condition: -failure
-    image: allthing/rabbitmq:${TAG}
-    networks:
-      web:
-        aliases:
-          - mqtt.local
-          - mqtt.scifi.farm
-    ports:
-      - "15672:15672"
-      - "8883:8883"
-    #  - "1883:1883"
-    secrets:
-      - source: althing_dev_mqtt_cert_bundle
-        target: mqtt_cert
-      - source: althing_dev_mqtt_key
-        target: mqtt_key
-      - source: althing_dev_ca_bundle
-        target: ca
-    volumes:
-        #- "./mqtt/config/:/etc/rabbitmq/"
-        - mqtt:/var/lib/rabbitmq/
-    # Hostname is needed to persist data. 
-    hostname: mqtt
   nr:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -329,6 +307,8 @@ secrets:
   althing_dev_mqtt_mqtt_username:
     external: true
   althing_dev_mqtt_mqtt_password:
+    external: true
+  althing_dev_mqtt_token:
     external: true
   althing_dev_nr_cert_bundle:
     external: true

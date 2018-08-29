@@ -63,6 +63,7 @@ else
     create_vault_and_mqtt_user node_red
     create_vault_and_mqtt_user platformio
     create_vault_and_mqtt_user portainer
+    create_vault_and_mqtt_user mqtt
     platformio_token=$(create_token platformio)
     create_secret platformio_token  $platformio_token
     mqtt_token=$(create_token mqtt)
