@@ -235,7 +235,8 @@ services:
       #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
   portainer:
-    command: -H unix:///var/run/docker.sock
+    environment:
+      - stackname=althing_dev
     deploy:
       #mode: global
       replicas: 1
@@ -347,7 +348,7 @@ secrets:
     external: true
   althing_dev_portainer_mqtt_password:
     external: true
-  althing_dev_platformio_token:
+  althing_dev_portainer_token:
     external: true
   althing_dev_node_red_mqtt_username:
     external: true
