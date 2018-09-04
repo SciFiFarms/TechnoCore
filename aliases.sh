@@ -7,4 +7,4 @@ alias run_ha='docker exec -it $(docker service ps -f desired-state=running --no-
 alias run_platformio='docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_platformio | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_platformio | grep althing_dev | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_docs='docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_docs | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_docs | grep althing_dev | tr -s " " | cut -d " " -f 1) /bin/sh'
 
-alias deploy='env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml'
+alias deploy='env $(cat ../AllThing/.env | grep ^[A-Z] | xargs) docker stack deploy --compose-file ../AllThing/docker-compose.yml'
