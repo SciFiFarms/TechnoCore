@@ -248,7 +248,7 @@ services:
       - "9000:9000"
     secrets:
       - source: althing_dev_portainer_cert_bundle
-        target: _cert
+        target: cert
       - source: althing_dev_portainer_key
         target: key
       - source: althing_dev_ca_bundle
@@ -257,6 +257,8 @@ services:
         target: mqtt_username
       - source: althing_dev_portainer_mqtt_password
         target: mqtt_password
+      - source: althing_dev_portainer_token
+        target: token
     volumes:
       - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
       - /var/run/docker.sock:/var/run/docker.sock 

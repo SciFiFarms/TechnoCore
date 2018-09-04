@@ -65,6 +65,10 @@ else
     create_vault_and_mqtt_user portainer
     platformio_token=$(create_token platformio)
     create_secret platformio_token  $platformio_token
+    mqtt_token=$(create_token mqtt)
+    create_secret mqtt_token  $mqtt_token
+    portainer_token=$(create_token portainer)
+    create_secret portainer_token  $portainer_token
 fi
 
 create_TLS_certs
