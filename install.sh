@@ -24,10 +24,11 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio)
 #docker swarm init
 #docker swarm join localhost
 
-# TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
-    docker stack rm $stackname
+    if docker stack rm $stackname ; then
+        echo "$stackname being removed. Sleeping."
     sleep 10
+    fi
     source clean.sh
 fi
 
