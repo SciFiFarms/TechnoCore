@@ -38,7 +38,6 @@ for file in ./installer/bash/*; do
 done
 
 add_althing_services_to_hosts_file
-export_UID_to_env
 
 network_name="${stackname}"
 docker network create --attachable $network_name

@@ -11,17 +11,6 @@ add_althing_services_to_hosts_file(){
     done
 }
 
-export_UID_to_env() {
-    # Make profile.d dir first
-    mkdir -p /etc/profile.d
-
-    # Put export uid commands in profiles.d
-    if [ ! -f /etc/profile.d/docker-uid.sh ]; then
-        echo "export UID" >> /etc/profile.d/docker-uid.sh
-        chmod +x /etc/profile.d/docker-uid.sh
-        export UID
-    fi
-}
 
 add_CA_to_firefox(){
     # Install CA cert into firefox. Eventually, put into other browsers too. 
