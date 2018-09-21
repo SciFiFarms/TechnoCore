@@ -79,21 +79,6 @@ docker network rm $network_name
 
 env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stackname
 
-# TODO: Make this check every # of seconds until it works. 
-sleep 30
-docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault login $rootToken
-
-# TODO: This should actually verify the connection. It seems like the CA cert might not be getting passed into rabbithole. It's also possible that the MQTT service wasn't up yet.
-# This page had the code that showed what was going on for varification... Just creating a connection: https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/path_config_connection.go
-# https://github.com/michaelklishin/rabbit-hole
-# https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/secret_creds.go
-# https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/path_role_create.go
-docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault write rabbitmq/config/connection \
-    connection_uri="https://mqtt:15672" \
-    username="vault" \
-    password="$mqtt_password" \
-    verify_connection="false" # Description: If set, connection_uri is verified by actually connecting to the RabbitMQ management API. This simply allows us to set the connection without the server having to be up. 
-
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
 # docker service update --publish-rm 8200 althing_vault

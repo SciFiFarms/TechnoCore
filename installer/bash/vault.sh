@@ -76,16 +76,16 @@ configure_CAs(){
 }
 
 # $1: username/file prefix.
-create_vault_and_mqtt_user(){
+create_vault_user(){
     vault_i policy write $1 - < vault/${1}_policy.hcl # $mqtt 
     # TODO: Make the writes and reads restricted to what is relevant. 
-    vault_i write rabbitmq/roles/$1 \
-        vhosts="$(cat vault/${1}_permissions.json)"
-        #vhosts='{"/":{"write": ".*", "read": ".*"}}'
-    local token=$(vault_i token create -policy=$1 -ttl="720h" -display-name=$1 -field="token")
-    vault_i login $token
-    local creds=$(vault_i read -format=json rabbitmq/creds/$1)
-    vault_i login $rootToken
-    create_secret ${1}_mqtt_username "$(extract_from_json username "$creds")"
-    create_secret ${1}_mqtt_password "$(echo -n "$(extract_from_json password "$creds")")"
+    #vault_i write rabbitmq/roles/$1 \
+    #    vhosts="$(cat vault/${1}_permissions.json)"
+    #    #vhosts='{"/":{"write": ".*", "read": ".*"}}'create_vault_and_mqtt_user
+    #local token=$(vault_i token create -policy=$1 -ttl="720h" -display-name=$1 -field="token")
+    #vault_i login $token
+    #local creds=$(vault_i read -format=json rabbitmq/creds/$1)
+    #vault_i login $rootToken
+    #create_secret ${1}_mqtt_username "$(extract_from_json username "$creds")"
+    #create_secret ${1}_mqtt_password "$(echo -n "$(extract_from_json password "$creds")")"
 }
