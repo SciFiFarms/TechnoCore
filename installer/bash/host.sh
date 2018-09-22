@@ -90,3 +90,23 @@ create_secret(){
 extract_from_json(){
     grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
 }
+
+# $1: The username to create
+# This is tightly coupled with the migrations in the portainer image. If you 
+# want to create more mqtt users, add them as migrations in the portainer image. 
+create_mqtt_user(){
+    local response
+    until response=$(vault_i write -force -format=json /sys/tools/random/32)
+    do
+        echo "Couldn't reach Vault. Will retry after sleep."
+        sleep 5
+    done
+    echo "Response: $response"
+    local password=$(extract_from_json random_bytes "$response")
+    echo "Password: $password"
+
+
+    create_secret ${1}_mqtt_username $1
+    create_secret ${1}_mqtt_password $password
+    echo "Created MQTT user: $1"
+}

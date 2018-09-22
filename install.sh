@@ -28,7 +28,7 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio $portainer)
 if [ $reinstall -eq 1 ] ; then
     if docker stack rm $stackname ; then
         echo "$stackname being removed. Sleeping."
-    sleep 10
+        sleep 10
     fi
     source clean.sh
 fi
@@ -44,33 +44,20 @@ add_althing_services_to_hosts_file
 network_name="${stackname}"
 docker network create --attachable $network_name
 
-if volume_exists vault && [ $reinstall -ne 1 ] ; then
-    echo "Vault Initialized";
-else
-    create_volume vault
-    initialize_vault
-    configure_CAs
-    # In ubuntu, that needs to install libnss3-tools, which provides certutil
-    add_CA_to_firefox
-fi
+# Setup certificate Authorities.
+create_volume vault
+initialize_vault
+configure_CAs
+# In ubuntu, that needs to install libnss3-tools, which provides certutil
+add_CA_to_firefox
 
-if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
-    echo "MQTT Initialized";
-else
-    create_volume mqtt
-    initialize_mqtt
-    create_vault_and_mqtt_user home_assistant
-    create_vault_and_mqtt_user node_red
-    create_vault_and_mqtt_user platformio
-    create_vault_and_mqtt_user portainer
-    create_vault_and_mqtt_user mqtt
-    platformio_token=$(create_token platformio)
-    create_secret platformio_token  $platformio_token
-    mqtt_token=$(create_token mqtt)
-    create_secret mqtt_token  $mqtt_token
-    portainer_token=$(create_token portainer)
-    create_secret portainer_token  $portainer_token
-fi
+create_mqtt_user mqtt
+create_mqtt_user portainer
+
+create_vault_user_and_token platformio
+create_vault_user_and_token portainer
+create_vault_user_and_token mqtt
+
 
 create_TLS_certs
 
