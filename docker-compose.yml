@@ -351,7 +351,6 @@ volumes:
   # TODO: Implement migrations on the actual volume instead. 
   home-assistant-db-migrations:
   mqtt:
-  mqtt2:
   node-red:
   portainer:
   vault:
