@@ -13,8 +13,12 @@ initialize_mqtt() {
     mqtt_i rabbitmqctl add_user vault $mqtt_password
     mqtt_i rabbitmqctl set_user_tags vault administrator
     mqtt_i rabbitmqctl set_permissions vault ".*" ".*" ".*"
+    # TODO: I think I can remove these.
     create_secret mqtt_vault_username vault
     create_secret mqtt_vault_password $mqtt_password
+
+    create_secret portainer_mqtt_username portainer
+    create_secret portainer_mqtt_password $mqtt_password
 
     vault_i secrets enable rabbitmq
     vault_i write rabbitmq/config/connection \

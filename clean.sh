@@ -22,3 +22,5 @@ remove_volume() {
 remove_volume althing_dev_home-assistant-db 
 remove_volume althing_dev_home-assistant-db-migrations
 remove_volume althing_dev_node-red
+remove_volume althing_dev_portainer
+remove_volume althing_dev_mqtt2

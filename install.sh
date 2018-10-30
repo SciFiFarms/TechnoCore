@@ -16,7 +16,8 @@ ha_db=ha_db
 nr=nr
 platformio=platformio
 docs=docs
-declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio)
+portainer=portainer
+declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio $portainer)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
@@ -61,8 +62,13 @@ else
     create_vault_and_mqtt_user home_assistant
     create_vault_and_mqtt_user node_red
     create_vault_and_mqtt_user platformio
+    create_vault_and_mqtt_user portainer
     platformio_token=$(create_token platformio)
     create_secret platformio_token  $platformio_token
+    mqtt_token=$(create_token mqtt)
+    create_secret mqtt_token  $mqtt_token
+    portainer_token=$(create_token portainer)
+    create_secret portainer_token  $portainer_token
 fi
 
 create_TLS_certs

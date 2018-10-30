@@ -77,6 +77,7 @@ create_volume(){
 
 # $1: The name of the secret.
 # $2: The value of the secret.
+# TODO: This is duplicated in portainer's dogfish instance. 
 create_secret(){
     # TODO: Only remove the secret if it exists.
     docker secret rm "${stackname}_$1"
@@ -85,6 +86,7 @@ create_secret(){
 
 # $1: The field to extract. 
 # $2: The JSON string.
+# TODO: This is duplicated in portainer's dogfish instance. 
 extract_from_json(){
     grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
 }
