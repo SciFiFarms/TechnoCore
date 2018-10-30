@@ -24,10 +24,11 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio)
 #docker swarm init
 #docker swarm join localhost
 
-# TODO: Should check that the stack is up before bringing it down.
 if [ $reinstall -eq 1 ] ; then
-    docker stack rm $stackname
+    if docker stack rm $stackname ; then
+        echo "$stackname being removed. Sleeping."
     sleep 10
+    fi
     source clean.sh
 fi
 
@@ -38,7 +39,6 @@ for file in ./installer/bash/*; do
 done
 
 add_althing_services_to_hosts_file
-export_UID_to_env
 
 network_name="${stackname}"
 docker network create --attachable $network_name
@@ -70,7 +70,7 @@ create_TLS_certs
 remove_temp_containers
 docker network rm $network_name
 
-docker stack deploy --compose-file docker-compose.yml $stackname
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stackname
 
 # TODO: Make this check every # of seconds until it works. 
 sleep 30

@@ -11,17 +11,6 @@ add_althing_services_to_hosts_file(){
     done
 }
 
-export_UID_to_env() {
-    # Make profile.d dir first
-    mkdir -p /etc/profile.d
-
-    # Put export uid commands in profiles.d
-    if [ ! -f /etc/profile.d/docker-uid.sh ]; then
-        echo "export UID" >> /etc/profile.d/docker-uid.sh
-        chmod +x /etc/profile.d/docker-uid.sh
-        export UID
-    fi
-}
 
 add_CA_to_firefox(){
     # Install CA cert into firefox. Eventually, put into other browsers too. 
@@ -61,12 +50,17 @@ volume_exists(){
     fi
 }
 
-# Waits for the container to finish beinsg removed and then removes the volume.
+# Waits for the container to finish being removed and then removes the volume.
 remove_volume(){
     echo "Removing $1 volume"
+    local response
     for second in `seq 1 15`; do
-        docker volume rm $1
+        response=$(docker volume rm $1 2>&1 )
         if [ $? -eq 0 ] ; then
+            break
+        fi
+        if grep -q 'No such volume' <<< $response; then
+            echo "Volume $1 doesn't exist, so it won't be removed."
             break
         fi
         sleep 1
