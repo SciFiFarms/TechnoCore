@@ -23,4 +23,7 @@ remove_volume althing_dev_home-assistant-db
 remove_volume althing_dev_home-assistant-db-migrations
 remove_volume althing_dev_node-red
 remove_volume althing_dev_portainer
-remove_volume althing_dev_mqtt2
+remove_volume althing_dev_mqtt
+remove_volume althing_dev_vault
+
+docker rm -f pio

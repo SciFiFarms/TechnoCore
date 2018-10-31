@@ -28,7 +28,7 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio $portainer)
 if [ $reinstall -eq 1 ] ; then
     if docker stack rm $stackname ; then
         echo "$stackname being removed. Sleeping."
-    sleep 10
+        sleep 10
     fi
     source clean.sh
 fi
@@ -44,32 +44,20 @@ add_althing_services_to_hosts_file
 network_name="${stackname}"
 docker network create --attachable $network_name
 
-if volume_exists vault && [ $reinstall -ne 1 ] ; then
-    echo "Vault Initialized";
-else
-    create_volume vault
-    initialize_vault
-    configure_CAs
-    # In ubuntu, that needs to install libnss3-tools, which provides certutil
-    add_CA_to_firefox
-fi
+# Setup certificate Authorities.
+create_volume vault
+initialize_vault
+configure_CAs
+# In ubuntu, that needs to install libnss3-tools, which provides certutil
+add_CA_to_firefox
 
-if volume_exists mqtt && [ $reinstall -ne 1 ] ; then
-    echo "MQTT Initialized";
-else
-    create_volume mqtt
-    initialize_mqtt
-    create_vault_and_mqtt_user home_assistant
-    create_vault_and_mqtt_user node_red
-    create_vault_and_mqtt_user platformio
-    create_vault_and_mqtt_user portainer
-    platformio_token=$(create_token platformio)
-    create_secret platformio_token  $platformio_token
-    mqtt_token=$(create_token mqtt)
-    create_secret mqtt_token  $mqtt_token
-    portainer_token=$(create_token portainer)
-    create_secret portainer_token  $portainer_token
-fi
+create_mqtt_user mqtt
+create_mqtt_user portainer
+
+create_vault_user_and_token platformio
+create_vault_user_and_token portainer
+create_vault_user_and_token mqtt
+
 
 create_TLS_certs
 
@@ -77,21 +65,6 @@ remove_temp_containers
 docker network rm $network_name
 
 env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stackname
-
-# TODO: Make this check every # of seconds until it works. 
-sleep 30
-docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault login $rootToken
-
-# TODO: This should actually verify the connection. It seems like the CA cert might not be getting passed into rabbithole. It's also possible that the MQTT service wasn't up yet.
-# This page had the code that showed what was going on for varification... Just creating a connection: https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/path_config_connection.go
-# https://github.com/michaelklishin/rabbit-hole
-# https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/secret_creds.go
-# https://github.com/hashicorp/vault/blob/e2bb2ec3b93a242a167f763684f93df867bb253d/builtin/logical/rabbitmq/path_role_create.go
-docker exec -it $(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc althing_dev_vault | grep althing_dev | tr -s " " | cut -d " " -f 1) vault write rabbitmq/config/connection \
-    connection_uri="https://mqtt:15672" \
-    username="vault" \
-    password="$mqtt_password" \
-    verify_connection="false" # Description: If set, connection_uri is verified by actually connecting to the RabbitMQ management API. This simply allows us to set the connection without the server having to be up. 
 
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
