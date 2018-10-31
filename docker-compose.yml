@@ -6,7 +6,7 @@ services:
         mode: global
         restart_policy:
           condition: on-failure
-    image: allthing/docs:${TAG}
+    image: ${image_provider}/docs:${TAG}
     ports:
       - "4000:4000"
       - 35729:35729
@@ -35,7 +35,7 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-    image: allthing/home-assistant:${TAG}
+    image: ${image_provider}/home-assistant:${TAG}
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
@@ -71,7 +71,7 @@ services:
       mode: global
       restart_policy:
         max_attempts: 20
-    image: allthing/home-assistant-db:${TAG}
+    image: ${image_provider}/home-assistant-db:${TAG}
     networks:
       - web
     secrets:
@@ -107,7 +107,7 @@ services:
       replicas: 1
       #restart_policy:
       #  condition: -failure
-    image: allthing/vernemq:${TAG}
+    image: ${image_provider}/vernemq:${TAG}
     networks:
       web:
         aliases:
@@ -153,7 +153,7 @@ services:
       mode: global
       restart_policy:
         condition: on-failure
-    image: allthing/node-red:${TAG}
+    image: ${image_provider}/node-red:${TAG}
     networks:
       - web
     ports:
@@ -212,7 +212,7 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-    image: allthing/portainer:${TAG}
+    image: ${image_provider}/portainer:${TAG}
     networks:
       - web
     ports:
@@ -247,7 +247,7 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: allthing/vault:${TAG}
+    image: ${image_provider}/vault:${TAG}
     networks:
       web:
         aliases:
