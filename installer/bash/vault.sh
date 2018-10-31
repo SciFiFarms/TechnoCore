@@ -77,7 +77,7 @@ configure_CAs(){
 
 # $1: username/file prefix.
 create_vault_user_and_token(){
-    vault_i policy write $1 - < vault/${1}_policy.hcl # $mqtt 
+    vault_i policy write $1 - < installer/vault/${1}_policy.hcl # $mqtt 
     local token=$(create_token $1)
     create_secret ${1}_token  $token
 }
