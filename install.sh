@@ -39,7 +39,7 @@ for file in ./installer/bash/*; do
    source $file
 done
 
-add_althing_services_to_hosts_file
+add_services_to_hosts_file
 
 network_name="${stack_name}"
 docker network create --attachable $network_name

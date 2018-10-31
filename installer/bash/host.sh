@@ -1,7 +1,7 @@
 
 # Add domains to hosts file.
 # TODO: It would be better to accomplish this task in a way that is shared accross the network. mDNS?
-add_althing_services_to_hosts_file(){
+add_services_to_hosts_file(){
     for service in "${services[@]}"
     do
         if ! grep -q $service.$domain /etc/hosts; then
