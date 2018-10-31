@@ -12,4 +12,6 @@ alias run_platformio='docker exec -it $(docker service ps -f desired-state=runni
 alias run_portainer='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_docs='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 
-alias deploy='env $(cat ../AllThing/.env | grep ^[A-Z] | xargs) docker stack deploy --compose-file ../AllThing/docker-compose.yml'
+alias deploy='env $(cat ../.env | grep ^[A-Z] | xargs) docker stack deploy --compose-file ../docker-compose.yml'
+# TODO: Add subrepo here.
+# TODO: Add deploy here too!

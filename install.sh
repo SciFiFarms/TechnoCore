@@ -3,8 +3,8 @@
 # Test that your installing as root or sudo.
 # Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
 # Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
-# Maybe /etc/tls/althing
-stackname=althing_dev
+# Maybe /etc/tls/technocore
+stack_name=technocore
 domain=scifi.farm
 reinstall=1
 
@@ -30,7 +30,7 @@ if [ $reinstall -eq 1 ] ; then
         echo "$stack_name being removed. Sleeping."
         sleep 10
     fi
-    source clean.sh
+    source utilities/clean.sh
 fi
 
 # Load the installer functions. 
@@ -66,6 +66,6 @@ docker network rm $network_name
 
 env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stack_name
 
-# Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
+# Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/technocore.
 # Remove vault port
 # docker service update --publish-rm 8200 ${stack_name}_vault

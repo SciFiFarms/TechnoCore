@@ -19,10 +19,8 @@ services:
         target: ca
     volumes:
       # TODO: Make this built into the image when built. 
-      - "../docs:/src"
+      - "./docs:/src"
   ha:
-    # This is useful to skip the timeout.
-    #entrypoint: "python -m homeassistant --config /config"
     depends_on:
       - vault
       - mqtt
@@ -89,15 +87,6 @@ services:
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
       - home-assistant-db-migrations:/shell-migrations/logs/
-  # I may use this at some point, but I'm going to try using Home Assistant first.
-  #homie-ota:
-  #  deploy:
-  #    mode: global
-  #  image: allthing/homie-ota
-  #  #volumes:
-  #    #- /home/pirate/firmwares:/app/firmwares
-  #  ports:
-  #    - "9080:9080"
   mqtt:
     depends_on:
       - vault
@@ -164,16 +153,24 @@ services:
     secrets:
       - source: ${stack_name}_nr_cert_bundle
         target: nr_cert
+        #uid: ${UID}
+        #mode: 0600
       - source: ${stack_name}_nr_key
         target: nr_key
+        #uid: ${UID}
+        #mode: 0600
       - source: ${stack_name}_ca_bundle
         target: ca
+        #uid: ${UID}
+        #mode: 0600
       - source: ${stack_name}_node_red_mqtt_username
         target: mqtt_username
+        #uid: ${UID}
+        #mode: 0600
       - source: ${stack_name}_node_red_mqtt_password
         target: mqtt_password
-        uid: ${UID}
-        mode: 0600
+        #uid: ${UID}
+        #mode: 0600
     user: "0" #${UID}
     volumes:
       - node-red:/data
