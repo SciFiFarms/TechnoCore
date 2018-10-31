@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# TODO: I doubt this works.
-technocore_folder=$(cd $(dirname $0) && pwd/..)
-source ${technocore_folder}/.env 
+technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source ${technocore_folder}/../.env 
 
 remove_volume() {
     local response # Declare response as a local var.

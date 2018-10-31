@@ -4,8 +4,7 @@
 # Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
 # Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
 # Maybe /etc/tls/technocore
-stack_name=technocore
-domain=scifi.farm
+source .env
 reinstall=1
 
 # List of services

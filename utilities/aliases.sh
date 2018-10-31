@@ -1,6 +1,5 @@
-# TODO: I doubt this works.
-technocore_folder=$(cd $(dirname $0) && pwd/..)
-source ${technocore_folder}/.env 
+technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source ${technocore_folder}/../.env 
 
 # One liner to exec in a docker service by name instead of hash. 
 alias run_mqtt='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_mqtt | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_mqtt | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/bash'

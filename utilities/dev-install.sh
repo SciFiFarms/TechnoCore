@@ -47,7 +47,8 @@ add_repo_if_missing()
 
 add_aliases_if_missing()
 {
-    alias_path="$(pwd)/aliases.sh"
+    alias_path="$(pwd)/utilities/aliases.sh"
+    # TODO: This check always adds the path :/.
     if ! grep -Fq ~/.bashrc "$alias_path"; then
         echo "source $alias_path" >> ~/.bashrc
         echo "Added source $alias_path to ~/.bashrc"
