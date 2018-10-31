@@ -14,3 +14,15 @@ vault/data
 vault/src
 *_old
 *.backup
+
+docs
+dogfish
+ha_homie
+home-assistant
+home-assistant-db
+homie
+node-red
+platformio
+portainer
+vault
+vernemq
