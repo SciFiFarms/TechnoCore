@@ -18,10 +18,10 @@ add_CA_to_firefox(){
     for certDB in $(find  /home/*/.mozilla* -name "cert8.db")
     do
       certDir=$(dirname ${certDB});
-      echo "mozilla certificate" "install '${stackname}' in ${certDir}"
+      echo "mozilla certificate" "install '${stack_name}' in ${certDir}"
       # I found that most certutil instructions missed the importance of "sql:", probably because firefox was using the old version then. 
       # For more info, checkout: https://askubuntu.com/questions/244582/add-certificate-authorities-system-wide-on-firefox/792806#792806
-      certutil -A -n "${stackname} Root CA" -t "TCu,Cuw,Tuw" -d sql:${certDir} -i ca.pem
+      certutil -A -n "${stack_name} Root CA" -t "TCu,Cuw,Tuw" -d sql:${certDir} -i ca.pem
     done
 }
 
@@ -43,7 +43,7 @@ remove_temp_containers(){
 }
 
 volume_exists(){
-    if docker volume ls | grep -Fq ${stackname}_$1 ; then
+    if docker volume ls | grep -Fq ${stack_name}_$1 ; then
         return 0
     else
         return 1
@@ -70,9 +70,9 @@ remove_volume(){
 # $1: The name of the volume to create.
 create_volume(){
     if [ $reinstall -eq 1 ] ; then
-        remove_volume ${stackname}_$1
+        remove_volume ${stack_name}_$1
     fi
-    docker volume create ${stackname}_$1
+    docker volume create ${stack_name}_$1
 }
 
 # $1: The name of the secret.
@@ -80,8 +80,8 @@ create_volume(){
 # TODO: This is duplicated in portainer's dogfish instance. 
 create_secret(){
     # TODO: Only remove the secret if it exists.
-    docker secret rm "${stackname}_$1"
-    echo -e "$2" | docker secret create "${stackname}_$1" - 
+    docker secret rm "${stack_name}_$1"
+    echo -e "$2" | docker secret create "${stack_name}_$1" - 
 }
 
 # $1: The field to extract. 

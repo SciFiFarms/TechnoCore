@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO: I doubt this works.
+technocore_folder=$(cd $(dirname $0) && pwd/..)
+source ${technocore_folder}/.env 
+
 remove_volume() {
     local response # Declare response as a local var.
     until response=$(docker volume rm $1 2>&1)
@@ -19,11 +23,11 @@ remove_volume() {
     echo "Removed volume $1."
 }
 
-remove_volume althing_dev_home-assistant-db 
-remove_volume althing_dev_home-assistant-db-migrations
-remove_volume althing_dev_node-red
-remove_volume althing_dev_portainer
-remove_volume althing_dev_mqtt
-remove_volume althing_dev_vault
+remove_volume ${stack_name}_home-assistant-db 
+remove_volume ${stack_name}_home-assistant-db-migrations
+remove_volume ${stack_name}_node-red
+remove_volume ${stack_name}_portainer
+remove_volume ${stack_name}_mqtt
+remove_volume ${stack_name}_vault
 
 docker rm -f pio

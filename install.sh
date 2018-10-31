@@ -26,8 +26,8 @@ declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio $portainer)
 #docker swarm join localhost
 
 if [ $reinstall -eq 1 ] ; then
-    if docker stack rm $stackname ; then
-        echo "$stackname being removed. Sleeping."
+    if docker stack rm $stack_name ; then
+        echo "$stack_name being removed. Sleeping."
         sleep 10
     fi
     source clean.sh
@@ -41,7 +41,7 @@ done
 
 add_althing_services_to_hosts_file
 
-network_name="${stackname}"
+network_name="${stack_name}"
 docker network create --attachable $network_name
 
 # Setup certificate Authorities.
@@ -64,8 +64,8 @@ create_TLS_certs
 remove_temp_containers
 docker network rm $network_name
 
-env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stackname
+env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml $stack_name
 
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/althing.
 # Remove vault port
-# docker service update --publish-rm 8200 althing_vault
+# docker service update --publish-rm 8200 ${stack_name}_vault

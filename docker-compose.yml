@@ -11,11 +11,11 @@ services:
       - "4000:4000"
       - 35729:35729
     secrets:
-      - source: althing_dev_docs_cert_bundle
+      - source: ${stack_name}_docs_cert_bundle
         target: wiki_cert
-      - source: althing_dev_docs_key
+      - source: ${stack_name}_docs_key
         target: wiki_key
-      - source: althing_dev_ca
+      - source: ${stack_name}_ca
         target: ca
     volumes:
       # TODO: Make this built into the image when built. 
@@ -45,19 +45,19 @@ services:
     ports:
       - "8123:8123"
     secrets:
-      - source: althing_dev_ha_cert_bundle
+      - source: ${stack_name}_ha_cert_bundle
         target: ha_cert
-        uid: ${UID}
-        mode: 0440
-      - source: althing_dev_ha_key
+        #uid: ${UID}
+        #mode: 0440
+      - source: ${stack_name}_ha_key
         target: ha_key
-        uid: ${UID}
-        mode: 0400
-      - source: althing_dev_ca_bundle
+        #uid: ${UID}
+        #mode: 0400
+      - source: ${stack_name}_ca_bundle
         target: ca
-      - source: althing_dev_home_assistant_mqtt_username
+      - source: ${stack_name}_home_assistant_mqtt_username
         target: mqtt_username
-      - source: althing_dev_home_assistant_mqtt_password
+      - source: ${stack_name}_home_assistant_mqtt_password
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
@@ -75,15 +75,15 @@ services:
     networks:
       - web
     secrets:
-      - source: althing_dev_ha_db_cert_bundle
+      - source: ${stack_name}_ha_db_cert_bundle
         target: ha_db_cert
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: althing_dev_ha_db_key
+      - source: ${stack_name}_ha_db_key
         target: ha_db_key
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: althing_dev_ca
+      - source: ${stack_name}_ca
         target: ca
     user: postgres 
     volumes:
@@ -117,21 +117,21 @@ services:
       - "8883:8883"
       - "1883:1883"
     secrets:
-      - source: althing_dev_mqtt_mqtt_username
+      - source: ${stack_name}_mqtt_mqtt_username
         target: mqtt_username
-      - source: althing_dev_mqtt_mqtt_password
+      - source: ${stack_name}_mqtt_mqtt_password
         target: mqtt_password
-      - source: althing_dev_mqtt_cert_bundle
+      - source: ${stack_name}_mqtt_cert_bundle
         target: mqtt_cert
-      - source: althing_dev_mqtt_key
+      - source: ${stack_name}_mqtt_key
         target: mqtt_key
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: ca
-      - source: althing_dev_mqtt_token
+      - source: ${stack_name}_mqtt_token
         target: token
-      - source: althing_dev_portainer_mqtt_username
+      - source: ${stack_name}_portainer_mqtt_username
         target: portainer_mqtt_username
-      - source: althing_dev_portainer_mqtt_password
+      - source: ${stack_name}_portainer_mqtt_password
         target: portainer_mqtt_password
     volumes:
         #- "./mqtt/config/:/etc/rabbitmq/"
@@ -162,23 +162,15 @@ services:
       # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
       - "9229:9229"
     secrets:
-      - source: althing_dev_nr_cert_bundle
+      - source: ${stack_name}_nr_cert_bundle
         target: nr_cert
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_nr_key
+      - source: ${stack_name}_nr_key
         target: nr_key
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: ca
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_node_red_mqtt_username
+      - source: ${stack_name}_node_red_mqtt_username
         target: mqtt_username
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_node_red_mqtt_password
+      - source: ${stack_name}_node_red_mqtt_password
         target: mqtt_password
         uid: ${UID}
         mode: 0600
@@ -189,7 +181,7 @@ services:
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
   platformio:
-    command: ["sh","-c","docker run --rm --name pio -t --network althing_dev_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 allthing/platformio:${TAG}"]
+    command: ["sh","-c","docker run --rm --name pio -t --network ${stack_name}_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 ${image_provider}/platformio:${TAG}"]
     deploy:
         mode: global
         restart_policy:
@@ -200,13 +192,13 @@ services:
     networks:
       - web
     secrets:
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: ca
-      - source: althing_dev_platformio_mqtt_username
+      - source: ${stack_name}_platformio_mqtt_username
         target: mqtt_username
-      - source: althing_dev_platformio_mqtt_password
+      - source: ${stack_name}_platformio_mqtt_password
         target: mqtt_password
-      - source: althing_dev_platformio_token
+      - source: ${stack_name}_platformio_token
         target: token
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
@@ -214,7 +206,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
   portainer:
     environment:
-      - stackname=althing_dev
+      - stackname=${stack_name}
     deploy:
       #mode: global
       replicas: 1
@@ -226,17 +218,17 @@ services:
     ports:
       - "9000:9000"
     secrets:
-      - source: althing_dev_portainer_cert_bundle
+      - source: ${stack_name}_portainer_cert_bundle
         target: cert
-      - source: althing_dev_portainer_key
+      - source: ${stack_name}_portainer_key
         target: key
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: ca
-      - source: althing_dev_portainer_mqtt_username
+      - source: ${stack_name}_portainer_mqtt_username
         target: mqtt_username
-      - source: althing_dev_portainer_mqtt_password
+      - source: ${stack_name}_portainer_mqtt_password
         target: mqtt_password
-      - source: althing_dev_portainer_token
+      - source: ${stack_name}_portainer_token
         target: token
     volumes:
       - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
@@ -262,17 +254,17 @@ services:
           - vault.local
           - vault.scifi.farm
     secrets:
-      - source: althing_dev_vault_key
+      - source: ${stack_name}_vault_key
         target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert_bundle
+      - source: ${stack_name}_vault_cert_bundle
         target: /run/secrets/vault_cert
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: /run/secrets/ca
-      - source: althing_dev_ca_bundle
+      - source: ${stack_name}_ca_bundle
         target: /etc/ssl/certs/ca-certificates.crt
-      - source: althing_dev_vault_unseal
+      - source: ${stack_name}_vault_unseal
         target: /run/secrets/vault_unseal
-      - source: althing_dev_vault_token
+      - source: ${stack_name}_vault_token
         target: /run/secrets/vault_token
     ports:
       - "8200:8200"
@@ -284,67 +276,67 @@ networks:
   web:
     attachable: true
 secrets:
-  althing_dev_ca:
+  ${stack_name}_ca:
     external: true
-  althing_dev_ca_bundle:
+  ${stack_name}_ca_bundle:
     external: true
-  althing_dev_ha_cert_bundle:
+  ${stack_name}_ha_cert_bundle:
     external: true
-  althing_dev_ha_key:
+  ${stack_name}_ha_key:
     external: true
-  althing_dev_home_assistant_mqtt_username:
+  ${stack_name}_home_assistant_mqtt_username:
     external: true
-  althing_dev_home_assistant_mqtt_password:
+  ${stack_name}_home_assistant_mqtt_password:
     external: true
-  althing_dev_ha_db_cert_bundle:
+  ${stack_name}_ha_db_cert_bundle:
     external: true
-  althing_dev_ha_db_key:
+  ${stack_name}_ha_db_key:
     external: true
-  althing_dev_mqtt_cert_bundle:
+  ${stack_name}_mqtt_cert_bundle:
     external: true
-  althing_dev_mqtt_key:
+  ${stack_name}_mqtt_key:
     external: true
-  althing_dev_mqtt_mqtt_username:
+  ${stack_name}_mqtt_mqtt_username:
     external: true
-  althing_dev_mqtt_mqtt_password:
+  ${stack_name}_mqtt_mqtt_password:
     external: true
-  althing_dev_mqtt_token:
+  ${stack_name}_mqtt_token:
     external: true
-  althing_dev_nr_cert_bundle:
+  ${stack_name}_nr_cert_bundle:
     external: true
-  althing_dev_nr_key:
+  ${stack_name}_nr_key:
     external: true
-  althing_dev_platformio_mqtt_username:
+  ${stack_name}_platformio_mqtt_username:
     external: true
-  althing_dev_platformio_mqtt_password:
+  ${stack_name}_platformio_mqtt_password:
     external: true
-  althing_dev_platformio_token:
+  ${stack_name}_platformio_token:
     external: true
-  althing_dev_portainer_cert_bundle:
+  ${stack_name}_portainer_cert_bundle:
     external: true
-  althing_dev_portainer_key:
+  ${stack_name}_portainer_key:
     external: true
-  althing_dev_portainer_mqtt_username:
+  ${stack_name}_portainer_mqtt_username:
     external: true
-  althing_dev_portainer_mqtt_password:
+  ${stack_name}_portainer_mqtt_password:
     external: true
-  althing_dev_portainer_token:
+  ${stack_name}_portainer_token:
     external: true
-  althing_dev_node_red_mqtt_username:
+  ${stack_name}_node_red_mqtt_username:
     external: true
-  althing_dev_node_red_mqtt_password:
+  ${stack_name}_node_red_mqtt_password:
     external: true
-  althing_dev_vault_cert_bundle:
+  ${stack_name}_vault_cert_bundle:
     external: true
-  althing_dev_vault_key:
+  ${stack_name}_vault_key:
     external: true
-  althing_dev_vault_unseal:
+  ${stack_name}_vault_unseal:
     external: true
-  althing_dev_vault_token:
+  ${stack_name}_vault_token:
     external: true
-  althing_dev_docs_cert_bundle:
+  ${stack_name}_docs_cert_bundle:
     external: true
-  althing_dev_docs_key:
+  ${stack_name}_docs_key:
     external: true
 volumes:
   home-assistant-db:
