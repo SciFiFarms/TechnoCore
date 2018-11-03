@@ -11,11 +11,11 @@ services:
       - "4000:4000"
       - 35729:35729
     secrets:
-      - source: ${stack_name}_docs_cert_bundle
+      - source: docs_cert_bundle
         target: wiki_cert
-      - source: ${stack_name}_docs_key
+      - source: docs_key
         target: wiki_key
-      - source: ${stack_name}_ca
+      - source: ca
         target: ca
     volumes:
       # TODO: Make this built into the image when built. 
@@ -43,19 +43,19 @@ services:
     ports:
       - "8123:8123"
     secrets:
-      - source: ${stack_name}_ha_cert_bundle
+      - source: ha_cert_bundle
         target: ha_cert
         #uid: ${UID}
         #mode: 0440
-      - source: ${stack_name}_ha_key
+      - source: ha_key
         target: ha_key
         #uid: ${UID}
         #mode: 0400
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: ${stack_name}_home_assistant_mqtt_username
+      - source: home_assistant_mqtt_username
         target: mqtt_username
-      - source: ${stack_name}_home_assistant_mqtt_password
+      - source: home_assistant_mqtt_password
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
@@ -73,15 +73,15 @@ services:
     networks:
       - web
     secrets:
-      - source: ${stack_name}_ha_db_cert_bundle
+      - source: ha_db_cert_bundle
         target: ha_db_cert
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: ${stack_name}_ha_db_key
+      - source: ha_db_key
         target: ha_db_key
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: ${stack_name}_ca
+      - source: ca
         target: ca
     user: postgres 
     volumes:
@@ -106,21 +106,21 @@ services:
       - "8883:8883"
       - "1883:1883"
     secrets:
-      - source: ${stack_name}_mqtt_mqtt_username
+      - source: mqtt_mqtt_username
         target: mqtt_username
-      - source: ${stack_name}_mqtt_mqtt_password
+      - source: mqtt_mqtt_password
         target: mqtt_password
-      - source: ${stack_name}_mqtt_cert_bundle
+      - source: mqtt_cert_bundle
         target: mqtt_cert
-      - source: ${stack_name}_mqtt_key
+      - source: mqtt_key
         target: mqtt_key
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: ${stack_name}_mqtt_token
+      - source: mqtt_token
         target: token
-      - source: ${stack_name}_portainer_mqtt_username
+      - source: portainer_mqtt_username
         target: portainer_mqtt_username
-      - source: ${stack_name}_portainer_mqtt_password
+      - source: portainer_mqtt_password
         target: portainer_mqtt_password
     volumes:
         #- "./mqtt/config/:/etc/rabbitmq/"
@@ -151,23 +151,23 @@ services:
       # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
       - "9229:9229"
     secrets:
-      - source: ${stack_name}_nr_cert_bundle
+      - source: nr_cert_bundle
         target: nr_cert
         #uid: ${UID}
         #mode: 0600
-      - source: ${stack_name}_nr_key
+      - source: nr_key
         target: nr_key
         #uid: ${UID}
         #mode: 0600
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: ca
         #uid: ${UID}
         #mode: 0600
-      - source: ${stack_name}_node_red_mqtt_username
+      - source: node_red_mqtt_username
         target: mqtt_username
         #uid: ${UID}
         #mode: 0600
-      - source: ${stack_name}_node_red_mqtt_password
+      - source: node_red_mqtt_password
         target: mqtt_password
         #uid: ${UID}
         #mode: 0600
@@ -189,13 +189,13 @@ services:
     networks:
       - web
     secrets:
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: ${stack_name}_platformio_mqtt_username
+      - source: platformio_mqtt_username
         target: mqtt_username
-      - source: ${stack_name}_platformio_mqtt_password
+      - source: platformio_mqtt_password
         target: mqtt_password
-      - source: ${stack_name}_platformio_token
+      - source: platformio_token
         target: token
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
@@ -215,17 +215,17 @@ services:
     ports:
       - "9000:9000"
     secrets:
-      - source: ${stack_name}_portainer_cert_bundle
+      - source: portainer_cert_bundle
         target: cert
-      - source: ${stack_name}_portainer_key
+      - source: portainer_key
         target: key
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: ${stack_name}_portainer_mqtt_username
+      - source: portainer_mqtt_username
         target: mqtt_username
-      - source: ${stack_name}_portainer_mqtt_password
+      - source: portainer_mqtt_password
         target: mqtt_password
-      - source: ${stack_name}_portainer_token
+      - source: portainer_token
         target: token
     volumes:
       - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
@@ -251,17 +251,17 @@ services:
           - vault.local
           - vault.scifi.farm
     secrets:
-      - source: ${stack_name}_vault_key
+      - source: vault_key
         target: /run/secrets/vault_key
-      - source: ${stack_name}_vault_cert_bundle
+      - source: vault_cert_bundle
         target: /run/secrets/vault_cert
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: /run/secrets/ca
-      - source: ${stack_name}_ca_bundle
+      - source: ca_bundle
         target: /etc/ssl/certs/ca-certificates.crt
-      - source: ${stack_name}_vault_unseal
+      - source: vault_unseal
         target: /run/secrets/vault_unseal
-      - source: ${stack_name}_vault_token
+      - source: vault_token
         target: /run/secrets/vault_token
     ports:
       - "8200:8200"
@@ -273,67 +273,98 @@ networks:
   web:
     attachable: true
 secrets:
-  ${stack_name}_ca:
+  ca:
+    name: ${stack_name}_ca
     external: true
-  ${stack_name}_ca_bundle:
+  ca_bundle:
+    name: ${stack_name}_ca_bundle
     external: true
-  ${stack_name}_ha_cert_bundle:
+  ha_cert_bundle:
+    name: ${stack_name}_ha_cert_bundle
     external: true
-  ${stack_name}_ha_key:
+  ha_key:
+    name: ${stack_name}_ha_key
     external: true
-  ${stack_name}_home_assistant_mqtt_username:
+  home_assistant_mqtt_username:
+    name: ${stack_name}_home_assistant_mqtt_username
     external: true
-  ${stack_name}_home_assistant_mqtt_password:
+  home_assistant_mqtt_password:
+    name: ${stack_name}_home_assistant_mqtt_password
     external: true
-  ${stack_name}_ha_db_cert_bundle:
+  ha_db_cert_bundle:
+    name: ${stack_name}_ha_db_cert_bundle
     external: true
-  ${stack_name}_ha_db_key:
+  ha_db_key:
+    name: ${stack_name}_ha_db_key
     external: true
-  ${stack_name}_mqtt_cert_bundle:
+  mqtt_cert_bundle:
+    name: ${stack_name}_mqtt_cert_bundle
     external: true
-  ${stack_name}_mqtt_key:
+  mqtt_key:
+    name: ${stack_name}_mqtt_key
     external: true
-  ${stack_name}_mqtt_mqtt_username:
+  mqtt_mqtt_username:
+    name: ${stack_name}_mqtt_mqtt_username
     external: true
-  ${stack_name}_mqtt_mqtt_password:
+  mqtt_mqtt_password:
+    name: ${stack_name}_mqtt_mqtt_password
     external: true
-  ${stack_name}_mqtt_token:
+  mqtt_token:
+    name: ${stack_name}_mqtt_token
     external: true
-  ${stack_name}_nr_cert_bundle:
+  nr_cert_bundle:
+    name: ${stack_name}_nr_cert_bundle
     external: true
-  ${stack_name}_nr_key:
+  nr_key:
+    name: ${stack_name}_nr_key
     external: true
-  ${stack_name}_platformio_mqtt_username:
+  platformio_mqtt_username:
+    name: ${stack_name}_platformio_mqtt_username
     external: true
-  ${stack_name}_platformio_mqtt_password:
+  platformio_mqtt_password:
+    name: ${stack_name}_platformio_mqtt_password
     external: true
-  ${stack_name}_platformio_token:
+  platformio_token:
+    name: ${stack_name}_platformio_token
     external: true
-  ${stack_name}_portainer_cert_bundle:
+  portainer_cert_bundle:
+    name: ${stack_name}_portainer_cert_bundle
     external: true
-  ${stack_name}_portainer_key:
+  portainer_key:
+    name: ${stack_name}_portainer_key
     external: true
-  ${stack_name}_portainer_mqtt_username:
+  portainer_mqtt_username:
+    name: ${stack_name}_portainer_mqtt_username
     external: true
-  ${stack_name}_portainer_mqtt_password:
+  portainer_mqtt_password:
+    name: ${stack_name}_portainer_mqtt_password
     external: true
-  ${stack_name}_portainer_token:
+  portainer_token:
+    name: ${stack_name}_portainer_token
     external: true
-  ${stack_name}_node_red_mqtt_username:
+  node_red_mqtt_username:
+    name: ${stack_name}_node_red_mqtt_username
     external: true
-  ${stack_name}_node_red_mqtt_password:
+  node_red_mqtt_password:
+    name: ${stack_name}_node_red_mqtt_password
     external: true
-  ${stack_name}_vault_cert_bundle:
+  vault_cert_bundle:
+    name: ${stack_name}_vault_cert_bundle
     external: true
-  ${stack_name}_vault_key:
+  vault_key:
+    name: ${stack_name}_vault_key
     external: true
-  ${stack_name}_vault_unseal:
+  vault_unseal:
+    name: ${stack_name}_vault_unseal
     external: true
-  ${stack_name}_vault_token:
+  vault_token:
+    name: ${stack_name}_vault_token
     external: true
-  ${stack_name}_docs_cert_bundle:
+  docs_cert_bundle:
+    name: ${stack_name}_docs_cert_bundle
     external: true
-  ${stack_name}_docs_key:
+  docs_key:
+    name: ${stack_name}_docs_key
     external: true
 volumes:
   home-assistant-db:
