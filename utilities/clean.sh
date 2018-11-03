@@ -13,7 +13,7 @@ remove_volume() {
             break
         fi
         if grep -q 'volume is in use' <<< $response; then
-            local container=$(echo "$response" | cut -d"[" -f2 | cut -d"]" -f1 )
+            local container=$(echo "$response" | cut -d"[" -f2 | cut -d"]" -f1 | tr "," " " )
             echo "Volume is in use by container $container. Will stop."
             docker rm -f $container
         fi
