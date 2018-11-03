@@ -8,15 +8,15 @@ source .env
 reinstall=1
 
 # List of services
-vault=vault
-ha=ha
-mqtt=mqtt
-ha_db=ha_db
-nr=nr
-platformio=platformio
-docs=docs
-portainer=portainer
-declare -a services=($vault $ha $mqtt $ha_db $nr $docs $platformio $portainer)
+#vault=vault
+#ha=ha
+#mqtt=mqtt
+#ha_db=ha_db
+#nr=nr
+#platformio=platformio
+#docs=docs
+#portainer=portainer
+declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
