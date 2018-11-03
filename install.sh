@@ -53,6 +53,13 @@ add_CA_to_firefox
 create_mqtt_user mqtt
 create_mqtt_user portainer
 
+create_secret home_assistant_mqtt_username "Not yet set."
+create_secret home_assistant_mqtt_password "Not yet set."
+create_secret node_red_mqtt_username "Not yet set."
+create_secret node_red_mqtt_password "Not yet set."
+create_secret platformio_mqtt_username "Not yet set."
+create_secret platformio_mqtt_password "Not yet set."
+
 create_vault_user_and_token platformio
 create_vault_user_and_token portainer
 create_vault_user_and_token mqtt
