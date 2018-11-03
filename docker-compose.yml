@@ -58,7 +58,7 @@ services:
     #user: ${UID}
     #volumes:
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      #- ../home-assistant/config/:/config
+      #- ./home-assistant/config/:/config
   ha_db:
     depends_on:
       - vault
@@ -120,12 +120,12 @@ services:
       - source: portainer_mqtt_password
         target: portainer_mqtt_password
     volumes:
-        #- "./mqtt/config/:/etc/rabbitmq/"
-        - mqtt2:/etc/vernemq/
+        - mqtt:/etc/vernemq/
         # Used for creating migrations.
-        #- ../vernemq/shell-migrations:/usr/share/dogfish/shell-migrations
+        #- ./vernemq/shell-migrations:/usr/share/dogfish/shell-migrations
     # Hostname is needed to persist data. 
     hostname: mqtt
+    # TODO: I'd like to run vernemq as something other than root. That results in a number of Permission denied errors.
     #user: vernemq
   nr:
     environment:
@@ -225,7 +225,7 @@ services:
       - source: portainer_token
         target: token
     volumes:
-      - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
+      #- ./portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
       - /var/run/docker.sock:/var/run/docker.sock 
       - portainer:/data
   vault:
