@@ -83,7 +83,6 @@ services:
     user: postgres 
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
-      - home-assistant-db-migrations:/shell-migrations/logs/
   mqtt:
     depends_on:
       - vault
@@ -366,7 +365,6 @@ secrets:
 volumes:
   home-assistant-db:
   # TODO: Implement migrations on the actual volume instead. 
-  home-assistant-db-migrations:
   mqtt:
   node-red:
   portainer:
