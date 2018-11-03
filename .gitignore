@@ -1,17 +1,4 @@
-**/logs/*
-.vscode/*
-**/certs/*
 ca.pem
-ha_db/data/*
-ha/data/.*
-ha/data/*.db
-ha/data/*.log
-ha/data/secrets.yaml
-vault/src
-nr/src/*
-omgwtfssl/
-vault/data
-vault/src
 *_old
 *.backup
 
