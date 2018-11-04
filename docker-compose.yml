@@ -5,7 +5,7 @@ services:
     deploy:
         mode: global
         restart_policy:
-          condition: on-failure
+          condition: any
     image: ${image_provider}/docs:${TAG}
     ports:
       - "4000:4000"
@@ -25,11 +25,7 @@ services:
       - mqtt
       - home_assistant_db
     deploy:
-      # I'm usinsg replicas set to 1 instead of global because I can't seem to 
-      # reboot the Home Assistant service consistantly. Setting replication to 
-      # 0, then 1 seems to work though. 
-      #mode: global
-      replicas: 1
+      mode: global
       restart_policy:
         condition: any
     image: ${image_provider}/home-assistant:${TAG}
@@ -64,7 +60,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        max_attempts: 20
+        condition: any
     image: ${image_provider}/home-assistant-db:${TAG}
     networks:
       - web
@@ -87,10 +83,9 @@ services:
       - vault
       - portainer
     deploy:
-      #mode: global
-      replicas: 1
-      #restart_policy:
-      #  condition: -failure
+      mode: global
+      restart_policy:
+        condition: any
     image: ${image_provider}/vernemq:${TAG}
     networks:
       web:
@@ -136,7 +131,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: any
     image: ${image_provider}/node-red:${TAG}
     networks:
       - web
@@ -167,7 +162,7 @@ services:
     deploy:
         mode: global
         restart_policy:
-          condition: on-failure
+          condition: any
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
     image: docker
@@ -190,8 +185,7 @@ services:
     environment:
       - stackname=${stack_name}
     deploy:
-      #mode: global
-      replicas: 1
+      mode: global
       restart_policy:
         condition: any
     image: ${image_provider}/portainer:${TAG}
@@ -219,7 +213,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: any
     environment:
       - SKIP_SETCAP=true
       - VAULT_ADDR=https://vault.local:8200
