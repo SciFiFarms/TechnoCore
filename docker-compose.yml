@@ -18,8 +18,7 @@ services:
       - source: ca
         target: ca
     volumes:
-      # TODO: Make this built into the image when built. 
-      - "./docs:/src"
+      - ${docs_live_mount}
   home_assistant:
     depends_on:
       - vault
@@ -56,9 +55,9 @@ services:
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
-    #volumes:
+    volumes:
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      #- ./home-assistant/config/:/config
+      - ${home_assistant_live_mount}
   home_assistant_db:
     depends_on:
       - vault
@@ -121,7 +120,7 @@ services:
     volumes:
         - mqtt:/etc/vernemq/
         # Used for creating migrations.
-        #- ./vernemq/shell-migrations:/usr/share/dogfish/shell-migrations
+        - ${mqtt_live_mount}
     # Hostname is needed to persist data. 
     hostname: mqtt
     # TODO: I'd like to run vernemq as something other than root. That results in a number of Permission denied errors.
@@ -149,24 +148,14 @@ services:
     secrets:
       - source: node_red_cert_bundle
         target: cert
-        #uid: ${UID}
-        #mode: 0600
       - source: node_red_key
         target: key
-        #uid: ${UID}
-        #mode: 0600
       - source: ca_bundle
         target: ca
-        #uid: ${UID}
-        #mode: 0600
       - source: node_red_mqtt_username
         target: mqtt_username
-        #uid: ${UID}
-        #mode: 0600
       - source: node_red_mqtt_password
         target: mqtt_password
-        #uid: ${UID}
-        #mode: 0600
     user: "0" #${UID}
     volumes:
       - node-red:/data
@@ -195,8 +184,8 @@ services:
         target: token
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
-      #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${platformio_live_mount}
   portainer:
     environment:
       - stackname=${stack_name}
@@ -224,7 +213,6 @@ services:
       - source: portainer_token
         target: token
     volumes:
-      #- ./portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
       - /var/run/docker.sock:/var/run/docker.sock 
       - portainer:/data
   vault:
@@ -262,8 +250,8 @@ services:
     ports:
       - "8200:8200"
     volumes:
-      #- ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
+      - ${vault_live_mount}
 
 networks:
   web:
