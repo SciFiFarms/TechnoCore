@@ -1,0 +1,40 @@
+{
+	"folders": [
+		{
+			"path": "docs"
+		},
+		{
+			"path": "vault"
+		},
+		{
+			"path": "vernemq"
+		},
+		{
+			"path": "platformio"
+		},
+		{
+			"path": "portainer"
+		},
+		{
+			"path": "ha_homie"
+		},
+		{
+			"path": "node-red"
+		},
+		{
+			"path": "homie"
+		},
+		{
+			"path": "home-assistant-db"
+		},
+		{
+			"path": "home-assistant"
+		},
+		{
+			"path": "dogfish"
+		},
+		{
+			"path": "."
+		}
+	]
+}

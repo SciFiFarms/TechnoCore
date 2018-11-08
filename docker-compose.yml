@@ -5,109 +5,88 @@ services:
     deploy:
         mode: global
         restart_policy:
-          condition: on-failure
-    image: allthing/docs:${TAG}
+          condition: any
+    image: ${image_provider}/docs:${TAG}
     ports:
       - "4000:4000"
       - 35729:35729
     secrets:
-      - source: althing_dev_docs_cert_bundle
+      - source: docs_cert_bundle
         target: wiki_cert
-      - source: althing_dev_docs_key
+      - source: docs_key
         target: wiki_key
-      - source: althing_dev_ca
+      - source: ca
         target: ca
     volumes:
-      # TODO: Make this built into the image when built. 
-      - "../docs:/src"
-  ha:
-    # This is useful to skip the timeout.
-    #entrypoint: "python -m homeassistant --config /config"
+      - ${docs_live_mount}
+  home_assistant:
     depends_on:
       - vault
       - mqtt
-      - ha_db
+      - home_assistant_db
     deploy:
-      # I'm usinsg replicas set to 1 instead of global because I can't seem to 
-      # reboot the Home Assistant service consistantly. Setting replication to 
-      # 0, then 1 seems to work though. 
-      #mode: global
-      replicas: 1
+      mode: global
       restart_policy:
         condition: any
-    image: allthing/home-assistant:${TAG}
+    image: ${image_provider}/home-assistant:${TAG}
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
         aliases:
-          - ha.local
-          - ha.scifi.farm
+          - home_assistant.local
+          - home_assistant.scifi.farm
     ports:
       - "8123:8123"
     secrets:
-      - source: althing_dev_ha_cert_bundle
-        target: ha_cert
-        uid: ${UID}
-        mode: 0440
-      - source: althing_dev_ha_key
-        target: ha_key
-        uid: ${UID}
+      - source: home_assistant_cert_bundle
+        target: cert
+      - source: home_assistant_key
+        target: key
         mode: 0400
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: althing_dev_home_assistant_mqtt_username
+      - source: home_assistant_mqtt_username
         target: mqtt_username
-      - source: althing_dev_home_assistant_mqtt_password
+      - source: home_assistant_mqtt_password
         target: mqtt_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
-    #volumes:
+    volumes:
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      #- ../home-assistant/config/:/config
-  ha_db:
+      - ${home_assistant_live_mount}
+  home_assistant_db:
     depends_on:
       - vault
     deploy:
       mode: global
       restart_policy:
-        max_attempts: 20
-    image: allthing/home-assistant-db:${TAG}
+        condition: any
+    image: ${image_provider}/home-assistant-db:${TAG}
     networks:
       - web
     secrets:
-      - source: althing_dev_ha_db_cert_bundle
-        target: ha_db_cert
+      - source: home_assistant_db_cert_bundle
+        target: cert
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: althing_dev_ha_db_key
-        target: ha_db_key
+      - source: home_assistant_db_key
+        target: key
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
-      - source: althing_dev_ca
+      - source: ca
         target: ca
     user: postgres 
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
-      - home-assistant-db-migrations:/shell-migrations/logs/
-  # I may use this at some point, but I'm going to try using Home Assistant first.
-  #homie-ota:
-  #  deploy:
-  #    mode: global
-  #  image: allthing/homie-ota
-  #  #volumes:
-  #    #- /home/pirate/firmwares:/app/firmwares
-  #  ports:
-  #    - "9080:9080"
   mqtt:
     depends_on:
       - vault
       - portainer
     deploy:
-      #mode: global
-      replicas: 1
-      #restart_policy:
-      #  condition: -failure
-    image: allthing/vernemq:${TAG}
+      mode: global
+      restart_policy:
+        condition: any
+    image: ${image_provider}/vernemq:${TAG}
     networks:
       web:
         aliases:
@@ -117,43 +96,43 @@ services:
       - "8883:8883"
       - "1883:1883"
     secrets:
-      - source: althing_dev_mqtt_mqtt_username
+      - source: mqtt_mqtt_username
         target: mqtt_username
-      - source: althing_dev_mqtt_mqtt_password
+      - source: mqtt_mqtt_password
         target: mqtt_password
-      - source: althing_dev_mqtt_cert_bundle
+      - source: mqtt_cert_bundle
         target: mqtt_cert
-      - source: althing_dev_mqtt_key
+      - source: mqtt_key
         target: mqtt_key
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: althing_dev_mqtt_token
+      - source: mqtt_token
         target: token
-      - source: althing_dev_portainer_mqtt_username
+      - source: portainer_mqtt_username
         target: portainer_mqtt_username
-      - source: althing_dev_portainer_mqtt_password
+      - source: portainer_mqtt_password
         target: portainer_mqtt_password
     volumes:
-        #- "./mqtt/config/:/etc/rabbitmq/"
-        - mqtt2:/etc/vernemq/
+        - mqtt:/etc/vernemq/
         # Used for creating migrations.
-        #- ../vernemq/shell-migrations:/usr/share/dogfish/shell-migrations
+        - ${mqtt_live_mount}
     # Hostname is needed to persist data. 
     hostname: mqtt
+    # TODO: I'd like to run vernemq as something other than root. That results in a number of Permission denied errors.
     #user: vernemq
-  nr:
+  node_red:
     environment:
       # Needed to be able to connect with Home Assistant
       - NODE_EXTRA_CA_CERTS=/run/secrets/ca
     depends_on:
-      - ha
+      - home_assistant
       - mqtt
       - vault
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
-    image: allthing/node-red:${TAG}
+        condition: any
+    image: ${image_provider}/node-red:${TAG}
     networks:
       - web
     ports:
@@ -162,26 +141,16 @@ services:
       # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
       - "9229:9229"
     secrets:
-      - source: althing_dev_nr_cert_bundle
-        target: nr_cert
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_nr_key
-        target: nr_key
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_ca_bundle
+      - source: node_red_cert_bundle
+        target: cert
+      - source: node_red_key
+        target: key
+      - source: ca_bundle
         target: ca
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_node_red_mqtt_username
+      - source: node_red_mqtt_username
         target: mqtt_username
-        uid: ${UID}
-        mode: 0600
-      - source: althing_dev_node_red_mqtt_password
+      - source: node_red_mqtt_password
         target: mqtt_password
-        uid: ${UID}
-        mode: 0600
     user: "0" #${UID}
     volumes:
       - node-red:/data
@@ -189,64 +158,62 @@ services:
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
   platformio:
-    command: ["sh","-c","docker run --rm --name pio -t --network althing_dev_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 allthing/platformio:${TAG}"]
+    command: ["sh","-c","docker run --rm --name pio -t --network ${stack_name}_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 ${image_provider}/platformio:${TAG}"]
     deploy:
         mode: global
         restart_policy:
-          condition: on-failure
+          condition: any
     devices:
       - "/dev/ttyUSB0:/dev/ttyUSB0"
     image: docker
     networks:
       - web
     secrets:
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: althing_dev_platformio_mqtt_username
+      - source: platformio_mqtt_username
         target: mqtt_username
-      - source: althing_dev_platformio_mqtt_password
+      - source: platformio_mqtt_password
         target: mqtt_password
-      - source: althing_dev_platformio_token
+      - source: platformio_token
         target: token
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
-      #- ./platformio/entrypoint.py:/workspace/entrypoint.py
       - /var/run/docker.sock:/var/run/docker.sock
+      - ${platformio_live_mount}
   portainer:
     environment:
-      - stackname=althing_dev
+      - stackname=${stack_name}
     deploy:
-      #mode: global
-      replicas: 1
+      mode: global
       restart_policy:
         condition: any
-    image: allthing/portainer:${TAG}
+    image: ${image_provider}/portainer:${TAG}
     networks:
       - web
     ports:
       - "9000:9000"
     secrets:
-      - source: althing_dev_portainer_cert_bundle
+      - source: portainer_cert_bundle
         target: cert
-      - source: althing_dev_portainer_key
+      - source: portainer_key
         target: key
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: ca
-      - source: althing_dev_portainer_mqtt_username
+      - source: portainer_mqtt_username
         target: mqtt_username
-      - source: althing_dev_portainer_mqtt_password
+      - source: portainer_mqtt_password
         target: mqtt_password
-      - source: althing_dev_portainer_token
+      - source: portainer_token
         target: token
     volumes:
-      - ../portainer_old/shell-migrations:/usr/share/dogfish/shell-migrations
       - /var/run/docker.sock:/var/run/docker.sock 
       - portainer:/data
   vault:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: any
     environment:
       - SKIP_SETCAP=true
       - VAULT_ADDR=https://vault.local:8200
@@ -255,101 +222,131 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: allthing/vault:${TAG}
+    image: ${image_provider}/vault:${TAG}
     networks:
       web:
         aliases:
           - vault.local
           - vault.scifi.farm
     secrets:
-      - source: althing_dev_vault_key
+      - source: vault_key
         target: /run/secrets/vault_key
-      - source: althing_dev_vault_cert_bundle
+      - source: vault_cert_bundle
         target: /run/secrets/vault_cert
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: /run/secrets/ca
-      - source: althing_dev_ca_bundle
+      - source: ca_bundle
         target: /etc/ssl/certs/ca-certificates.crt
-      - source: althing_dev_vault_unseal
+      - source: vault_unseal
         target: /run/secrets/vault_unseal
-      - source: althing_dev_vault_token
+      - source: vault_token
         target: /run/secrets/vault_token
     ports:
       - "8200:8200"
     volumes:
-      #- ./vault/data/config.hcl:/vault/config/config.hcl
       - vault:/vault/file
+      - ${vault_live_mount}
 
 networks:
   web:
     attachable: true
 secrets:
-  althing_dev_ca:
+  ca:
+    name: ${stack_name}_ca
     external: true
-  althing_dev_ca_bundle:
+  ca_bundle:
+    name: ${stack_name}_ca_bundle
     external: true
-  althing_dev_ha_cert_bundle:
+  home_assistant_cert_bundle:
+    name: ${stack_name}_home_assistant_cert_bundle
     external: true
-  althing_dev_ha_key:
+  home_assistant_key:
+    name: ${stack_name}_home_assistant_key
     external: true
-  althing_dev_home_assistant_mqtt_username:
+  home_assistant_mqtt_username:
+    name: ${stack_name}_home_assistant_mqtt_username
     external: true
-  althing_dev_home_assistant_mqtt_password:
+  home_assistant_mqtt_password:
+    name: ${stack_name}_home_assistant_mqtt_password
     external: true
-  althing_dev_ha_db_cert_bundle:
+  home_assistant_db_cert_bundle:
+    name: ${stack_name}_home_assistant_db_cert_bundle
     external: true
-  althing_dev_ha_db_key:
+  home_assistant_db_key:
+    name: ${stack_name}_home_assistant_db_key
     external: true
-  althing_dev_mqtt_cert_bundle:
+  mqtt_cert_bundle:
+    name: ${stack_name}_mqtt_cert_bundle
     external: true
-  althing_dev_mqtt_key:
+  mqtt_key:
+    name: ${stack_name}_mqtt_key
     external: true
-  althing_dev_mqtt_mqtt_username:
+  mqtt_mqtt_username:
+    name: ${stack_name}_mqtt_mqtt_username
     external: true
-  althing_dev_mqtt_mqtt_password:
+  mqtt_mqtt_password:
+    name: ${stack_name}_mqtt_mqtt_password
     external: true
-  althing_dev_mqtt_token:
+  mqtt_token:
+    name: ${stack_name}_mqtt_token
     external: true
-  althing_dev_nr_cert_bundle:
+  node_red_cert_bundle:
+    name: ${stack_name}_node_red_cert_bundle
     external: true
-  althing_dev_nr_key:
+  node_red_key:
+    name: ${stack_name}_node_red_key
     external: true
-  althing_dev_platformio_mqtt_username:
+  platformio_mqtt_username:
+    name: ${stack_name}_platformio_mqtt_username
     external: true
-  althing_dev_platformio_mqtt_password:
+  platformio_mqtt_password:
+    name: ${stack_name}_platformio_mqtt_password
     external: true
-  althing_dev_platformio_token:
+  platformio_token:
+    name: ${stack_name}_platformio_token
     external: true
-  althing_dev_portainer_cert_bundle:
+  portainer_cert_bundle:
+    name: ${stack_name}_portainer_cert_bundle
     external: true
-  althing_dev_portainer_key:
+  portainer_key:
+    name: ${stack_name}_portainer_key
     external: true
-  althing_dev_portainer_mqtt_username:
+  portainer_mqtt_username:
+    name: ${stack_name}_portainer_mqtt_username
     external: true
-  althing_dev_portainer_mqtt_password:
+  portainer_mqtt_password:
+    name: ${stack_name}_portainer_mqtt_password
     external: true
-  althing_dev_portainer_token:
+  portainer_token:
+    name: ${stack_name}_portainer_token
     external: true
-  althing_dev_node_red_mqtt_username:
+  node_red_mqtt_username:
+    name: ${stack_name}_node_red_mqtt_username
     external: true
-  althing_dev_node_red_mqtt_password:
+  node_red_mqtt_password:
+    name: ${stack_name}_node_red_mqtt_password
     external: true
-  althing_dev_vault_cert_bundle:
+  vault_cert_bundle:
+    name: ${stack_name}_vault_cert_bundle
     external: true
-  althing_dev_vault_key:
+  vault_key:
+    name: ${stack_name}_vault_key
     external: true
-  althing_dev_vault_unseal:
+  vault_unseal:
+    name: ${stack_name}_vault_unseal
     external: true
-  althing_dev_vault_token:
+  vault_token:
+    name: ${stack_name}_vault_token
     external: true
-  althing_dev_docs_cert_bundle:
+  docs_cert_bundle:
+    name: ${stack_name}_docs_cert_bundle
     external: true
-  althing_dev_docs_key:
+  docs_key:
+    name: ${stack_name}_docs_key
     external: true
 volumes:
   home-assistant-db:
   # TODO: Implement migrations on the actual volume instead. 
-  home-assistant-db-migrations:
   mqtt:
   node-red:
   portainer:
