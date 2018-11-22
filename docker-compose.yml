@@ -37,6 +37,7 @@ services:
           - home_assistant.scifi.farm
     ports:
       - "8123:8123"
+      - "5678:5678"
     secrets:
       - source: home_assistant_cert_bundle
         target: cert
