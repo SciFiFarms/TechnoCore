@@ -54,7 +54,8 @@ services:
     #user: ${UID}
     volumes:
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      - ${home_assistant_live_mount}
+      - ${home_assistant_config_live_mount}
+      - ${home_assistant_src_live_mount}
   home_assistant_db:
     depends_on:
       - vault
