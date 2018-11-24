@@ -13,6 +13,7 @@ alias run_docs='docker exec -it $(docker service ps -f desired-state=running --n
 
 # TODO: It may be useful to figure out how to run this in the closest parent 
 # directory that contains a docker-compose.yml file. 
-alias deploy='env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml'
+# Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
 # TODO: Add subrepo here.
 # TODO: Add deploy here too!
