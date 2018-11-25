@@ -37,6 +37,7 @@ services:
           - home_assistant.scifi.farm
     ports:
       - "8123:8123"
+      - "5678:5678"
     secrets:
       - source: home_assistant_cert_bundle
         target: cert
@@ -53,7 +54,8 @@ services:
     #user: ${UID}
     volumes:
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      - ${home_assistant_live_mount}
+      - ${home_assistant_config_live_mount}
+      - ${home_assistant_src_live_mount}
   home_assistant_db:
     depends_on:
       - vault

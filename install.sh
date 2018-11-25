@@ -62,8 +62,9 @@ create_TLS_certs
 remove_temp_containers
 docker network rm $network_name
 
-env $(cat .env | grep ^[A-Z] | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
+# Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 # Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/technocore.
 # Remove vault port
 # docker service update --publish-rm 8200 ${stack_name}_vault
