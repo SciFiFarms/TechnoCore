@@ -11,6 +11,7 @@ check_git_dependancy()
 {
     # TODO: If git doesn't exist, throw an error.
     echo
+    # TODO: Have this determine if I should use the https path, or the ssh path. 
 }
 
 check_docker_dependancy()
