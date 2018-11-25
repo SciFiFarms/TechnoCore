@@ -6,7 +6,7 @@ services:
         mode: global
         restart_policy:
           condition: any
-    image: ${image_provider}/docs:${TAG}
+    image: ${image_provider}/technocore-docs:${TAG}
     ports:
       - "4000:4000"
       - 35729:35729
@@ -28,7 +28,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/home-assistant:${TAG}
+    image: ${image_provider}/technocore-home-assistant:${TAG}
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
@@ -61,7 +61,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/home-assistant-db:${TAG}
+    image: ${image_provider}/technocore-home-assistant-db:${TAG}
     networks:
       - web
     secrets:
@@ -86,7 +86,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/vernemq:${TAG}
+    image: ${image_provider}/technocore-vernemq:${TAG}
     networks:
       web:
         aliases:
@@ -132,7 +132,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/node-red:${TAG}
+    image: ${image_provider}/technocore-node-red:${TAG}
     networks:
       - web
     ports:
@@ -163,9 +163,7 @@ services:
         mode: global
         restart_policy:
           condition: any
-    devices:
-      - "/dev/ttyUSB0:/dev/ttyUSB0"
-    image: docker
+    image: ${image_provider}/technocore-platformio-wrapper:${TAG}
     networks:
       - web
     secrets:
@@ -188,7 +186,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/portainer:${TAG}
+    image: ${image_provider}/technocore-portainer:${TAG}
     networks:
       - web
     ports:
@@ -222,7 +220,7 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: ${image_provider}/vault:${TAG}
+    image: ${image_provider}/technocore-vault:${TAG}
     networks:
       web:
         aliases:
