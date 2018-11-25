@@ -158,11 +158,16 @@ services:
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
   platformio:
-    command: ["sh","-c","docker run --rm --name pio -t --network ${stack_name}_web -e CA=\"$$(cat /run/secrets/ca)\" -e MQTT_USERNAME=\"$$(cat /run/secrets/mqtt_username)\" -e MQTT_PASSWORD=\"$$(cat /run/secrets/mqtt_password)\" -e VAULT_TOKEN=\"$$(cat /run/secrets/token)\" --device /dev/ttyUSB0 ${image_provider}/platformio:${TAG}"]
     deploy:
         mode: global
         restart_policy:
           condition: any
+    #devices:
+    #  - "/dev/ttyUSB0:/dev/ttyUSB0"
+    environment:
+      - image_provider=${image_provider}
+      - stack_name=${stack_name}
+      - TAG=${TAG}
     image: ${image_provider}/technocore-platformio-wrapper:${TAG}
     networks:
       - web

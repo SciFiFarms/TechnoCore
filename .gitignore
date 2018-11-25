@@ -10,6 +10,7 @@ home-assistant-db
 homie
 node-red
 platformio
+platformio-wrapper
 portainer
 vault
 vernemq
