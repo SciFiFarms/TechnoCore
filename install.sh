@@ -1,6 +1,17 @@
 #!/bin/bash
-# Test that docker exists.
-# Test that your installing as root or sudo.
+
+# Make sure dependencies are met. 
+# Source: https://askubuntu.com/questions/15853/how-can-a-script-check-if-its-being-run-as-root
+if ! [ $(id -u) = 0 ]; then
+   echo "Not running as root. Try running with sudo prepended to the command. "
+   exit 1
+fi
+# Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
+if ! command -v docker >/dev/null 2>&1; then
+    echo >&2 "Docker is required but not installed. See https://hub.docker.com/search/?type=edition&offering=community \nAborting Install."
+    exit 1
+fi
+
 # Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
 # Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
 # Maybe /etc/tls/technocore
