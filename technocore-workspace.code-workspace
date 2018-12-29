@@ -37,6 +37,9 @@
 			"path": "platformio-wrapper"
 		},
 		{
+			"path": "nginx"
+		},
+		{
 			"path": "."
 		}
 	]

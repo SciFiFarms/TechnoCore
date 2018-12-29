@@ -19,7 +19,7 @@ source .env
 reinstall=1
 
 # List of services
-declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer)
+declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer nginx)
 
 # Todo: only do this if not inited already.
 # I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 

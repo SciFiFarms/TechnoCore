@@ -10,6 +10,7 @@ alias run_home_assistant='docker exec -it $(docker service ps -f desired-state=r
 alias run_platformio='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_platformio | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_platformio | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_portainer='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_docs='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
+alias run_nginx='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/bash'
 
 # TODO: It may be useful to figure out how to run this in the closest parent 
 # directory that contains a docker-compose.yml file. 

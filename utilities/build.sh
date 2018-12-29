@@ -11,3 +11,4 @@ docker build ./platformio-wrapper/ -t ${image_provider}/technocore-platformio-wr
 docker build ./vault/ -t ${image_provider}/technocore-vault:$TAG
 docker build ./vernemq/ -t ${image_provider}/technocore-vernemq:$TAG
 docker build ./portainer/ -t ${image_provider}/technocore-portainer:$TAG
+docker build ./nginx/ -t ${image_provider}/technocore-nginx:$TAG
