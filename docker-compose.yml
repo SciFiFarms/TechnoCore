@@ -94,9 +94,12 @@ services:
         aliases:
           - mqtt.local
           - mqtt.scifi.farm
-    ports:
-      - "8883:8883"
-      - "1883:1883"
+    # For some reason, the vmq-admin tool stops working if ANY port is set. 
+    # Fortunately, I was able to use NGINX to do the port forwarding instead.
+    # See https://github.com/SciFiFarms/TechnoCore-VerneMQ/pull/4 for more.
+    #ports:
+    #  - "8883:8883"
+    #  - "1883:1883"
     secrets:
       - source: mqtt_mqtt_username
         target: mqtt_username
@@ -115,8 +118,8 @@ services:
       - source: portainer_mqtt_password
         target: portainer_mqtt_password
     volumes:
-        - mqtt:/etc/vernemq/
-        # Used for creating migrations.
+      - mqtt:/vernemq/etc 
+      # Used for working with migrations.
         - ${mqtt_live_mount}
     # Hostname is needed to persist data. 
     hostname: mqtt
