@@ -120,8 +120,32 @@ services:
         - ${mqtt_live_mount}
     # Hostname is needed to persist data. 
     hostname: mqtt
-    # TODO: I'd like to run vernemq as something other than root. That results in a number of Permission denied errors.
-    #user: vernemq
+  nginx:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: ${image_provider}/technocore-nginx:${TAG}
+    networks:
+      - web
+    ports:
+      - "44053:44053"
+      - "8883:8883"
+      - "1883:1883"
+      #- "1880:1880"
+      # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
+      # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
+      #- "9229:9229"
+    secrets:
+      - source: nginx_cert_bundle
+        target: cert
+      - source: nginx_key
+        target: key
+      - source: ca_bundle
+        target: ca
+    volumes:
+      - ${nginx_config_folder_live_mount}
+      - ${nginx_config_file_live_mount}
   node_red:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -304,6 +328,12 @@ secrets:
     external: true
   node_red_key:
     name: ${stack_name}_node_red_key
+    external: true
+  nginx_cert_bundle:
+    name: ${stack_name}_nginx_cert_bundle
+    external: true
+  nginx_key:
+    name: ${stack_name}_nginx_key
     external: true
   platformio_mqtt_username:
     name: ${stack_name}_platformio_mqtt_username
