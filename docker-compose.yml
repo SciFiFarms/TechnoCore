@@ -120,7 +120,7 @@ services:
     volumes:
       - mqtt:/vernemq/etc 
       # Used for working with migrations.
-        - ${mqtt_live_mount}
+      - ${mqtt_live_mount}
     # Hostname is needed to persist data. 
     hostname: mqtt
   nginx:
