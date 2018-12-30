@@ -1,5 +1,5 @@
 vault_i() {
-    docker exec -i $containerId ${stack_name}_vault "$@"
+    docker exec -i $containerId vault "$@"
 }
 
 # First argment should be the service name. Examples are "vault", "emq"
@@ -35,7 +35,7 @@ create_TLS_certs(){
 initialize_vault(){
     echo "Initializing Vault"
     # I have to pass in a custom config to start vault without TLS.
-    containerId=$(docker run -d -p 8200:8200 --name ${stack_name}_vault --network $network_name -e "VAULT_CONFIG_DIR=/vault/setup" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stack_name}_vault:/vault/file ${image_provider}/technocore-vault:${TAG})
+    containerId=$(docker run -d -p 8200:8200 --name vault --network $network_name -e "VAULT_CONFIG_DIR=/vault/setup" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stack_name}_vault:/vault/file ${image_provider}/technocore-vault:${TAG})
     sleep 1
     initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1)
     unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs)
