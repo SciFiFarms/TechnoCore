@@ -134,13 +134,10 @@ services:
     networks:
       - web
     ports:
-      - "44053:44053"
       - "8883:8883"
       - "1883:1883"
-      #- "1880:1880"
-      # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
-      # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
-      #- "9229:9229"
+      - "80:80"
+      - "443:443"
     secrets:
       - source: nginx_cert_bundle
         target: cert
