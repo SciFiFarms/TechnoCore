@@ -1,5 +1,5 @@
 vault_i() {
-    docker exec -i $containerId ${stack_name}_vault "$@"
+    docker exec -i $containerId vault "$@"
 }
 
 # First argment should be the service name. Examples are "vault", "emq"
