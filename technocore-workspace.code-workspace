@@ -40,6 +40,9 @@
 			"path": "nginx"
 		},
 		{
+			"path": "nginx-docker-gen"
+		},
+		{
 			"path": "."
 		}
 	]

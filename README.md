@@ -75,6 +75,7 @@ More specifically, I'd like to thank everyone who has worked on the following pr
 - **[Open Agriculture Initiative](https://www.media.mit.edu/groups/open-agriculture-openag/overview/)** - When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. It was the blueprint that got me started. TechnoCore is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
 - **[Rabbit MQ](https://www.rabbitmq.com)** for being the communication backbone of TechnoCore.  
 - **[Node-RED](https://nodered.org/)** for allowing an intuitive way to program the Internet of Things. Because of this, Node-RED is used to implement all the business logic.
+- **[NGINX](https://nginx.org/)** for being the gateway to TechnoCore and making secure communication easy. 
 - **[Home Assistant](https://www.home-assistant.io/)** for making TechnoCore user friendly. Home Assistant makes seeing current statuses, history, and interacting with the devices easy.
 - **[PostgreSQL](https://www.postgresql.org/)** for storing the data; in the world today, data is worth more than gold.
 - **[Vault](https://www.vaultproject.io/)** for the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.

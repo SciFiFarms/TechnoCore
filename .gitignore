@@ -10,6 +10,7 @@ home-assistant-db
 homie
 node-red
 nginx
+nginx-docker-gen
 platformio
 platformio-wrapper
 portainer

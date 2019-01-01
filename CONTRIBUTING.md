@@ -72,7 +72,11 @@ To support this, please begin your commit messages with:
 ### Overview 
 The open source projects that are currently being used are:
 - **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-- **[Rabbit MQ](https://www.rabbitmq.com/)** - MQTT is the communication backbone of TechnoCore. It is what enables sensors to talk with services and services to talk with each other. 
+- **[NGINX docker gen](https://nginx.org/)** - Generates configs for NGINX based on the labels given to services.
+  - [NGINX docker gen Documentation](https://github.com/jwilder/docker-gen)
+  - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
+  - [TechnoCore-NGINX-docker-gen: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX-docker-gen)
+  - [TechnoCore-NGINX-docker-gen: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx-docker-gen)
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of TechnoCore. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
 - **[Home Assistant](https://www.home-assistant.io/)** - For viewing current status of sensors as well as their history. 
 - **[PostgreSQL](https://www.home-assistant.io/)** - Database back end for Home Assistant.

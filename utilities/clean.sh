@@ -23,6 +23,7 @@ remove_volume() {
 }
 
 remove_volume ${stack_name}_home-assistant-db 
+remove_volume ${stack_name}_nginx_config_folder
 remove_volume ${stack_name}_node-red
 remove_volume ${stack_name}_portainer
 remove_volume ${stack_name}_mqtt
