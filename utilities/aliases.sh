@@ -20,4 +20,3 @@ alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
 # TODO: Add subrepo here.
-# TODO: Add deploy here too!

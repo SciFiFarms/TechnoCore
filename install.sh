@@ -11,8 +11,7 @@ if ! [ $(id -u) = 0 ]; then
 fi
 # Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
 if ! command -v docker >/dev/null 2>&1; then
-    # TODO: the \n isn't working.
-    echo >&2 "Docker is required but not installed. See https://hub.docker.com/search/?type=edition&offering=community \nAborting Install."
+    echo -e >&2 "Docker is required but not installed. See https://hub.docker.com/search/?type=edition&offering=community \nAborting Install."
     exit 1
 fi
 
@@ -79,3 +78,7 @@ docker network rm $network_name
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
+
+echo -e "\n\n\nFinished initializing ${stack_name}."
+echo "Please allow 5 or 10 minutes for the services to initialize themselves."
+echo "You'll know they are ready once 'docker service logs -f ${stack_name}_home_assistant' starts reporting something other than 'Couldn't reach MQTT'"
