@@ -150,19 +150,6 @@ services:
     volumes:
       - ${nginx_config_folder_live_mount}
       - ${nginx_config_file_live_mount}
-  nginx_docker_gen:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider}/technocore-nginx-docker-gen:${TAG}
-    networks:
-      - web
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro 
-      # The nginx_config_folder is a volume that is shared with nginx and nginx-docker-gen. 
-      - ${nginx_config_folder_live_mount}
-      - ${nginx_docker_gen_templates_live_mount}
   node_red:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -402,10 +389,7 @@ secrets:
     external: true
 volumes:
   home-assistant-db:
-  # TODO: Implement migrations on the actual volume instead. 
   mqtt:
-  nginx_config_folder:
   node-red:
   portainer:
   vault:
-# Can also use external per http://blog.scottlogic.com/2017/03/01/docker-secrets.html
