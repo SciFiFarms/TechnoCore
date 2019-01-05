@@ -49,4 +49,4 @@ do
 done
 
 # Remove the platformio workaround container. 
-docker rm -f pio 2> /dev/null 
+docker rm -f pio 2&> /dev/null 
