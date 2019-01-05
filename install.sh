@@ -25,18 +25,15 @@ reinstall=1
 # List of services
 declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer nginx)
 
-# Todo: only do this if not inited already.
-# I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
-# I also had to install docker-compose separately. 
-#docker swarm init
-#docker swarm join localhost
-
-if [ $reinstall -eq 1 ] ; then
-    if docker stack rm $stack_name ; then
-        echo "$stack_name being removed. Sleeping."
+# Remove old stack if one is found.
+if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then
+    echo "Previous $stack_name install detected. "
+    if [ -v TECHNOCORE_REINSTALL ]; then
+        echo "Removing stack $stack_name"
+        docker stack rm $stack_name
         sleep 10
+        source utilities/clean.sh
     fi
-    source utilities/clean.sh
 fi
 
 # Load the installer functions. 

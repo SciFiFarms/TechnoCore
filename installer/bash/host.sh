@@ -39,39 +39,10 @@ remove_temp_containers(){
         docker stop $containerId3
         docker rm $containerId3
     fi
-
-}
-
-volume_exists(){
-    if docker volume ls | grep -Fq ${stack_name}_$1 ; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Waits for the container to finish being removed and then removes the volume.
-remove_volume(){
-    echo "Removing $1 volume"
-    local response
-    for second in `seq 1 15`; do
-        response=$(docker volume rm $1 2>&1 )
-        if [ $? -eq 0 ] ; then
-            break
-        fi
-        if grep -q 'No such volume' <<< $response; then
-            echo "Volume $1 doesn't exist, so it won't be removed."
-            break
-        fi
-        sleep 1
-    done
 }
 
 # $1: The name of the volume to create.
 create_volume(){
-    if [ $reinstall -eq 1 ] ; then
-        remove_volume ${stack_name}_$1
-    fi
     docker volume create ${stack_name}_$1
 }
 

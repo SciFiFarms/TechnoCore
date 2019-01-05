@@ -22,15 +22,13 @@ create_tls(){
     create_secret ${1}_cert_bundle "${tlsCert}\n${tlsCa}"
 }
 
+# Create TLS certs for services.
 create_TLS_certs(){
     local secrets=$(docker secret ls --format "table {{.Name}}")
     for service in "${services[@]}"
     do
-        # If the secret doesn't exist, create it.
-        if [[ ! "$secrets" =~ .*${stack_name}_$service.* ]] || [ $reinstall ]; then
             echo "Creating TLS certs for ${stack_name}_$service"
             create_tls $service $reinstall
-        fi
     done
 }
 
