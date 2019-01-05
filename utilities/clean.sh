@@ -5,7 +5,7 @@ source ${technocore_folder}.env
 
 # $@ the arguments to pass into yq. See http://mikefarah.github.io/yq/
 yq() {
-    docker run -v $technocore_folder/:/workdir mikefarah/yq:2.2.0 yq $@
+    docker run --rm -v $technocore_folder/:/workdir mikefarah/yq:2.2.0 yq $@
 }
 
 remove_volume() {
