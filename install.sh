@@ -1,4 +1,7 @@
 #!/bin/bash
+# Set env vars. 
+source .env
+TECHNOCORE_REINSTALL=1
 
 # Make sure dependencies are met. 
 # Source: https://askubuntu.com/questions/15853/how-can-a-script-check-if-its-being-run-as-root
@@ -72,7 +75,6 @@ create_TLS_certs
 
 remove_temp_containers
 docker network rm $network_name
-
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
