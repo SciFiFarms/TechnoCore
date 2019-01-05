@@ -2,16 +2,11 @@ vault_i() {
     docker exec -i $containerId vault "$@"
 }
 
-# First argment should be the service name. Examples are "vault", "emq"
+# $1: service name. Examples are "vault", "emq"
 create_tls(){
-    tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}.${domain}" alt_names="${1}.local,${1}" ttl=720h format=pem)
-    tlsCert=$(grep -Eo '"certificate":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
-    tlsKey=$(grep -Eo '"private_key":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
-    tlsCa=$(grep -Eo '"issuing_ca":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
-
-    if [ $2 ]; then
-        docker secret rm "${stack_name}_${1}_key"
-        docker secret rm "${stack_name}_${1}_cert_bundle"
+    local alt_names="${1}.local,${1}"
+    if [ "$1" == "nginx" ]; then
+        alt_names="${1}.local,${1},${stack_name},${stack_name}.local,${stack_name}.${domain},${HOSTNAME},${HOSTNAME}.local,${HOSTNAME}.${domain}"
     fi
     local tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}.${domain}" alt_names="$alt_names" ttl=720h format=pem)
     local tlsCert=$(grep -Eo '"certificate":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
