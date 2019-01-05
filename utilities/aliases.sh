@@ -12,6 +12,8 @@ alias run_portainer='docker exec -it $(docker service ps -f desired-state=runnin
 alias run_docs='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_nginx='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/bash'
 alias run_nginx_docker_gen='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx_docker_gen | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx_docker_gen | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
+alias remove_all_containers='docker ps --no-trunc -aq | xargs docker rm -f'
+alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 
 # TODO: It may be useful to figure out how to run this in the closest parent 
 # directory that contains a docker-compose.yml file. 
