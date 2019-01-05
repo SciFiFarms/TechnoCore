@@ -1,17 +1,3 @@
-
-# Add domains to hosts file.
-# TODO: It would be better to accomplish this task in a way that is shared accross the network. mDNS?
-add_services_to_hosts_file(){
-    for service in "${services[@]}"
-    do
-        if ! grep -q $service.$domain /etc/hosts; then
-            echo "Adding $service.$domain to /etc/hosts."
-            echo "127.0.0.1 ${service}.$domain" >> /etc/hosts
-        fi
-    done
-}
-
-
 add_CA_to_firefox(){
     # Install CA cert into firefox. Eventually, put into other browsers too. 
     # There is a powershell implementation of this on this page: https://stackoverflow.com/questions/1435000/programmatically-install-certificate-into-mozilla

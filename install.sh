@@ -16,14 +16,9 @@ fi
 # TODO: Add user permission to use docker if not already setup.
 #https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
 
-# Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
-# Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
-# Maybe /etc/tls/technocore
-source .env
-reinstall=1
 
-# List of services
-declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer nginx)
+# List of services that need TLS.
+declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx)
 
 # Remove old stack if one is found.
 if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then
@@ -37,12 +32,9 @@ if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep 
 fi
 
 # Load the installer functions. 
-# TODO: Construct the path by figuring out host env and choosing the appropriate folders. 
 for file in ./installer/bash/*; do
    source $file
 done
-
-add_services_to_hosts_file
 
 network_name="${stack_name}"
 docker network create --attachable $network_name
@@ -68,7 +60,6 @@ create_vault_user_and_token platformio
 create_vault_user_and_token portainer
 create_vault_user_and_token mqtt
 
-
 create_TLS_certs
 
 remove_temp_containers
@@ -77,6 +68,3 @@ docker network rm $network_name
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
-# Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/technocore.
-# Remove vault port
-# docker service update --publish-rm 8200 ${stack_name}_vault
