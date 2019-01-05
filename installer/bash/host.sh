@@ -79,9 +79,8 @@ create_volume(){
 # $2: The value of the secret.
 # TODO: This is duplicated in portainer's dogfish instance. 
 create_secret(){
-    # TODO: Only remove the secret if it exists.
-    docker secret rm "${stack_name}_$1"
-    echo -e "$2" | docker secret create "${stack_name}_$1" - 
+    echo "Creating secret ${stack_name}_$1"
+    echo -e "$2" | docker secret create "${stack_name}_$1" - > /dev/null
 }
 
 # $1: The field to extract. 

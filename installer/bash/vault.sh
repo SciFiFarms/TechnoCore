@@ -18,8 +18,8 @@ create_tls(){
     local tlsKey=$(grep -Eo '"private_key":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
     local tlsCa=$(grep -Eo '"issuing_ca":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
 
-    echo -e "$tlsKey" | docker secret create "${stack_name}_${1}_key" -
-    echo -e "${tlsCert}\n${tlsCa}" | docker secret create "${stack_name}_${1}_cert_bundle" -
+    create_secret ${1}_key "$tlsKey"
+    create_secret ${1}_cert_bundle "${tlsCert}\n${tlsCa}"
 }
 
 create_TLS_certs(){
@@ -71,10 +71,8 @@ configure_CAs(){
     vault_i write ca/roles/tls key_bits=2048 max_ttl=8760h allow_any_name=true enforce_hostnames=false
     local caIntPem=$(curl -s http://127.0.0.1:8200/v1/ca/ca/pem)
 
-    docker secret rm "${stack_name}_ca_bundle"
-    echo -e "$caPem\n$caIntPem" | docker secret create "${stack_name}_ca_bundle" - 
-    docker secret rm "${stack_name}_ca"
-    echo -e "$caPem" | docker secret create "${stack_name}_ca" - 
+    create_secret ca_bundle "$caPem\n$caIntPem"
+    create_secret ca "$caPem"
 }
 
 # $1: username/file prefix.
