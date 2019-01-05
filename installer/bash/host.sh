@@ -25,19 +25,11 @@ add_CA_to_firefox(){
     done
 }
 
+# Remove the temporary vault container.
 remove_temp_containers(){
-    # Remove the temperary vault container.
     if [ $containerId ]; then
-        docker stop $containerId
-        docker rm $containerId
-    fi
-    if [ $containerId2 ]; then
-        docker stop $containerId2
-        docker rm $containerId2
-    fi
-    if [ $containerId3 ]; then
-        docker stop $containerId3
-        docker rm $containerId3
+        docker stop $containerId > /dev/null
+        docker rm $containerId > /dev/null
     fi
 }
 
@@ -66,17 +58,14 @@ extract_from_json(){
 # want to create more mqtt users, add them as migrations in the portainer image. 
 create_mqtt_user(){
     local response
+    echo "Creating MQTT user $1"
     until response=$(vault_i write -force -format=json /sys/tools/random/32)
     do
         echo "Couldn't reach Vault. Will retry after sleep."
         sleep 5
     done
-    echo "Response: $response"
     local password=$(extract_from_json random_bytes "$response")
-    echo "Password: $password"
-
 
     create_secret ${1}_mqtt_username $1
     create_secret ${1}_mqtt_password $password
-    echo "Created MQTT user: $1"
 }

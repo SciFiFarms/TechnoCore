@@ -42,8 +42,8 @@ initialize_vault(){
     local rootToken=$(grep -C 1 "Root Token" <<< "$initResponse" | cut -d : -f 2 | xargs)
     create_secret vault_unseal $unsealKey
     create_secret vault_token $rootToken
-    vault_i operator unseal $unsealKey
-    vault_i login $rootToken
+    vault_i operator unseal $unsealKey > /dev/null
+    vault_i login $rootToken > /dev/null
     vault_i audit enable file file_path=stdout
 }
 
