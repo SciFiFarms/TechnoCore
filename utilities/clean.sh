@@ -26,6 +26,10 @@ remove_volume() {
     done
 }
 
+# Remove the stack
+docker stack rm $stack_name
+sleep 10
+
 # Remove all the secrets
 for secret in $(yq read docker-compose.yml 'secrets.*.name')
 do
@@ -49,4 +53,4 @@ do
 done
 
 # Remove the platformio workaround container. 
-docker rm -f pio 2&> /dev/null 
+docker rm -f pio >&2 /dev/null 

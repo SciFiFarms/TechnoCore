@@ -36,8 +36,6 @@ if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep 
     echo "Previous $stack_name install detected. "
     if [ -v TECHNOCORE_REINSTALL ]; then
         echo "Removing stack $stack_name"
-        docker stack rm $stack_name
-        sleep 10
         source utilities/clean.sh
     fi
 fi
