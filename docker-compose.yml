@@ -23,9 +23,9 @@ services:
       - ${docs_live_mount}
   home_assistant:
     depends_on:
-      - vault
-      - mqtt
       - home_assistant_db
+      - mqtt
+      - vault
     deploy:
       mode: global
       restart_policy:
@@ -85,7 +85,6 @@ services:
   mqtt:
     depends_on:
       - vault
-      - portainer
     deploy:
       mode: global
       restart_policy:
@@ -188,6 +187,8 @@ services:
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
   platformio:
+    depends_on:
+      - mqtt
     deploy:
         mode: global
         restart_policy:
@@ -221,6 +222,8 @@ services:
       - image_provider=${image_provider}
       - TAG=${TAG}
       - image_refresh_time=${image_refresh_time}
+    depends_on:
+      - mqtt
     deploy:
       mode: global
       restart_policy:
