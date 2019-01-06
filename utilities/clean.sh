@@ -4,6 +4,9 @@ technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/
 source ${technocore_folder}.env 
 
 # $@ the arguments to pass into yq. See http://mikefarah.github.io/yq/
+# Alternatives: https://stackoverflow.com/questions/5014632/how-can-i-parse-a-yaml-file-from-a-linux-shell-script
+# Documentation: https://yq.readthedocs.io/en/latest/
+#                http://mikefarah.github.io/yq/
 yq() {
     docker run --rm -v $technocore_folder/:/workdir mikefarah/yq:2.2.0 yq $@
 }
@@ -53,4 +56,4 @@ do
 done
 
 # Remove the platformio workaround container. 
-docker rm -f pio >&2 /dev/null 
+docker rm -f pio &> /dev/null 
