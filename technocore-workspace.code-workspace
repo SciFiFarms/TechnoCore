@@ -40,10 +40,23 @@
 			"path": "nginx"
 		},
 		{
-			"path": "nginx-docker-gen"
-		},
-		{
 			"path": "."
 		}
-	]
+	],
+	"extensions": {
+		"recommendations": [
+			"vsciot-vscode.vscode-arduino",
+			"formulahendry.code-runner",
+			"streetsidesoftware.code-spell-checker",
+			"peterjausovec.vscode-docker",
+			"mikestead.dotenv",
+			"wholroyd.hcl",
+			"yzhang.markdown-all-in-one",
+			"shd101wyy.markdown-preview-enhanced",
+			"mushan.vscode-paste-image",
+			"ms-python.python",
+			"tyriar.sort-lines"
+		],
+		"unwantedRecommendations": []
+	}
 }
