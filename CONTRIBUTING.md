@@ -75,8 +75,8 @@ The open source projects that are currently being used are:
 - **[NGINX docker gen](https://nginx.org/)** - Generates configs for NGINX based on the labels given to services.
   - [NGINX docker gen Documentation](https://github.com/jwilder/docker-gen)
   - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
-  - [TechnoCore-NGINX-docker-gen: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX-docker-gen)
-  - [TechnoCore-NGINX-docker-gen: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx-docker-gen)
+  - [TechnoCore-NGINX: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX)
+  - [TechnoCore-NGINX: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx)
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of TechnoCore. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
 - **[Home Assistant](https://www.home-assistant.io/)** - For viewing current status of sensors as well as their history. 
 - **[PostgreSQL](https://www.home-assistant.io/)** - Database back end for Home Assistant.

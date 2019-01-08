@@ -12,4 +12,3 @@ docker pull ${image_provider}/technocore-vault:$TAG
 docker pull ${image_provider}/technocore-vernemq:$TAG
 docker pull ${image_provider}/technocore-portainer:$TAG
 docker pull ${image_provider}/technocore-nginx:$TAG
-docker pull ${image_provider}/technocore-nginx-docker-gen:$TAG

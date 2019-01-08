@@ -11,7 +11,6 @@ alias run_platformio='docker exec -it $(docker service ps -f desired-state=runni
 alias run_portainer='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_portainer | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_docs='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_docs | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias run_nginx='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/bash'
-alias run_nginx_docker_gen='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx_docker_gen | grep ${stack_name} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name}_nginx_docker_gen | grep ${stack_name} | tr -s " " | cut -d " " -f 1) /bin/sh'
 alias remove_all_containers='docker ps --no-trunc -aq | xargs docker rm -f'
 alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 
@@ -19,4 +18,4 @@ alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 # directory that contains a docker-compose.yml file. 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
-# TODO: Add subrepo here.
+# TODO: Add subrepo here?

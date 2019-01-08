@@ -49,7 +49,7 @@ network_name="${stack_name}"
 docker network create --attachable $network_name > /dev/null
 
 # Setup certificate Authorities.
-create_volume vault 
+create_volume vault
 initialize_vault
 configure_CAs
 # In ubuntu, that needs to install libnss3-tools, which provides certutil

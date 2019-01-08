@@ -126,8 +126,6 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
   nginx:
-    depends_on:
-      - nginx_docker_gen
     deploy:
       mode: global
       restart_policy:
