@@ -82,6 +82,7 @@ services:
     user: postgres 
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
+      - ${home_assistant_db_live_mount}
   mqtt:
     depends_on:
       - vault
