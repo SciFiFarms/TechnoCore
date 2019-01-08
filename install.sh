@@ -46,10 +46,10 @@ for file in ./installer/bash/*; do
 done
 
 network_name="${stack_name}"
-docker network create --attachable $network_name
+docker network create --attachable $network_name > /dev/null
 
 # Setup certificate Authorities.
-create_volume vault
+create_volume vault 
 initialize_vault
 configure_CAs
 # In ubuntu, that needs to install libnss3-tools, which provides certutil
@@ -72,11 +72,11 @@ create_vault_user_and_token mqtt
 create_TLS_certs
 
 remove_temp_containers
-docker network rm $network_name
+docker network rm $network_name > /dev/null
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
 echo -e "\n\n\nFinished initializing ${stack_name}."
-echo "Please allow 5 or 10 minutes for the services to initialize themselves."
+echo "Please allow 5 minutes for the services to initialize themselves."
 echo "You'll know they are ready once 'docker service logs -f ${stack_name}_home_assistant' starts reporting something other than 'Couldn't reach MQTT'"

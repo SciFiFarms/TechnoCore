@@ -21,7 +21,7 @@ remove_temp_containers(){
 
 # $1: The name of the volume to create.
 create_volume(){
-    docker volume create ${stack_name}_$1
+    echo "Creating volume $(docker volume create ${stack_name}_$1)"
 }
 
 # $1: The name of the secret.
