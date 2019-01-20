@@ -54,6 +54,3 @@ do
     volume=$(eval echo $volume | cut -f1 -d:)
     remove_volume ${stack_name}_$volume
 done
-
-# Remove the platformio workaround container. 
-docker rm -f pio &> /dev/null 

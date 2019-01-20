@@ -62,10 +62,10 @@ create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
-create_secret platformio_mqtt_username "Not yet set."
-create_secret platformio_mqtt_password "Not yet set."
+create_secret esphomeyaml_mqtt_username "Not yet set."
+create_secret esphomeyaml_mqtt_password "Not yet set."
 
-create_vault_user_and_token platformio
+create_vault_user_and_token esphomeyaml
 create_vault_user_and_token portainer
 create_vault_user_and_token mqtt
 

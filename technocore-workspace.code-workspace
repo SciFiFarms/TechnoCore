@@ -4,13 +4,16 @@
 			"path": "docs"
 		},
 		{
+			"path": "esphomeyaml"
+		},
+		{
+			"path": "esphomeyaml-wrapper"
+		},
+		{
 			"path": "vault"
 		},
 		{
 			"path": "vernemq"
-		},
-		{
-			"path": "platformio"
 		},
 		{
 			"path": "portainer"
@@ -32,9 +35,6 @@
 		},
 		{
 			"path": "dogfish"
-		},
-		{
-			"path": "platformio-wrapper"
 		},
 		{
 			"path": "nginx"

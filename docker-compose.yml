@@ -21,6 +21,34 @@ services:
         target: ca
     volumes:
       - ${docs_live_mount}
+  esphomeyaml-wrapper:
+    depends_on:
+      - mqtt
+    deploy:
+        mode: global
+        restart_policy:
+          condition: any
+    environment:
+      - image_provider=${image_provider}
+      - stack_name=${stack_name}
+      - service_name=esphomeyaml
+      - TAG=${TAG}
+    image: ${image_provider}/technocore-esphomeyaml-wrapper:${TAG}
+    networks:
+      - web
+    secrets:
+      - source: ca_bundle
+        target: ca
+      - source: esphomeyaml_mqtt_username
+        target: mqtt_username
+      - source: esphomeyaml_mqtt_password
+        target: mqtt_password
+      - source: esphomeyaml_token
+        target: token
+    user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${esphomeyaml_live_mount}
   home_assistant:
     depends_on:
       - home_assistant_db
@@ -138,6 +166,7 @@ services:
       - "1883:1883"
       - "80:80"
       - "443:443"
+      - "6052:6052"
     secrets:
       - source: nginx_cert_bundle
         target: cert
@@ -185,35 +214,6 @@ services:
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
-  platformio:
-    depends_on:
-      - mqtt
-    deploy:
-        mode: global
-        restart_policy:
-          condition: any
-    #devices:
-    #  - "/dev/ttyUSB0:/dev/ttyUSB0"
-    environment:
-      - image_provider=${image_provider}
-      - stack_name=${stack_name}
-      - TAG=${TAG}
-    image: ${image_provider}/technocore-platformio-wrapper:${TAG}
-    networks:
-      - web
-    secrets:
-      - source: ca_bundle
-        target: ca
-      - source: platformio_mqtt_username
-        target: mqtt_username
-      - source: platformio_mqtt_password
-        target: mqtt_password
-      - source: platformio_token
-        target: token
-    user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${platformio_live_mount}
   portainer:
     environment:
       - stackname=${stack_name}
@@ -341,14 +341,14 @@ secrets:
   nginx_key:
     name: ${stack_name}_nginx_key
     external: true
-  platformio_mqtt_username:
-    name: ${stack_name}_platformio_mqtt_username
+  esphomeyaml_mqtt_username:
+    name: ${stack_name}_esphomeyaml_mqtt_username
     external: true
-  platformio_mqtt_password:
-    name: ${stack_name}_platformio_mqtt_password
+  esphomeyaml_mqtt_password:
+    name: ${stack_name}_esphomeyaml_mqtt_password
     external: true
-  platformio_token:
-    name: ${stack_name}_platformio_token
+  esphomeyaml_token:
+    name: ${stack_name}_esphomeyaml_token
     external: true
   portainer_cert_bundle:
     name: ${stack_name}_portainer_cert_bundle
@@ -390,6 +390,7 @@ secrets:
     name: ${stack_name}_docs_key
     external: true
 volumes:
+  esphomeyaml:
   home-assistant-db:
   mqtt:
   node-red:

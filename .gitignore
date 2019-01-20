@@ -4,14 +4,14 @@ ca.pem
 
 docs
 dogfish
+esphomeyaml
+esphomeyaml-wrapper
 ha_homie
 home-assistant
 home-assistant-db
 homie
 node-red
 nginx
-platformio
-platformio-wrapper
 portainer
 vault
 vernemq
