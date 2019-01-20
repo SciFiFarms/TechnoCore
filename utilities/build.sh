@@ -2,6 +2,7 @@
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source ${technocore_folder}/../.env 
 
+# TODO: Make these reference docker-compose.yaml like clean.sh does.
 docker build ./docs/ -t ${image_provider}/technocore-docs:$TAG
 docker build ./esphomeyaml/ -t ${image_provider}/technocore-esphomeyaml:$TAG
 docker build ./esphomeyaml-wrapper/ -t ${image_provider}/technocore-esphomeyaml-wrapper:$TAG

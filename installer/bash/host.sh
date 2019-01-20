@@ -15,7 +15,6 @@ add_CA_to_firefox(){
 remove_temp_containers(){
     if [ $containerId ]; then
         docker stop $containerId > /dev/null
-        docker rm $containerId > /dev/null
     fi
 }
 
