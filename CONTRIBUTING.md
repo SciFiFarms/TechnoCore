@@ -6,17 +6,16 @@
         - [Creating an issue](#creating-an-issue)
             - [Labels](#labels)
         - [Report a bug](#report-a-bug)
-        - [Working on an issue](#working-on-an-issue)
-        - [Code review process](#code-review-process)
-        - [Committing code](#committing-code)
-        - [Conventions](#conventions)
+  - [Community](#community)
     - [Development](#development)
         - [Overview](#overview)
         - [Developer Environment](#developer-environment)
-        - [Debug](#debug)
+    - [Debugging (how to find out what went wrong)](#debugging-how-to-find-out-what-went-wrong)
+      - [Viewing Logs](#viewing-logs)
+      - [Changing verbosity of logs](#changing-verbosity-of-logs)
+    - [Working on an issue](#working-on-an-issue)
         - [Run tests](#run-tests)
-    - [Community](#community)
-    - [Development Tips and Tricks](#development-tips-and-tricks)
+    - [Conventions](#conventions)
 
 ## Contributing
 My hope is that TechnoCore changes the world, but I can't do it alone. So thank you for considering contributing to TechnoCore. 
@@ -48,55 +47,96 @@ When filing an issue, please answer these five questions:
 
 If you find a security vulnerability, please email SpencerIsSuperAwesome@gmail.com rather than opening an issue. 
 
-### Working on an issue
-For something that is bigger than a one or two line fix:
-1. Create your own fork of the code
-2. Do the changes in your fork
-3. If you like the change and think the project could use it, send a pull request.
-
-### Code review process
-I will review pull requests regularly. If the project grows, I will form a more formal review process and involve others who wish to help maintain TechnoCore. 
-
-### Committing code
-I'd like to be able to trace commits back to the discussion in issues. 
-To support this, please begin your commit messages with:
-- #[issue number being addressed] if your commit addresses an open issue. If it addresses more than one issue #comma,#seperate,#the,#list.
-- #none if there isn't an open issue, but you'd still like to open a pull request. 
-- #documentation if it just updates to documentation or a typo in the code. 
-- #typo if you're implementing a 1 or 2 line change that isn't addressed in any open issues.
-
-### Conventions
- TechnoCore uses a wide variety of languages, so having one set of conventions doesn't make sense. Please use the conventions typical of the language being used. 
+## Community
+Currently, TechnoCore's only community is seen in the issues. While it is small, that works well. But if you have an interest in creating a place for chat or discussion, checkout https://github.com/SciFiFarms/TechnoCore/issues/29.
 
 ## Development
 ### Overview 
-The open source projects that are currently being used are:
+Below is a list of the projects that TechnoCore uses and links to more information about each one. 
+Technocore's documentation on a technology is usually the websites I found helpful when setting up that service or feature. I plan to clean these up and add more TechnoCore specific information about the service. Currently, this is the only organized way to get to these pages.
 - **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-- **[NGINX docker gen](https://nginx.org/)** - Generates configs for NGINX based on the labels given to services.
-  - [NGINX docker gen Documentation](https://github.com/jwilder/docker-gen)
+  - [Docker's Documentation](https://docs.docker.com/)
+  - [TechnoCore's documentation on Docker](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docker.md)
+- **[VerneMQ (MQTT Provider)](https://vernemq.com/)** - MQTT is the communication backbone of TechnoCore. It is what enables sensors to talk with services and services to talk with each other. 
+  - [VerneMQ's Documentation](https://vernemq.com/docs/)
+  - [TechnoCore's documentation on VerneMQ](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vernemq.md)
+  - [TechnoCore-VerneMQ: Git repo](https://github.com/SciFiFarms/TechnoCore-VerneMQ)
+  - [TechnoCore-VerneMQ: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vernemq)
+- **[NGINX](https://nginx.org/)** - Is the gateway to TechnoCore. All HTTP, HTTPS, and MQTT traffic gets forwarded by NGINX. 
+  - [NGINX's Documentation](http://nginx.org/en/docs/)
   - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
   - [TechnoCore-NGINX: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX)
   - [TechnoCore-NGINX: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx)
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of TechnoCore. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
+  - [Node-RED's Documentation](https://nodered.org/docs/)
+  - [TechnoCore's documentation on Node-RED](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_node-red.md)
+  - [TechnoCore-Node-RED: Git repo](https://github.com/SciFiFarms/TechnoCore-Node-RED)
+  - [TechnoCore-Node-RED: Docker Hub](https://hub.docker.com/r/scififarms/technocore-node-red)
 - **[Home Assistant](https://www.home-assistant.io/)** - For viewing current status of sensors as well as their history. 
-- **[PostgreSQL](https://www.home-assistant.io/)** - Database back end for Home Assistant.
+  - [Home-Assistant's Documentation](https://www.home-assistant.io/docs/)
+  - [TechnoCore's documentation on Home Assistant](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_home-assistant.md)
+  - [TechnoCore-Home-Assistant: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant)
+  - [TechnoCore-Home-Assistant: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant)
+- **[PostgreSQL](https://www.postgresql.org/)** - Database back end for Home Assistant.
+  - [PostgreSQL's Documentation](https://www.postgresql.org/docs/)
+  - [TechnoCore's documentation on PostgreSQL](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_postgresql.md)
+  - [TechnoCore-Home-Assistant-DB: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant-DB)
+  - [TechnoCore-Home-Assistant-DB: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant-db)
 - **[Vault](https://www.vaultproject.io/)** - Is the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
-- **[Homie for ESP8266](https://github.com/marvinroger/homie-esp8266)** - This is the framework being used to run the ESP8266s. Homie and/or ESP8266s are not *necessary* for TechnoCore. All that is required are devices that can communicate using the MQTT protocol. 
+  - [Vault's Documentation(https://www.vaultproject.io/docs/)
+  - [TechnoCore's documentation on Vault](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vault.md)
+  - [TechnoCore-Vault: Git repo](https://github.com/SciFiFarms/TechnoCore-Vault)
+  - [TechnoCore-Vault: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vault)
+- **[Homie](https://github.com/marvinroger/homie-esp8266)** - This is the framework being used to run the ESP8266s. Homie and/or ESP8266s are not *necessary* for TechnoCore. All that is required are devices that can communicate using the MQTT protocol. 
+  - [Homie's Documentation](http://marvinroger.github.io/homie-esp8266/docs/develop/quickstart/what-is-it/)
+  - [TechnoCore's documentation on Homie](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_homie.md)
+  - [Homie: Git repo](https://github.com/SciFiFarms/Homie)
 - **[espressif/ESP8266](https://espressif.com)** - The ESP8266 is a $5 WiFi chip that you can connect senors to.
+- **[Jekyll](https://jekyllrb.com/)** - Jekyll powers TechnoCore's documentation. 
+  - [Jekyll's Documentation](https://jekyllrb.com/docs/)
+  - [TechnoCore's documentation on Jekyll](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
+  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
+  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
+- **[PlatformIO (Flashing ESPs)](https://platformio.org/)** - The PlatformIO service allows for flashing ESPs and is triggered from Home Assistant.
+  - [PlatformIO's Documentation](https://docs.platformio.org/)
+  - [TechnoCore's documentation on PlatformIO](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_platformio.md)
+  - [TechnoCore-PlatformIO: Git repo](https://github.com/SciFiFarms/TechnoCore-PlatformIO)
+  - [TechnoCore-PlatformIO: Docker Hub](https://hub.docker.com/r/scififarms/technocore-platformio)
+- **[Portainer](https://www.portainer.io/)** - Provides a GUI for Docker as well as the service responsible for initializing all the other services.
+  - [Portainer's Documentation](https://portainer.readthedocs.io/en/stable/)
+  - [TechnoCore's documentation on Portainer](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_portainer.md)
+  - [TechnoCore-Portainer: Git repo](https://github.com/SciFiFarms/TechnoCore-Portainer)
+  - [TechnoCore-Portainer: Docker Hub](https://hub.docker.com/r/scififarms/technocore-portainer)
+- **[Dogfish](https://github.com/dwb/dogfish)** - Enables the idea of migrations to the state of the service.
+  - [TechnoCore's documentation on Dogfish](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_dogfish.md)
+  - [Dogfish: Git repo](https://github.com/SciFiFarms/dogfish)
 
 ### Developer Environment 
-Right now, the only way to run TechnoCore is by building the images yourself. This gives you access to everything you'll need to work on TechnoCore. This will not always be the case: [#11](https://github.com/SciFiFarms/TechnoCore/issues/11)
 
-### Debug
-The best way I've found to debug so far is using `docker service logs SERVICE_NAME`
+### Debugging (how to find out what went wrong)
+#### Viewing Logs
+The best way I've found to debug so far is using `docker service logs -f SERVICE_NAME`
 To get a list of the service names, run `docker service ls`
+#### Changing verbosity of logs
+- To increase logging verbosity in Node-RED, change node-red/data/settings.js logging: console: level to "trace".
+
+#### There will be more added to this section soon. Here is an outline of the topics to be added:
+Setting up VS Code with TechnoCore(technocore-workspace.code-workspace)
+Getting started via dev-setup.sh
+Mounting local files into running services(.env)
+Building the images yourself (utilities/clean.sh)
+Debugging in Home Assistant, Node-RED, and VerneMQ (MQTT)
+Changing verbosity of Home Assistant and VerneMQ. 
+Where to look for things in TechnoCore. 
+
+### Working on an issue
+1. Fork the code
+2. Commit your changes in your fork
+3. Send a pull request with your changes
 
 ### Run tests
 There aren't currently any tests written. I'd love to change that [#6](https://github.com/SciFiFarms/TechnoCore/issues/6). 
 
-## Community
-Currently, TechnoCore's only community is seen in the issues. While it is small, that works well. But if you have an interest in creating a place for chat or discussion, feel free to get ahold of me SpencerIsSuperAwesome@gmail.com
+### Conventions
+TechnoCore uses bash, c++, Python, and Javascript, so having one set of conventions doesn't make sense. Please use the conventions typical of the language being used. 
 
-## Development Tips and Tricks
-- To increase logging verbosity in Node-RED, change nr/data/settings.js logging: console: level to "trace".
-- To increase logging verbosity in RabbitMQ, uncomment "log.console.level = debug" in mqtt/data/rabbitmq.conf.
