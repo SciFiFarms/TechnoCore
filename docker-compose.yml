@@ -58,6 +58,12 @@ services:
       mode: global
       restart_policy:
         condition: any
+    environment:
+      - HOSTNAME=${HOSTNAME}
+      - HOSTNAME_NODE_RED_URL=https://${HOSTNAME}/node_red/
+      - HOSTNAME_ESPHOMEYAML_URL=https://${HOSTNAME}:6052/
+      - HOSTNAME_PORTAINER_URL=https://${HOSTNAME}/portainer/
+      - HOSTNAME_DOCS_URL=https://${HOSTNAME}/docs/
     image: ${image_provider}/technocore-home-assistant:${TAG}
     networks:
       web:
