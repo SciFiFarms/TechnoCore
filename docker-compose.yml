@@ -83,6 +83,10 @@ services:
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
     volumes:
+      # Might need to change from "/config/.storage" to "/config". 
+      # "/config/.storage" is where the users are kept, but we might want to save
+      # changes made to the /config/ dir too. 
+      - home-assistant:/config/.storage/
       # This allows for realtime editing of Home Assistant configs and scripts. 
       - ${home_assistant_config_live_mount}
       - ${home_assistant_src_live_mount}
@@ -391,6 +395,7 @@ secrets:
     external: true
 volumes:
   esphomeyaml:
+  home-assistant:
   home-assistant-db:
   mqtt:
   node-red:
