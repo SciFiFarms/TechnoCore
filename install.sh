@@ -2,6 +2,8 @@
 # Set env vars. 
 source .env
 TECHNOCORE_REINSTALL=1
+# TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
+debug_output=/dev/null
 
 # Make sure dependencies are met. 
 # Source: https://askubuntu.com/questions/15853/how-can-a-script-check-if-its-being-run-as-root
@@ -77,6 +79,12 @@ docker network rm $network_name > /dev/null
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
+echo "${stack_name} initializing. "
+# For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
+until curl --insecure --fail https://${HOSTNAME}/ &> /dev/null
+do
+    echo "https://${HOSTNAME}/ is not yet up. Will retry in 5 seconds."
+    sleep 5
+done
 echo -e "\n\n\nFinished initializing ${stack_name}."
-echo "Please allow 5 minutes for the services to initialize themselves."
-echo "You'll know they are ready once 'docker service logs -f ${stack_name}_home_assistant' starts reporting something other than 'Couldn't reach MQTT'"
+echo "You may now use https://${HOSTNAME}/ to access your ${stack_name} instance."
