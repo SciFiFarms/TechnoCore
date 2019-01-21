@@ -20,8 +20,9 @@ fi
 # Add user permission to use docker if not already setup.
 #https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
 if ! getent group docker | grep -w "$USER" > /dev/null ; then
-    echo "Adding $USER to docker group"
-    usermod -a -G docker $USER
+    # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
+    echo "Adding $(logname) to docker group"
+    usermod -a -G docker $(logname)
 fi
 
 # Initialize the swarm if it isn't setup.
