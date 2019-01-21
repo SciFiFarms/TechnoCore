@@ -26,7 +26,7 @@ if ! getent group docker | grep -w "$USER" > /dev/null ; then
 fi
 
 # Initialize the swarm if it isn't setup.
-if docker swarm ca | grep "Error response" &> /dev/null ; then
+if ! docker swarm ca | grep "Error response" &> /dev/null ; then
     echo "Initializing Docker Swarm"
     docker swarm init
 fi
