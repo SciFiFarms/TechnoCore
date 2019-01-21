@@ -17,17 +17,17 @@ if ! command -v docker >/dev/null 2>&1; then
     exit 1
 fi
 
-# Initialize the swarm if it isn't setup.
-if docker swarm ca | grep "docker swarm init" > /dev/null ; then
-    echo "Initializing Docker Swarm"
-    docker swarm init
-fi
-
 # Add user permission to use docker if not already setup.
 #https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
 if ! getent group docker | grep -w "$USER" > /dev/null ; then
     echo "Adding $USER to docker group"
     usermod -a -G docker $USER
+fi
+
+# Initialize the swarm if it isn't setup.
+if docker swarm ca | grep "Error response" &> /dev/null ; then
+    echo "Initializing Docker Swarm"
+    docker swarm init
 fi
 
 # List of services that need TLS.
