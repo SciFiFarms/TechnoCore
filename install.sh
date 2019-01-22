@@ -81,11 +81,12 @@ docker network rm $network_name > /dev/null
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
 echo "${stack_name} initializing. "
+hostname_trimmed=echo ${HOSTNAME} | cut -d"." -f 1
 # For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
-until curl --insecure --fail https://${HOSTNAME}/ &> /dev/null
+until curl --insecure --fail https://${hostname_trimmed}/ &> /dev/null
 do
-    echo "https://${HOSTNAME}/ is not yet up. Will retry in 5 seconds."
+    echo "https://${hostname_trimmed}/ is not yet up. Will retry in 5 seconds."
     sleep 5
 done
 echo -e "\n\n\nFinished initializing ${stack_name}."
-echo "You may now use https://${HOSTNAME}/ to access your ${stack_name} instance."
+echo "You may now use https://${hostname_trimmed}/ to access your ${stack_name} instance."
