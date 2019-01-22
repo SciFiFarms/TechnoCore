@@ -11,14 +11,17 @@ if ! [ $(id -u) = 0 ]; then
    echo "Not running as root. Try running with sudo prepended to the command. "
    exit 1
 fi
+
 # Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
 if ! command -v docker >/dev/null 2>&1; then
-    echo -e >&2 "Docker is required but not installed. See https://hub.docker.com/search/?type=edition&offering=community \nAborting Install."
-    exit 1
+    echo -e >&2 "Docker is required but not installed. Installing." 
+    curl -fsSL get.docker.com | CHANNEL=stable sh > $debug_output
+    systemctl enable docker > $debug_output
+    systemctl start docker > $debug_output
 fi
 
 # Add user permission to use docker if not already setup.
-#https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+# https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
 if ! getent group docker | grep -w "$USER" > /dev/null ; then
     # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
     echo "Adding $(logname) to docker group"
