@@ -86,7 +86,7 @@ docker network rm $network_name > /dev/null
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
 echo "${stack_name} initializing. "
-hostname_trimmed=echo ${HOSTNAME} | cut -d"." -f 1
+hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
 # For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
 until curl --insecure --fail https://${hostname_trimmed}/ &> /dev/null
 do
