@@ -26,9 +26,11 @@ if ! getent group docker | grep -w "$USER" > /dev/null ; then
 fi
 
 # Initialize the swarm if it isn't setup.
-if ! docker swarm ca | grep "Error response" &> /dev/null ; then
+# Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
+# would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
     echo "Initializing Docker Swarm"
-    docker swarm init
+    docker swarm init > /dev/null
 fi
 
 # List of services that need TLS.
