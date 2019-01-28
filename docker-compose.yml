@@ -259,6 +259,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
       - portainer:/data
+      - ${portainer_live_mount}
   vault:
     deploy:
       mode: global
