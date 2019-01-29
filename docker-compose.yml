@@ -180,7 +180,7 @@ services:
       - "6052:6052"
     secrets:
       - source: nginx_cert_bundle
-        target: cert
+        target: cert_bundle
       - source: nginx_key
         target: key
       - source: ca_bundle
