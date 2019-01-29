@@ -23,14 +23,14 @@ remove_volume() {
         if grep -q 'volume is in use' <<< $response; then
             local container=$(echo "$response" | cut -d"[" -f2 | cut -d"]" -f1 | tr "," " " )
             echo "Volume is in use by container $container. Will stop."
-            docker rm -f $container
+            docker rm -f $container > /dev/null
         fi
         sleep 2
     done
 }
 
 # Remove the stack
-docker stack rm $stack_name
+docker stack rm $stack_name 2> /dev/null
 sleep 10
 
 # Remove all the secrets
