@@ -227,6 +227,7 @@ services:
       #- "./node-red:/usr/src/node-red"
   portainer:
     environment:
+      - acme_flags=${acme_flags}
       - stackname=${stack_name}
       - stack_name=${stack_name}
       - image_provider=${image_provider}
