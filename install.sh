@@ -62,6 +62,7 @@ create_volume vault
 initialize_vault
 configure_CAs
 # In ubuntu, that needs to install libnss3-tools, which provides certutil
+# TODO: Would like to install LetsEncrypt's testing server CAs. 
 add_CA_to_firefox
 
 create_mqtt_user mqtt
@@ -69,6 +70,7 @@ create_mqtt_user portainer
 
 create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
+create_secret home_assistant_domain "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
 create_secret esphomeyaml_mqtt_username "Not yet set."

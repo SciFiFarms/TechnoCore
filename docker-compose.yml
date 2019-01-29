@@ -59,11 +59,7 @@ services:
       restart_policy:
         condition: any
     environment:
-      - HOSTNAME=${HOSTNAME}
-      - HOSTNAME_NODE_RED_URL=https://${HOSTNAME}/node_red/
-      - HOSTNAME_ESPHOMEYAML_URL=https://${HOSTNAME}:6052/
-      - HOSTNAME_PORTAINER_URL=https://${HOSTNAME}/portainer/
-      - HOSTNAME_DOCS_URL=https://${HOSTNAME}/docs/
+      - DOCKER_HOSTNAME=${HOSTNAME}
     image: ${image_provider}/technocore-home-assistant:${TAG}
     networks:
       web:
@@ -86,6 +82,8 @@ services:
         target: mqtt_username
       - source: home_assistant_mqtt_password
         target: mqtt_password
+      - source: home_assistant_domain
+        target: domain
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
     volumes:
@@ -316,6 +314,9 @@ secrets:
     external: true
   home_assistant_cert_bundle:
     name: ${stack_name}_home_assistant_cert_bundle
+    external: true
+  home_assistant_domain:
+    name: ${stack_name}_home_assistant_domain
     external: true
   home_assistant_key:
     name: ${stack_name}_home_assistant_key
