@@ -1,6 +1,7 @@
 #!/bin/bash
 # Set env vars. 
 source .env
+source utilities/aliases.sh
 TECHNOCORE_REINSTALL=1
 # TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
 debug_output=/dev/null
@@ -72,6 +73,7 @@ create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
 create_secret esphomeyaml_mqtt_username "Not yet set."
 create_secret esphomeyaml_mqtt_password "Not yet set."
+create_secret portainer_acme_env "Not yet set."
 
 create_vault_user_and_token esphomeyaml
 create_vault_user_and_token portainer
@@ -86,7 +88,27 @@ docker network rm $network_name > /dev/null
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
 
 echo "${stack_name} initializing. "
-hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
+
+# TODO: This should be parsed in via a flag rather than just assuming the second 
+# variable is the development flag. 
+if [ $# -eq 1 ]; then
+    hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
+else
+    # TODO: I'd rather silence errors from the gen-tls.sh command, but 2> doesn't seem to work. 
+    sleep 1
+    until run_portainer gen-tls.sh 
+    do
+        echo "Waiting for portainer to initialize."
+        sleep 5
+    done
+    until domain=$(run_portainer get-domain.sh 2> /dev/null)
+    do
+        echo "Waiting for acme.sh to initialize."
+        sleep 5
+    done
+    hostname_trimmed=$domain
+    echo "acme.sh initialized."
+fi
 # For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
 until curl --insecure --fail https://${hostname_trimmed}/ &> /dev/null
 do
