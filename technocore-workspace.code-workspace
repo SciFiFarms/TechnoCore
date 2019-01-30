@@ -19,13 +19,7 @@
 			"path": "portainer"
 		},
 		{
-			"path": "ha_homie"
-		},
-		{
 			"path": "node-red"
-		},
-		{
-			"path": "homie"
 		},
 		{
 			"path": "home-assistant-db"
