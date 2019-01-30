@@ -30,14 +30,14 @@ TechnoCore is currently in beta. The infrastructure is done, but there are still
 If you try it and run into issues, please open a [new issue](https://github.com/SciFiFarms/TechnoCore/issues/new). I'd love to help get it working.
 ### Dependencies 
 1. Git 
-2. Docker
+2. Docker - Will be installed automatically if not present. 
 3. Operating System
    1. Linux - I'm running under Fedora 29. This should work in other distributions. 
    2. OS X - At one point, it was working with OS X. A lot has changed since then, and I'd expect some minor issues. 
    3. Windows - Not currently supported. Once the installer moves to within the swarm, it should work OK. Checkout https://github.com/SciFiFarms/TechnoCore/issues/10 for more information.
    4. Pi - Would like to eventually support. https://github.com/SciFiFarms/TechnoCore/issues/8
 ### Roadmap 
-TechnoCore isn't feature complete, so it may be worth checking out the [TechnoCore Project](https://github.com/orgs/SciFiFarms/projects/1) to see what features are in the works.
+There is always something in the works, so it may be worth checking out the [TechnoCore Project](https://github.com/orgs/SciFiFarms/projects/1) to see what features are being addressed.
 
 ## Where to ask questions
 One of my biggest hopes for this project is that it gets used by others. So if you have any questions or run into any trouble using the software, I would really like to know about it. Feel free to open a [new issue](https://github.com/SciFiFarms/TechnoCore/issues/new) with your question or problem. Alternatively, you can email me at SpencerIsSuperAwesome@gmail.com.
@@ -47,7 +47,6 @@ One of my biggest hopes for this project is that it gets used by others. So if y
 git clone https://github.com/SciFiFarms/TechnoCore.git technocore
 cd technocore
 sudo ./install.sh
-
 ~~~
 
 ## How to use TechnoCore
@@ -105,16 +104,24 @@ See also the list of [contributors](https://github.com/SciFiFarms/TechnoCore/con
 ## Acknowledgements
 If you were to compare the number of lines of code unique to TechnoCore vs the projects that make up TechnoCore, it would be clear my contribution has been a drop in the ocean. The real credit has to go to all the folks creating open source software; without which, TechnoCore would not be possible.
 More specifically, I'd like to thank everyone who has worked on the following projects:
-- **[Docker](https://www.docker.com/)** for being the glue that brings everything together. Without Docker, sharing this project would not be feasible and be tricky to maintain. Docker makes TechnoCore possible.
 - **[Home Assistant](https://www.home-assistant.io/)** for making TechnoCore user friendly. Home Assistant makes seeing current statuses, history, and interacting with the devices easy.
 - **[esphomelib](https://esphomelib.com/)** for running my ESP8266s. \*esphomeyaml and/or ESP8266s are not *necessary* for TechnoCore. All that is required are devices that can communicate using the MQTT protocol.
 - **[Node-RED](https://nodered.org/)** for allowing an intuitive way to program the Internet of Things. Because of this, Node-RED is used to implement all the business logic.
-- **[VerneMQ](https://vernemq.com/)** for being the communication backbone of TechnoCore.  
 - **[Portainer](https://portainer.io/)** for making Docker approachable. 
-- **[PostgreSQL](https://www.postgresql.org/)** for storing the data; in the world today, data is worth more than gold.
+- **[Docker](https://www.docker.com/)** for being the glue that brings everything together. Without Docker, sharing this project would not be feasible and be tricky to maintain. Docker makes TechnoCore possible.
+- **[Jekyll](https://jekyllrb.com/)** for powering TechnoCore's documentation. 
+- **[NGINX](https://nginx.org/)** for being the gateway to TechnoCore. 
+- **[VerneMQ](https://vernemq.com/)** for being the communication backbone of TechnoCore.  
 - **[Vault](https://www.vaultproject.io/)** for the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
+- **[Dogfish](https://github.com/dwb/dogfish)** for enabling migrations in the services.
+- **[acme.sh](https://github.com/Neilpang/acme.sh)** for making LetsEncrypt crazy easy. 
+- **[PostgreSQL](https://www.postgresql.org/)** for storing the data; in the world today, data is worth more than gold.
+- **[PlatformIO](https://platformio.org/)** for flashing ESPs.
+- **[yq](https://github.com/mikefarah/yq)** for making yaml in bash possible. 
 - **[Linux](https://www.linux.org/)** for being the OS running TechnoCore.
 - **[Espressif/ESP8266](https://www.espressif.com/)** for being the easiest and cheapest way to run many sensors.
+- **[DuckDNS](https://www.duckdns.org/)** for making using LetsEncrypt simple, as well as providing dynamic DNS. The free service is much appreciated.
+- **[LetsEncrypt](https://letsencrypt.org/)** for automating security and encrypting the web. 
 - **[Open Agriculture Initiative](https://www.media.mit.edu/groups/open-agriculture-openag/overview/)** - When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. It was the blueprint that got me started. TechnoCore is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
 
 ## License
