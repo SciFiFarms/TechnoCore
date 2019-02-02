@@ -2,7 +2,7 @@ path "*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
-path "rabbitmq/creds/platformio" {
+path "rabbitmq/creds/esphomeyaml" {
   capabilities = ["read"]
 }
 

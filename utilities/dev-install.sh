@@ -82,13 +82,12 @@ add_aliases_if_missing
 
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Docs.git docs
 add_repo_if_missing git@github.com:SciFiFarms/dogfish.git dogfish
-add_repo_if_missing git@github.com:SciFiFarms/HA_Homie.git ha_homie
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml.git esphomeyaml
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml-Wrapper.git esphomeyaml-wrapper
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant.git home-assistant
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant-DB.git home-assistant-db
-add_repo_if_missing git@github.com:SciFiFarms/Homie.git homie
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Node-RED.git node-red
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-PlatformIO.git platformio
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-PlatformIO-Wrapper.git platformio-wrapper
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-NGINX.git nginx
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Portainer.git portainer
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Vault.git vault
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-VerneMQ.git vernemq

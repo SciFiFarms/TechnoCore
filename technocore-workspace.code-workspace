@@ -4,25 +4,22 @@
 			"path": "docs"
 		},
 		{
+			"path": "esphomeyaml"
+		},
+		{
+			"path": "esphomeyaml-wrapper"
+		},
+		{
 			"path": "vault"
 		},
 		{
 			"path": "vernemq"
 		},
 		{
-			"path": "platformio"
-		},
-		{
 			"path": "portainer"
 		},
 		{
-			"path": "ha_homie"
-		},
-		{
 			"path": "node-red"
-		},
-		{
-			"path": "homie"
 		},
 		{
 			"path": "home-assistant-db"
@@ -34,13 +31,26 @@
 			"path": "dogfish"
 		},
 		{
-			"path": "platformio-wrapper"
-		},
-		{
 			"path": "nginx"
 		},
 		{
 			"path": "."
 		}
-	]
+	],
+	"extensions": {
+		"recommendations": [
+			"vsciot-vscode.vscode-arduino",
+			"formulahendry.code-runner",
+			"streetsidesoftware.code-spell-checker",
+			"peterjausovec.vscode-docker",
+			"mikestead.dotenv",
+			"wholroyd.hcl",
+			"yzhang.markdown-all-in-one",
+			"shd101wyy.markdown-preview-enhanced",
+			"mushan.vscode-paste-image",
+			"ms-python.python",
+			"tyriar.sort-lines"
+		],
+		"unwantedRecommendations": []
+	}
 }

@@ -1,4 +1,10 @@
 #!/bin/bash
+# Set env vars. 
+source .env
+source utilities/aliases.sh
+TECHNOCORE_REINSTALL=1
+# TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
+debug_output=/dev/null
 
 # Make sure dependencies are met. 
 # Source: https://askubuntu.com/questions/15853/how-can-a-script-check-if-its-being-run-as-root
@@ -6,55 +12,57 @@ if ! [ $(id -u) = 0 ]; then
    echo "Not running as root. Try running with sudo prepended to the command. "
    exit 1
 fi
+
 # Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
 if ! command -v docker >/dev/null 2>&1; then
-    # TODO: the \n isn't working.
-    echo >&2 "Docker is required but not installed. See https://hub.docker.com/search/?type=edition&offering=community \nAborting Install."
-    exit 1
+    echo -e >&2 "Docker is required but not installed. Installing." 
+    curl -fsSL get.docker.com | CHANNEL=stable sh > $debug_output
+    systemctl enable docker > $debug_output
+    systemctl start docker > $debug_output
 fi
 
-# TODO: Add user permission to use docker if not already setup.
-#https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+# Add user permission to use docker if not already setup.
+# https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+if ! getent group docker | grep -w "$USER" > /dev/null ; then
+    # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
+    echo "Adding $(logname) to docker group"
+    usermod -a -G docker $(logname)
+fi
 
-# Test that for each file in linux(or deb vs rpm) installer folder, there is a corresponding file in the osx and/or windows folder. 
-# Check /etc/tls/certs and /etc/tls/keys, and maybe ca-cets and ca-keys. Load them if avalible.
-# Maybe /etc/tls/technocore
-source .env
-reinstall=1
+# Initialize the swarm if it isn't setup.
+# Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
+# would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
+    echo "Initializing Docker Swarm"
+    docker swarm init > /dev/null
+fi
 
-# List of services
-declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs platformio portainer nginx)
+# List of services that need TLS.
+declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx)
 
-# Todo: only do this if not inited already.
-# I had to use  --advertise-addr 192.168.1.106. I imagine the IP address would change. 
-# I also had to install docker-compose separately. 
-#docker swarm init
-#docker swarm join localhost
-
-if [ $reinstall -eq 1 ] ; then
-    if docker stack rm $stack_name ; then
-        echo "$stack_name being removed. Sleeping."
-        sleep 10
+# Remove old stack if one is found.
+if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then
+    echo "Previous $stack_name install detected. "
+    if [ -v TECHNOCORE_REINSTALL ]; then
+        echo "Removing stack $stack_name"
+        source utilities/clean.sh
     fi
-    source utilities/clean.sh
 fi
 
 # Load the installer functions. 
-# TODO: Construct the path by figuring out host env and choosing the appropriate folders. 
 for file in ./installer/bash/*; do
    source $file
 done
 
-add_services_to_hosts_file
-
 network_name="${stack_name}"
-docker network create --attachable $network_name
+docker network create --attachable $network_name > /dev/null
 
 # Setup certificate Authorities.
 create_volume vault
 initialize_vault
 configure_CAs
 # In ubuntu, that needs to install libnss3-tools, which provides certutil
+# TODO: Would like to install LetsEncrypt's testing server CAs. 
 add_CA_to_firefox
 
 create_mqtt_user mqtt
@@ -62,24 +70,52 @@ create_mqtt_user portainer
 
 create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
+create_secret home_assistant_domain "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
-create_secret platformio_mqtt_username "Not yet set."
-create_secret platformio_mqtt_password "Not yet set."
+create_secret esphomeyaml_mqtt_username "Not yet set."
+create_secret esphomeyaml_mqtt_password "Not yet set."
+create_secret portainer_acme_env "Not yet set."
 
-create_vault_user_and_token platformio
+create_vault_user_and_token esphomeyaml
 create_vault_user_and_token portainer
 create_vault_user_and_token mqtt
-
 
 create_TLS_certs
 
 remove_temp_containers
-docker network rm $network_name
-
+docker network rm $network_name > /dev/null
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
-# Maybe pull a backup of the CA from docker secrets. Put in /etc/tls/technocore.
-# Remove vault port
-# docker service update --publish-rm 8200 ${stack_name}_vault
+
+echo "${stack_name} initializing. "
+
+# TODO: This should be parsed in via a flag rather than just assuming the second 
+# variable is the development flag. 
+if [ $# -eq 1 ]; then
+    hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
+else
+    # TODO: I'd rather silence errors from the gen-tls.sh command, but 2> doesn't seem to work. 
+    sleep 1
+    until run_portainer gen-tls.sh 
+    do
+        echo "Waiting for portainer to initialize."
+        sleep 5
+    done
+    until domain=$(run_portainer get-domain.sh 2> /dev/null)
+    do
+        echo "Waiting for acme.sh to initialize."
+        sleep 5
+    done
+    hostname_trimmed=$domain
+    echo "acme.sh initialized."
+fi
+# For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
+until curl --insecure --fail https://${hostname_trimmed}/ &> /dev/null
+do
+    echo "https://${hostname_trimmed}/ is not yet up. Will retry in 5 seconds."
+    sleep 5
+done
+echo -e "\n\n\nFinished initializing ${stack_name}."
+echo "You may now use https://${hostname_trimmed}/ to access your ${stack_name} instance."
