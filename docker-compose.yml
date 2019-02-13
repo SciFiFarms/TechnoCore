@@ -21,7 +21,7 @@ services:
         target: ca
     volumes:
       - ${docs_live_mount}
-  esphomeyaml-wrapper:
+  esphomeyaml:
     depends_on:
       - mqtt
     deploy:
@@ -47,6 +47,8 @@ services:
         target: mqtt_password
       - source: esphomeyaml_token
         target: token
+      - source: home_assistant_domain
+        target: domain
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

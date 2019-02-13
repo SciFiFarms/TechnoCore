@@ -70,12 +70,19 @@ create_mqtt_user portainer
 
 create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
-create_secret home_assistant_domain "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
 create_secret esphomeyaml_mqtt_username "Not yet set."
 create_secret esphomeyaml_mqtt_password "Not yet set."
 create_secret portainer_acme_env "Not yet set."
+
+# TODO: Make an actual flag for dev mode. --dev. 
+if [ $# -eq 1 ]; then
+    hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
+    create_secret home_assistant_domain "$hostname_trimmed"
+else
+    create_secret home_assistant_domain "Not yet set."
+fi
 
 create_vault_user_and_token esphomeyaml
 create_vault_user_and_token portainer
@@ -93,11 +100,9 @@ echo "${stack_name} initializing. "
 
 # TODO: This should be parsed in via a flag rather than just assuming the second 
 # variable is the development flag. 
-if [ $# -eq 1 ]; then
-    hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
-else
-    # TODO: I'd rather silence errors from the gen-tls.sh command, but 2> doesn't seem to work. 
+if [ $# -eq 0 ]; then
     sleep 1
+    # TODO: I'd rather silence errors from the gen-tls.sh command, but 2> doesn't seem to work. 
     until run_portainer gen-tls.sh 
     do
         echo "Waiting for portainer to initialize."

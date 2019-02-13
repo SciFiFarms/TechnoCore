@@ -23,6 +23,21 @@
             "host": "localhost"
         },
         {
+            "name": "Debug esphomeyaml",
+            "type": "python",
+            "request": "attach",
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/esphomeyaml/",
+                    "remoteRoot": "/usr/src/app/"
+                }
+            ],
+            "port": 6051,
+            //"logToFile": true,
+            //"secret": "my_secret",
+            "host": "localhost"
+        },
+        {
             "type": "node",
             "request": "attach",
             "name": "Debug NodeJS",
