@@ -1,20 +1,22 @@
 # Contributing to TechnoCore :D
 #### Table of contents:
 - [Contributing to TechnoCore :D](#contributing-to-technocore-d)
-            - [Table of contents:](#table-of-contents)
-    - [Contributing](#contributing)
-        - [Creating an issue](#creating-an-issue)
-            - [Labels](#labels)
-        - [Report a bug](#report-a-bug)
+      - [Table of contents:](#table-of-contents)
+  - [Contributing](#contributing)
+    - [Creating an issue](#creating-an-issue)
+      - [Labels](#labels)
+    - [Report a bug](#report-a-bug)
   - [Community](#community)
-    - [Development](#development)
-        - [Overview](#overview)
-        - [Developer Environment](#developer-environment)
+  - [Development](#development)
+    - [Overview](#overview)
+    - [Developer Environment](#developer-environment)
     - [Debugging (how to find out what went wrong)](#debugging-how-to-find-out-what-went-wrong)
       - [Viewing Logs](#viewing-logs)
       - [Changing verbosity of logs](#changing-verbosity-of-logs)
+      - [Documentation Coming Soon](#documentation-coming-soon)
+    - [Finding things](#finding-things)
     - [Working on an issue](#working-on-an-issue)
-        - [Run tests](#run-tests)
+    - [Run tests](#run-tests)
     - [Conventions](#conventions)
 
 ## Contributing
@@ -131,14 +133,22 @@ To get a list of the service names, run `docker service ls`
 #### Changing verbosity of logs
 - To increase logging verbosity in Node-RED, change node-red/data/settings.js logging: console: level to "trace".
 
-#### There will be more added to this section soon. Here is an outline of the topics to be added:
-Setting up VS Code with TechnoCore(technocore-workspace.code-workspace)
-Getting started via dev-setup.sh
-Mounting local files into running services(.env)
-Building the images yourself (utilities/clean.sh)
-Debugging in Home Assistant, Node-RED, and VerneMQ (MQTT)
-Changing verbosity of Home Assistant and VerneMQ. 
-Where to look for things in TechnoCore. 
+#### Documentation Coming Soon
+There will be more added to this section soon. Here is an outline of the topics to be added:
+  - Setting up VS Code with TechnoCore(technocore-workspace.code-workspace)
+  - Getting started via dev-setup.sh
+  - Mounting local files into running services(.env)
+  - Building the images yourself (utilities/clean.sh)
+  - Debugging in Home Assistant, Node-RED, and VerneMQ (MQTT)
+  - Changing verbosity of Home Assistant and VerneMQ. 
+If you'd like to know about any of these before I get around to adding them, just let me know and I'll prioritize it. 
+
+### Finding things
+There are two places I'd recommend searching for things you might be looking for. 
+  1. Run the ./utilities/dev-install.sh script to install the whole code base, and then use VS Code (Or your preferred IDE) to search through the workspace. 
+    I've found this to be the most reliable search method, but doesn't get pull requests or issues. 
+  2. [SciFiFarms' GitHub](https://github.com/search?q=org%3ASciFiFarms)
+    This should find things in the code as well as what's documented in pull requests and issues. 
 
 ### Working on an issue
 1. Fork the code
@@ -150,4 +160,3 @@ There aren't currently any tests written. I'd love to change that [#6](https://g
 
 ### Conventions
 TechnoCore uses bash, c++, Python, and Javascript, so having one set of conventions doesn't make sense. Please use the conventions typical of the language being used. 
-
