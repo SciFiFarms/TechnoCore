@@ -35,6 +35,7 @@ services:
       - TAG=${TAG}
       # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
       - host_working_dir=$PWD
+      - esphome_core=./esphome-core:/esphome-core
     image: ${image_provider}/technocore-esphomeyaml-wrapper:${TAG}
     networks:
       - web
@@ -53,6 +54,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${esphomeyaml_live_mount}
+      - ./esphome-core:/esphome-core
   home_assistant:
     depends_on:
       - home_assistant_db
