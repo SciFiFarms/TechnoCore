@@ -141,10 +141,9 @@ services:
     # For some reason, the vmq-admin tool stops working if ANY port is set. 
     # Fortunately, I was able to use NGINX to do the port forwarding instead.
     # See https://github.com/SciFiFarms/TechnoCore-VerneMQ/pull/4 for more.
-    # For some reason, the above didn't work with esphomeyaml connections. 
-    ports:
-      - "8883:8883"
-      - "1883:1883"
+    #ports:
+    #  - "8883:8883"
+    #  - "1883:1883"
     secrets:
       - source: mqtt_mqtt_username
         target: mqtt_username
@@ -177,8 +176,8 @@ services:
     networks:
       - web
     ports:
-      #- "8883:8883"
-      #- "1883:1883"
+      - "8883:8883"
+      - "1883:1883"
       - "80:80"
       - "443:443"
       - "6052:6052"
