@@ -1,37 +1,40 @@
 {
 	"folders": [
+		/*{
+			"path": "hals"
+		},*/
 		{
-			"path": "docs"
-		},
-		{
-			"path": "esphomeyaml"
-		},
-		{
-			"path": "esphomeyaml-wrapper"
-		},
-		{
-			"path": "vault"
-		},
-		{
-			"path": "vernemq"
-		},
-		{
-			"path": "portainer"
-		},
-		{
-			"path": "node-red"
-		},
-		{
-			"path": "home-assistant-db"
+			"path": "nginx"
 		},
 		{
 			"path": "home-assistant"
 		},
 		{
+			"path": "esphomeyaml"
+		},
+		{
+			"path": "portainer"
+		},
+		{
+			"path": "vernemq"
+		},
+		{
+			"path": "node-red"
+		},
+		{
+			"path": "vault"
+		},
+		{
+			"path": "home-assistant-db"
+		},
+		{
 			"path": "dogfish"
 		},
 		{
-			"path": "nginx"
+			"path": "esphomeyaml-wrapper"
+		},
+		{
+			"path": "docs"
 		},
 		{
 			"path": "."
@@ -51,6 +54,6 @@
 			"ms-python.python",
 			"tyriar.sort-lines"
 		],
-		"unwantedRecommendations": []
+	"unwantedRecommendations": []
 	}
 }
