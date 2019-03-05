@@ -266,6 +266,8 @@ services:
         target: token
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
+      - ./.env:/var/run/.env
+      - ./docker-compose.yml:/var/run/docker-compose.yml
       - portainer:/data
       - portainer-acme:/acme.sh/
       - ${portainer_live_mount}

@@ -38,6 +38,7 @@ if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
 fi
 
 # List of services that need TLS.
+# This list is duplicated in portainer/mqtt-scripts/renew-tls.sh. 
 declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx)
 
 # Remove old stack if one is found.
