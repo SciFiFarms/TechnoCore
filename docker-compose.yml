@@ -78,7 +78,7 @@ services:
       - "5678:5678"
     secrets:
       - source: home_assistant_cert_bundle
-        target: cert
+        target: cert_bundle
       - source: home_assistant_key
         target: key
         mode: 0400
@@ -112,7 +112,7 @@ services:
       - web
     secrets:
       - source: home_assistant_db_cert_bundle
-        target: cert
+        target: cert_bundle
         uid: "999" # This is set in Postgres' Dockerfile
         mode: 0400
       - source: home_assistant_db_key
@@ -150,9 +150,9 @@ services:
       - source: mqtt_mqtt_password
         target: mqtt_password
       - source: mqtt_cert_bundle
-        target: mqtt_cert
+        target: cert_bundle
       - source: mqtt_key
-        target: mqtt_key
+        target: key
       - source: ca_bundle
         target: ca
       - source: mqtt_token
@@ -213,7 +213,7 @@ services:
       - "9229:9229"
     secrets:
       - source: node_red_cert_bundle
-        target: cert
+        target: cert_bundle
       - source: node_red_key
         target: key
       - source: ca_bundle
@@ -290,17 +290,17 @@ services:
           - vault.scifi.farm
     secrets:
       - source: vault_key
-        target: /run/secrets/vault_key
+        target: key
       - source: vault_cert_bundle
-        target: /run/secrets/vault_cert
+        target: cert_bundle
       - source: ca_bundle
-        target: /run/secrets/ca
+        target: ca
       - source: ca_bundle
         target: /etc/ssl/certs/ca-certificates.crt
       - source: vault_unseal
-        target: /run/secrets/vault_unseal
+        target: vault_unseal
       - source: vault_token
-        target: /run/secrets/vault_token
+        target: vault_token
     ports:
       - "8200:8200"
     volumes:
