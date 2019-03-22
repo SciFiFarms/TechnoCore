@@ -4,7 +4,7 @@ source ${technocore_folder}/../.env
 
 # TODO: Make these reference docker-compose.yaml like clean.sh does.
 docker build ./docs/ -t ${image_provider}/technocore-docs:$TAG
-docker build ./esphomeyaml/ -t ${image_provider}/technocore-esphomeyaml:$TAG
+docker build -f ./esphomeyaml/docker/Dockerfile ./esphomeyaml/ -t ${image_provider}/technocore-esphomeyaml:$TAG
 docker build ./esphomeyaml-wrapper/ -t ${image_provider}/technocore-esphomeyaml-wrapper:$TAG
 docker build ./home-assistant/ -t ${image_provider}/technocore-home-assistant:$TAG
 docker build ./home-assistant-db/ -t ${image_provider}/technocore-home-assistant-db:$TAG

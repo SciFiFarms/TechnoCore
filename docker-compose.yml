@@ -36,6 +36,7 @@ services:
       # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
       - host_working_dir=$PWD
       - esphome_core=./esphome-core:/esphome-core
+      - esphome_app=${esphomeyaml_app_live_mount}
     image: ${image_provider}/technocore-esphomeyaml-wrapper:${TAG}
     networks:
       - web
