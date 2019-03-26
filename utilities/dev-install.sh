@@ -67,7 +67,7 @@ add_aliases_if_missing()
 add_env_if_missing()
 {
     if [ ! -f .env ]; then
-        cp example.env .env
+        cp dev.env .env
         echo "Created .env file from example."
     else
         echo ".env already exists."

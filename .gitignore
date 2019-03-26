@@ -1,6 +1,7 @@
 ca.pem
 *_old
 *.backup
+.env
 
 docs
 dogfish
