@@ -1,6 +1,8 @@
 #!/bin/bash
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+if [ -f "${technocore_folder}/../.env" ]; then
 source ${technocore_folder}/../.env 
+fi
 
 # TODO: Make these reference docker-compose.yaml like clean.sh does.
 docker build ./docs/ -t ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}

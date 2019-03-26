@@ -1,5 +1,7 @@
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source ${technocore_folder}/../.env 
+if [ -f "${technocore_folder}/../.env " ]; then
+    source ${technocore_folder}/../.env 
+fi
 
 # One liner to exec in a docker service by name instead of hash. 
 alias run_mqtt='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_mqtt | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_mqtt | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 1) /bin/bash'
@@ -23,5 +25,10 @@ alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 # TODO: It may be useful to figure out how to run this in the closest parent 
 # directory that contains a docker-compose.yml file. 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
-alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
+# TODO: This is duplicated in portainer/shell-migrations/20190324221228-grafana_and_jupyter-migrate.sh
+if [ -f "${technocore_folder}/../.env " ]; then
+    alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
+else
+    alias deploy='docker stack deploy --compose-file docker-compose.yml'
+fi
 # TODO: Add subrepo here?

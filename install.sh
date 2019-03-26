@@ -1,6 +1,8 @@
 #!/bin/bash
 # Set env vars. 
+if [ -f ".env" ]; then
 source .env
+fi
 source utilities/aliases.sh
 TECHNOCORE_REINSTALL=1
 # TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
@@ -95,7 +97,12 @@ remove_temp_containers
 docker network rm $network_name > /dev/null
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+# TODO: This is duplicated in utilities/aliases.sh
+if [ -f ".env " ]; then
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name:-technocore}
+else
+    docker stack deploy --compose-file docker-compose.yml ${stack_name:-technocore}
+fi
 
 echo "${stack_name:-technocore} initializing. "
 

@@ -240,6 +240,7 @@ services:
       - TAG=${TAG:-latest}
       # 1 day = 86400 seconds
       - image_refresh_time=${image_refresh_time:-86400}
+      - host_working_dir=$PWD
     depends_on:
       - mqtt
     deploy:
@@ -268,8 +269,7 @@ services:
         target: token
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock 
-      - ./.env:/var/run/.env
-      - ./docker-compose.yml:/var/run/docker-compose.yml
+      - ./:/var/run/technocore
       - portainer:/data
       - portainer-acme:/acme.sh/
       - ${portainer_live_mount:-./empty/:/opt/.dummy}

@@ -1,7 +1,9 @@
 #!/bin/bash
 
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/../"
+if [ -f "${technocore_folder}/../.env" ]; then
 source ${technocore_folder}.env 
+fi
 
 # $@ the arguments to pass into yq. See http://mikefarah.github.io/yq/
 # Alternatives: https://stackoverflow.com/questions/5014632/how-can-i-parse-a-yaml-file-from-a-linux-shell-script

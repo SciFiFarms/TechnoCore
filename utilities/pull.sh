@@ -1,6 +1,8 @@
 #!/bin/bash
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+if [ -f "${technocore_folder}/../.env" ]; then
 source ${technocore_folder}/../.env 
+fi
 
 docker pull ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
