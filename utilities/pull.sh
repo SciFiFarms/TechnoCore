@@ -2,13 +2,13 @@
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source ${technocore_folder}/../.env 
 
-docker pull ${image_provider}/technocore-docs:$TAG
-docker pull ${image_provider}/technocore-home-assistant:$TAG
-docker pull ${image_provider}/technocore-home-assistant-db:$TAG
-docker pull ${image_provider}/technocore-node-red:$TAG
-docker pull ${image_provider}/technocore-esphomeyaml:$TAG
-docker pull ${image_provider}/technocore-esphomeyaml-wrapper:$TAG
-docker pull ${image_provider}/technocore-vault:$TAG
-docker pull ${image_provider}/technocore-vernemq:$TAG
-docker pull ${image_provider}/technocore-portainer:$TAG
-docker pull ${image_provider}/technocore-nginx:$TAG
+docker pull ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-esphomeyaml:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}

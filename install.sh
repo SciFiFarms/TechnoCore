@@ -43,9 +43,9 @@ declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs p
 
 # Remove old stack if one is found.
 if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then
-    echo "Previous $stack_name install detected. "
+    echo "Previous ${stack_name:-technocore} install detected. "
     if [ -v TECHNOCORE_REINSTALL ]; then
-        echo "Removing stack $stack_name"
+        echo "Removing stack ${stack_name:-technocore}"
         source utilities/clean.sh
     fi
 fi
@@ -55,7 +55,7 @@ for file in ./installer/bash/*; do
    source $file
 done
 
-network_name="${stack_name}"
+network_name="${stack_name:-technocore}"
 docker network create --attachable $network_name > /dev/null
 
 # Setup certificate Authorities.
@@ -95,9 +95,9 @@ remove_temp_containers
 docker network rm $network_name > /dev/null
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
-env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name}
+env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name:-technocore}
 
-echo "${stack_name} initializing. "
+echo "${stack_name:-technocore} initializing. "
 
 # TODO: This should be parsed in via a flag rather than just assuming the second 
 # variable is the development flag. 
@@ -114,7 +114,7 @@ if [ $# -eq 0 ]; then
         echo "Waiting for acme.sh to initialize."
         sleep 5
     done
-    hostname_trimmed=$domain
+    hostname_trimmed=${domain:-latest}
     echo "acme.sh initialized."
 fi
 # For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
@@ -123,5 +123,5 @@ do
     echo "https://${hostname_trimmed}/ is not yet up. Will retry in 5 seconds."
     sleep 5
 done
-echo -e "\n\n\nFinished initializing ${stack_name}."
-echo "You may now use https://${hostname_trimmed}/ to access your ${stack_name} instance."
+echo -e "\n\n\nFinished initializing ${stack_name:-technocore}."
+echo "You may now use https://${hostname_trimmed}/ to access your ${stack_name:-technocore} instance."

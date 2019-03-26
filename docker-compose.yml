@@ -6,7 +6,7 @@ services:
         mode: global
         restart_policy:
           condition: any
-    image: ${image_provider}/technocore-docs:${TAG}
+    image: ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
     networks:
       - web
     ports:
@@ -20,7 +20,7 @@ services:
       - source: ca
         target: ca
     volumes:
-      - ${docs_live_mount}
+      - ${docs_live_mount:-./empty/:/opt/.dummy}
   esphomeyaml:
     depends_on:
       - mqtt
@@ -29,15 +29,15 @@ services:
         restart_policy:
           condition: any
     environment:
-      - image_provider=${image_provider}
-      - stack_name=${stack_name}
+      - image_provider=${image_provider:-scififarms}
+      - stack_name=${stack_name:-technocore}
       - service_name=esphomeyaml
-      - TAG=${TAG}
+      - TAG=${TAG:-latest}
       # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
       - host_working_dir=$PWD
       - esphome_core=./esphome-core:/esphome-core
       - esphome_app=${esphomeyaml_app_live_mount}
-    image: ${image_provider}/technocore-esphomeyaml-wrapper:${TAG}
+    image: ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
     networks:
       - web
     secrets:
@@ -54,7 +54,7 @@ services:
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${esphomeyaml_live_mount}
+      - ${esphomeyaml_live_mount:-./empty/:/opt/.dummy}
       - ./esphome-core:/esphome-core
   home_assistant:
     depends_on:
@@ -67,7 +67,7 @@ services:
         condition: any
     environment:
       - DOCKER_HOSTNAME=${HOSTNAME}
-    image: ${image_provider}/technocore-home-assistant:${TAG}
+    image: ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
@@ -99,8 +99,8 @@ services:
       # changes made to the /config/ dir too. 
       - home-assistant:/config/.storage/
       # This allows for realtime editing of Home Assistant configs and scripts. 
-      - ${home_assistant_config_live_mount}
-      - ${home_assistant_src_live_mount}
+      - ${home_assistant_config_live_mount:-./empty/:/opt/.dummy}
+      - ${home_assistant_src_live_mount:-./empty/:/opt/.src_dummy}
   home_assistant_db:
     depends_on:
       - vault
@@ -108,7 +108,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/technocore-home-assistant-db:${TAG}
+    image: ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
     networks:
       - web
     secrets:
@@ -125,7 +125,7 @@ services:
     user: postgres 
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
-      - ${home_assistant_db_live_mount}
+      - ${home_assistant_db_live_mount:-./empty/:/opt/.dummy}
   mqtt:
     depends_on:
       - vault
@@ -133,7 +133,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/technocore-vernemq:${TAG}
+    image: ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
     networks:
       web:
         aliases:
@@ -165,7 +165,7 @@ services:
     volumes:
       - mqtt:/vernemq/etc 
       # Used for working with migrations.
-      - ${mqtt_live_mount}
+      - ${mqtt_live_mount:-./empty/:/opt/.dummy}
     # Hostname is needed to persist data. 
     hostname: mqtt
   nginx:
@@ -173,7 +173,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/technocore-nginx:${TAG}
+    image: ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
     networks:
       - web
     ports:
@@ -190,8 +190,8 @@ services:
       - source: ca_bundle
         target: ca
     volumes:
-      - ${nginx_config_folder_live_mount}
-      - ${nginx_config_file_live_mount}
+      - ${nginx_config_folder_live_mount:-./empty/:/opt/.config_folder_dummy}
+      - ${nginx_config_file_live_mount:-./empty/:/opt/.config_file_dummy}
   node_red:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -204,7 +204,7 @@ services:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/technocore-node-red:${TAG}
+    image: ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
     networks:
       - web
     ports:
@@ -231,21 +231,22 @@ services:
       #- "./node-red:/usr/src/node-red"
   portainer:
     environment:
-      - acme_flags=${acme_flags}
-      - stackname=${stack_name}
-      - stack_name=${stack_name}
-      - image_provider=${image_provider}
+      - acme_flags=${acme_flags:-""}
+      - stackname=${stack_name:-technocore}
+      - stack_name=${stack_name:-technocore}
+      - image_provider=${image_provider:-scififarms}
       # Tempaltes are cool: https://docs.docker.com/engine/swarm/services/#create-services-using-templates
       - DOCKER_HOSTNAME={{ .Node.Hostname }}
-      - TAG=${TAG}
-      - image_refresh_time=${image_refresh_time}
+      - TAG=${TAG:-latest}
+      # 1 day = 86400 seconds
+      - image_refresh_time=${image_refresh_time:-86400}
     depends_on:
       - mqtt
     deploy:
       mode: global
       restart_policy:
         condition: any
-    image: ${image_provider}/technocore-portainer:${TAG}
+    image: ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}
     networks:
       - web
     ports:
@@ -271,7 +272,8 @@ services:
       - ./docker-compose.yml:/var/run/docker-compose.yml
       - portainer:/data
       - portainer-acme:/acme.sh/
-      - ${portainer_live_mount}
+      - ${portainer_live_mount:-./empty/:/opt/.dummy}
+      - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
   vault:
     deploy:
       mode: global
@@ -285,7 +287,7 @@ services:
       - VAULT_CACERT=/run/secrets/ca
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
-    image: ${image_provider}/technocore-vault:${TAG}
+    image: ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
     networks:
       web:
         aliases:
@@ -308,116 +310,116 @@ services:
       - "8200:8200"
     volumes:
       - vault:/vault/file
-      - ${vault_live_mount}
+      - ${vault_live_mount:-./empty/:/opt/.dummy}
 
 networks:
   web:
     attachable: true
 secrets:
   ca:
-    name: ${stack_name}_ca
+    name: ${stack_name:-technocore}_ca
     external: true
   ca_bundle:
-    name: ${stack_name}_ca_bundle
+    name: ${stack_name:-technocore}_ca_bundle
     external: true
   home_assistant_cert_bundle:
-    name: ${stack_name}_home_assistant_cert_bundle
+    name: ${stack_name:-technocore}_home_assistant_cert_bundle
     external: true
   home_assistant_domain:
-    name: ${stack_name}_home_assistant_domain
+    name: ${stack_name:-technocore}_home_assistant_domain
     external: true
   home_assistant_key:
-    name: ${stack_name}_home_assistant_key
+    name: ${stack_name:-technocore}_home_assistant_key
     external: true
   home_assistant_mqtt_username:
-    name: ${stack_name}_home_assistant_mqtt_username
+    name: ${stack_name:-technocore}_home_assistant_mqtt_username
     external: true
   home_assistant_mqtt_password:
-    name: ${stack_name}_home_assistant_mqtt_password
+    name: ${stack_name:-technocore}_home_assistant_mqtt_password
     external: true
   home_assistant_db_cert_bundle:
-    name: ${stack_name}_home_assistant_db_cert_bundle
+    name: ${stack_name:-technocore}_home_assistant_db_cert_bundle
     external: true
   home_assistant_db_key:
-    name: ${stack_name}_home_assistant_db_key
+    name: ${stack_name:-technocore}_home_assistant_db_key
     external: true
   mqtt_cert_bundle:
-    name: ${stack_name}_mqtt_cert_bundle
+    name: ${stack_name:-technocore}_mqtt_cert_bundle
     external: true
   mqtt_key:
-    name: ${stack_name}_mqtt_key
+    name: ${stack_name:-technocore}_mqtt_key
     external: true
   mqtt_mqtt_username:
-    name: ${stack_name}_mqtt_mqtt_username
+    name: ${stack_name:-technocore}_mqtt_mqtt_username
     external: true
   mqtt_mqtt_password:
-    name: ${stack_name}_mqtt_mqtt_password
+    name: ${stack_name:-technocore}_mqtt_mqtt_password
     external: true
   mqtt_token:
-    name: ${stack_name}_mqtt_token
+    name: ${stack_name:-technocore}_mqtt_token
     external: true
   node_red_cert_bundle:
-    name: ${stack_name}_node_red_cert_bundle
+    name: ${stack_name:-technocore}_node_red_cert_bundle
     external: true
   node_red_key:
-    name: ${stack_name}_node_red_key
+    name: ${stack_name:-technocore}_node_red_key
     external: true
   nginx_cert_bundle:
-    name: ${stack_name}_nginx_cert_bundle
+    name: ${stack_name:-technocore}_nginx_cert_bundle
     external: true
   nginx_key:
-    name: ${stack_name}_nginx_key
+    name: ${stack_name:-technocore}_nginx_key
     external: true
   esphomeyaml_mqtt_username:
-    name: ${stack_name}_esphomeyaml_mqtt_username
+    name: ${stack_name:-technocore}_esphomeyaml_mqtt_username
     external: true
   esphomeyaml_mqtt_password:
-    name: ${stack_name}_esphomeyaml_mqtt_password
+    name: ${stack_name:-technocore}_esphomeyaml_mqtt_password
     external: true
   esphomeyaml_token:
-    name: ${stack_name}_esphomeyaml_token
+    name: ${stack_name:-technocore}_esphomeyaml_token
     external: true
   portainer_acme_env:
-    name: ${stack_name}_portainer_acme_env
+    name: ${stack_name:-technocore}_portainer_acme_env
     external: true
   portainer_cert_bundle:
-    name: ${stack_name}_portainer_cert_bundle
+    name: ${stack_name:-technocore}_portainer_cert_bundle
     external: true
   portainer_key:
-    name: ${stack_name}_portainer_key
+    name: ${stack_name:-technocore}_portainer_key
     external: true
   portainer_mqtt_username:
-    name: ${stack_name}_portainer_mqtt_username
+    name: ${stack_name:-technocore}_portainer_mqtt_username
     external: true
   portainer_mqtt_password:
-    name: ${stack_name}_portainer_mqtt_password
+    name: ${stack_name:-technocore}_portainer_mqtt_password
     external: true
   portainer_token:
-    name: ${stack_name}_portainer_token
+    name: ${stack_name:-technocore}_portainer_token
     external: true
   node_red_mqtt_username:
-    name: ${stack_name}_node_red_mqtt_username
+    name: ${stack_name:-technocore}_node_red_mqtt_username
     external: true
   node_red_mqtt_password:
-    name: ${stack_name}_node_red_mqtt_password
+    name: ${stack_name:-technocore}_node_red_mqtt_password
     external: true
   vault_cert_bundle:
-    name: ${stack_name}_vault_cert_bundle
+    name: ${stack_name:-technocore}_vault_cert_bundle
     external: true
   vault_key:
-    name: ${stack_name}_vault_key
+    name: ${stack_name:-technocore}_vault_key
     external: true
   vault_unseal:
-    name: ${stack_name}_vault_unseal
+    name: ${stack_name:-technocore}_vault_unseal
     external: true
   vault_token:
-    name: ${stack_name}_vault_token
+    name: ${stack_name:-technocore}_vault_token
     external: true
   docs_cert_bundle:
-    name: ${stack_name}_docs_cert_bundle
+    name: ${stack_name:-technocore}_docs_cert_bundle
     external: true
   docs_key:
-    name: ${stack_name}_docs_key
+    name: ${stack_name:-technocore}_docs_key
     external: true
 volumes:
   esphomeyaml:

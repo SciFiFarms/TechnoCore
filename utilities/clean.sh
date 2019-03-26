@@ -30,7 +30,7 @@ remove_volume() {
 }
 
 # Remove the stack
-docker stack rm $stack_name 2> /dev/null
+docker stack rm ${stack_name:-technocore} 2> /dev/null
 sleep 10
 
 # Remove all the secrets
@@ -52,5 +52,5 @@ do
     fi
     #echo $(eval echo $volume)
     volume=$(eval echo $volume | cut -f1 -d:)
-    remove_volume ${stack_name}_$volume
+    remove_volume ${stack_name:-technocore}_$volume
 done
