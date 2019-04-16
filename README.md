@@ -5,7 +5,6 @@ Fundamentally TechnoCore is a stack built to support Home Assistant. It strives 
 - [TechnoCore](#technocore)
       - [Table of contents:](#table-of-contents)
   - [What to know before getting started](#what-to-know-before-getting-started)
-  - [What to know before getting started](#what-to-know-before-getting-started-1)
     - [Status of TechnoCore:](#status-of-technocore)
     - [Dependencies](#dependencies)
     - [Roadmap](#roadmap)
@@ -21,11 +20,6 @@ Fundamentally TechnoCore is a stack built to support Home Assistant. It strives 
   - [Acknowledgements](#acknowledgements)
   - [License](#license)
     
-## What to know before getting started
-1. What you see is a working proof of concept; it hasn't been tested. But if you try it and run into issues, feel free to open a [new issue](https://github.com/SciFiFarms/TechnoCore/issues/new). I'd love to help get it working.
-1. TechnoCore depends on Docker being installed.
-1. TechnoCore isn't feature complete, so it may be worth checking out the [issues](https://github.com/SciFiFarms/TechnoCore/issues) to see what is coming.
-
 ## What to know before getting started
 ### Status of TechnoCore: 
 TechnoCore is currently in beta. The infrastructure is done, but there are still some sensors that need to be integrated into the esp8266 firmware. 
