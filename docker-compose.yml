@@ -21,6 +21,7 @@ services:
         target: ca
     volumes:
       - ${docs_live_mount:-./empty/:/opt/.dummy}
+
   esphomeyaml:
     depends_on:
       - mqtt
@@ -56,6 +57,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${esphomeyaml_live_mount:-./empty/:/opt/.dummy}
       - ./esphome-core:/esphome-core
+      
+  
   home_assistant:
     depends_on:
       - home_assistant_db
@@ -101,6 +104,7 @@ services:
       # This allows for realtime editing of Home Assistant configs and scripts. 
       - ${home_assistant_config_live_mount:-./empty/:/opt/.dummy}
       - ${home_assistant_src_live_mount:-./empty/:/opt/.src_dummy}
+      
   home_assistant_db:
     depends_on:
       - vault
@@ -126,6 +130,7 @@ services:
     volumes:
       - home-assistant-db:/var/lib/postgresql/data
       - ${home_assistant_db_live_mount:-./empty/:/opt/.dummy}
+      
   mqtt:
     depends_on:
       - vault
@@ -168,6 +173,8 @@ services:
       - ${mqtt_live_mount:-./empty/:/opt/.dummy}
     # Hostname is needed to persist data. 
     hostname: mqtt
+    
+
   nginx:
     deploy:
       mode: global
@@ -192,6 +199,7 @@ services:
     volumes:
       - ${nginx_config_folder_live_mount:-./empty/:/opt/.config_folder_dummy}
       - ${nginx_config_file_live_mount:-./empty/:/opt/.config_file_dummy}
+
   node_red:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -229,6 +237,7 @@ services:
       # If you docker cp [container hash]:/usr/src/node-red nr/src/
       # You can work with live running code by uncommenting the following volume>
       #- "./node-red:/usr/src/node-red"
+
   portainer:
     environment:
       - acme_flags=${acme_flags:-""}
@@ -274,6 +283,7 @@ services:
       - portainer-acme:/acme.sh/
       - ${portainer_live_mount:-./empty/:/opt/.dummy}
       - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
+      
   vault:
     deploy:
       mode: global
