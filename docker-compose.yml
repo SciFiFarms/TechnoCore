@@ -94,6 +94,10 @@ services:
         target: mqtt_password
       - source: home_assistant_domain
         target: domain
+      - source: home_assistant_timeseries_db_username
+        target: timeseries_db_username
+      - source: home_assistant_timeseries_db_password
+        target: timeseries_db_password
     # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
     #user: ${UID}
     volumes:
@@ -308,6 +312,31 @@ services:
       - ${portainer_live_mount:-./empty/:/opt/.dummy}
       - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
       
+  timeseries_db:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    #environment:
+    image: ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
+    networks:
+      - web
+    secrets:
+      - source: timeseries_db_admin_username
+        target: admin_username
+      - source: timeseries_db_admin_password
+        target: admin_password
+      - source: timeseries_db_home_assistant_username
+        target: home_assistant_username
+      - source: timeseries_db_home_assistant_password
+        target: home_assistant_password
+      - source: timeseries_db_grafana_username
+        target: grafana_username
+      - source: timeseries_db_grafana_password
+        target: grafana_password
+    volumes:
+      - timeseries-db:/var/lib/influxdb
+
   vault:
     deploy:
       mode: global
@@ -377,6 +406,12 @@ secrets:
   home_assistant_db_key:
     name: ${stack_name:-technocore}_home_assistant_db_key
     external: true
+  home_assistant_timeseries_db_username:
+    name: ${stack_name:-technocore}_home_assistant_timeseries_db_username
+    external: true
+  home_assistant_timeseries_db_password:
+    name: ${stack_name:-technocore}_home_assistant_timeseries_db_password
+    external: true
   jupyter_cert_bundle:
     name: ${stack_name:-technocore}_jupyter_cert_bundle
     external: true
@@ -443,6 +478,24 @@ secrets:
   node_red_mqtt_password:
     name: ${stack_name:-technocore}_node_red_mqtt_password
     external: true
+  timeseries_db_admin_username:
+    name: ${stack_name:-technocore}_timeseries_db_admin_username
+    external: true
+  timeseries_db_admin_password:
+    name: ${stack_name:-technocore}_timeseries_db_admin_password
+    external: true
+  timeseries_db_grafana_username:
+    name: ${stack_name:-technocore}_timeseries_db_grafana_username
+    external: true
+  timeseries_db_grafana_password:
+    name: ${stack_name:-technocore}_timeseries_db_grafana_password
+    external: true
+  timeseries_db_home_assistant_username:
+    name: ${stack_name:-technocore}_timeseries_db_home_assistant_username
+    external: true
+  timeseries_db_home_assistant_password:
+    name: ${stack_name:-technocore}_timeseries_db_home_assistant_password
+    external: true
   vault_cert_bundle:
     name: ${stack_name:-technocore}_vault_cert_bundle
     external: true
@@ -470,4 +523,5 @@ volumes:
   node-red:
   portainer:
   portainer-acme:
+  timeseries-db:
   vault:

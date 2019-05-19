@@ -71,6 +71,7 @@ add_CA_to_firefox
 create_mqtt_user mqtt
 create_mqtt_user portainer
 
+# TODO: This could be generated from the docker-compose file at install time
 create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
@@ -78,6 +79,18 @@ create_secret node_red_mqtt_password "Not yet set."
 create_secret esphomeyaml_mqtt_username "Not yet set."
 create_secret esphomeyaml_mqtt_password "Not yet set."
 create_secret portainer_acme_env "Not yet set."
+
+# If any of these need to change, you'll also need to update influxdb with the 
+# new usernames and passwords. They are ignored after the DB is initialized.
+create_secret timeseries_db_admin_username "Not yet set."
+create_secret timeseries_db_admin_password "Not yet set."
+create_secret timeseries_db_grafana_username "Not yet set."
+create_secret timeseries_db_grafana_password "Not yet set."
+create_secret timeseries_db_home_assistant_username "Not yet set."
+create_secret timeseries_db_home_assistant_password "Not yet set."
+
+create_secret home_assistant_timeseries_db_username "Not yet set."
+create_secret home_assistant_timeseries_db_password "Not yet set."
 
 # TODO: Make an actual flag for dev mode. --dev. 
 if [ $# -eq 1 ]; then

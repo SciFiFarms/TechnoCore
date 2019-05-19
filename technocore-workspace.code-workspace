@@ -28,6 +28,9 @@
 			"path": "jupyter"
 		},
 		{
+			"path": "influxdb"
+		},
+		{
 			"path": "home-assistant-db"
 		},
 		{

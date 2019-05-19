@@ -90,6 +90,7 @@ add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Jupyter.git jupyter
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Node-RED.git node-red
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-NGINX.git nginx
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Portainer.git portainer
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-InfluxDB.git influxdb
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Vault.git vault
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-VerneMQ.git vernemq
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome-Core.git esphome-core

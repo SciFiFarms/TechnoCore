@@ -16,3 +16,4 @@ docker build ./portainer/ -t ${image_provider:-scififarms}/technocore-portainer:
 docker build ./vault/ -t ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
 docker build ./vernemq/ -t ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
 docker build ./jupyter/ -t ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
+docker build ./influxdb/ -t ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
