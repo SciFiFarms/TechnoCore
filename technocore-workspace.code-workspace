@@ -70,5 +70,8 @@
 			"tyriar.sort-lines"
 		],
 	"unwantedRecommendations": []
+	},
+	"settings": {
+		"scm.providers.visible": 50
 	}
 }
