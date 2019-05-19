@@ -74,16 +74,6 @@ services:
     networks:
       - web
     secrets:
-      - source: home_assistant_cert_bundle
-        target: cert_bundle
-        #uid: "999" # This is set in Postgres' Dockerfile
-        #mode: 0400
-      - source: home_assistant_key
-        target: key
-        #uid: "999" # This is set in Postgres' Dockerfile
-        #mode: 0400
-      - source: ca
-        target: ca
       - source: grafana_timeseries_db_username
         target: timeseries_db_username
       - source: grafana_timeseries_db_password
