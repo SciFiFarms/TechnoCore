@@ -2,7 +2,7 @@
 
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/../"
 if [ -f "${technocore_folder}/../.env" ]; then
-source ${technocore_folder}.env 
+    source ${technocore_folder}.env 
 fi
 
 # $@ the arguments to pass into yq. See http://mikefarah.github.io/yq/

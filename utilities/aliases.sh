@@ -1,5 +1,5 @@
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-if [ -f "${technocore_folder}/../.env " ]; then
+if [ -f "${technocore_folder}/../.env" ]; then
     source ${technocore_folder}/../.env 
 fi
 
@@ -31,7 +31,7 @@ alias remove_all_volumes='docker volume ls -q | xargs docker volume rm -f'
 # directory that contains a docker-compose.yml file. 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 # TODO: This is duplicated in portainer/shell-migrations/20190324221228-grafana_and_jupyter-migrate.sh
-if [ -f "${technocore_folder}/../.env " ]; then
+if [ -f "${technocore_folder}/../.env" ]; then
     alias deploy='env $(egrep -v "^#" .env | xargs) docker stack deploy --compose-file docker-compose.yml'
 else
     alias deploy='docker stack deploy --compose-file docker-compose.yml'

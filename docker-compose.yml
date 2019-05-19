@@ -273,7 +273,6 @@ services:
     # Hostname is needed to persist data. 
     hostname: mqtt
     
-
   nginx:
     deploy:
       mode: global

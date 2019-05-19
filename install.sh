@@ -117,10 +117,11 @@ docker network rm $network_name > /dev/null
 
 # Found on: https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
 # TODO: This is duplicated in utilities/aliases.sh
-if [ -f ".env " ]; then
+if [ -f ".env" ]; then
 env $(egrep -v '^#' .env | xargs) docker stack deploy --compose-file docker-compose.yml ${stack_name:-technocore}
 else
     docker stack deploy --compose-file docker-compose.yml ${stack_name:-technocore}
+    echo "Doesn't have .env"
 fi
 
 echo "${stack_name:-technocore} initializing. "
