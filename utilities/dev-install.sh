@@ -46,17 +46,6 @@ add_repo_if_missing()
     fi
 }
 
-add_aliases_if_missing()
-{
-    alias_path="$(pwd)/utilities/aliases.sh"
-    # TODO: This check always adds the path :/.
-    if ! grep -Fq ~/.bashrc "$alias_path"; then
-        echo "source $alias_path" >> ~/.bashrc
-        echo "Added source $alias_path to ~/.bashrc"
-    else
-        echo "$alias_path was already in ~/.bashrc, skipping."
-    fi
-}
 
 # TODO: Add example.env to repo
 # It may ultimately make more sense to do something more complicated so that

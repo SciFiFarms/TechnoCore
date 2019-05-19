@@ -38,6 +38,19 @@ if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
     docker swarm init > /dev/null
 fi
 
+add_aliases_if_missing()
+{
+    local alias_path="$(pwd)/utilities/aliases.sh"
+    local home_folder="$(getent passwd $SUDO_USER | cut -d: -f6)"
+    if ! grep -Fq "$alias_path" ${home_folder}/.bashrc ; then
+        echo "source $alias_path" >> ${home_folder}/.bashrc
+        echo "Added source $alias_path to ${home_folder}/.bashrc"
+    else
+        echo "$alias_path was already in ${home_folder}/.bashrc, skipping."
+    fi
+}
+add_aliases_if_missing
+
 # List of services that need TLS.
 # This list is duplicated in portainer/mqtt-scripts/renew-tls.sh. 
 declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx jupyter grafana logs health timeseries_db )
