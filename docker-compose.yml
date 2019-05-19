@@ -91,6 +91,25 @@ services:
     volumes:
       - grafana:/var/lib/grafana
 
+  health:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
+    networks:
+      - web
+    ports:
+      - 9090:9090
+    secrets:
+      - source: health_cert_bundle
+        target: cert_bundle
+      - source: health_key
+        target: key
+      - source: ca
+        target: ca
+    volumes:
+      - health:/var/lib/health
   
   home_assistant:
     depends_on:
@@ -526,6 +545,12 @@ secrets:
   node_red_mqtt_password:
     name: ${stack_name:-technocore}_node_red_mqtt_password
     external: true
+  health_cert_bundle:
+    name: ${stack_name:-technocore}_health_cert_bundle
+    external: true
+  health_key:
+    name: ${stack_name:-technocore}_health_key
+    external: true
   timeseries_db_admin_username:
     name: ${stack_name:-technocore}_timeseries_db_admin_username
     external: true
@@ -573,4 +598,5 @@ volumes:
   portainer:
   portainer-acme:
   timeseries-db:
+  health:
   vault:

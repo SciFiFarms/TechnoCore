@@ -14,7 +14,9 @@ docker build ./home-assistant-db/ -t ${image_provider:-scififarms}/technocore-ho
 docker build ./nginx/ -t ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
 docker build ./node-red/ -t ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
 docker build ./portainer/ -t ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}
+docker build ./prometheus/ -t ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
 docker build ./vault/ -t ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
 docker build ./vernemq/ -t ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
 docker build ./jupyter/ -t ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
 docker build ./influxdb/ -t ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
+docker build ./prometheus/ -t ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}

@@ -34,6 +34,9 @@
 			"path": "influxdb"
 		},
 		{
+			"path": "prometheus"
+		},
+		{
 			"path": "home-assistant-db"
 		},
 		{

@@ -17,3 +17,4 @@ docker pull ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-health:${TAG:-latest}
