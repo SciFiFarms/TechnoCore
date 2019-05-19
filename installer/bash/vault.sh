@@ -4,11 +4,11 @@ vault_i() {
 
 # $1: service name. Examples are "vault", "emq"
 create_tls(){
-    local alt_names="${1}.local,${1}"
+    local alt_names="${1}.${domain:-scifi.farm},${1}.local"
     if [ "$1" == "nginx" ]; then
-        alt_names="${1}.local,${1},${stack_name:-technocore},${stack_name:-technocore}.local,${stack_name:-technocore}.${domain:-latest},${HOSTNAME},${HOSTNAME}.local,${HOSTNAME}.${domain:-latest}"
+        alt_names="${1}.${domain:-scifi.farm},${1}.local,${stack_name:-technocore},${stack_name:-technocore}.local,${stack_name:-technocore}.${domain:-scifi.farm},${HOSTNAME},${HOSTNAME}.local,${HOSTNAME}.${domain:-scifi.farm}"
     fi
-    local tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}.${domain:-latest}" alt_names="$alt_names" ttl=720h format=pem)
+    local tlsResponse=$(vault_i write -format=json ca/issue/tls common_name="${1}" alt_names="$alt_names" ttl=720h format=pem)
     local tlsCert=$(grep -Eo '"certificate":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
     local tlsKey=$(grep -Eo '"private_key":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)
     local tlsCa=$(grep -Eo '"issuing_ca":.*?[^\\]",' <<< "$tlsResponse" | cut -d \" -f 4)

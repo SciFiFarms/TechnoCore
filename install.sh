@@ -151,7 +151,8 @@ if [ $# -eq 0 ]; then
         echo "Waiting for acme.sh to initialize."
         sleep 5
     done
-    hostname_trimmed=${domain:-latest}
+    # This doesn't seem like it should work?
+    hostname_trimmed=${domain:-local}
     echo "acme.sh initialized."
 fi
 # For more about --fail, see: https://superuser.com/questions/590099/can-i-make-curl-fail-with-an-exitcode-different-than-0-if-the-http-status-code-i 
