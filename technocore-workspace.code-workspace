@@ -28,6 +28,9 @@
 			"path": "jupyter"
 		},
 		{
+			"path": "grafana"
+		},
+		{
 			"path": "influxdb"
 		},
 		{

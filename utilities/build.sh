@@ -8,6 +8,7 @@ fi
 docker build ./docs/ -t ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
 docker build -f ./esphomeyaml/docker/Dockerfile ./esphomeyaml/ -t ${image_provider:-scififarms}/technocore-esphomeyaml:${TAG:-latest}
 docker build ./esphomeyaml-wrapper/ -t ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
+docker build ./grafana/ -t ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
 docker build ./home-assistant/ -t ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
 docker build ./home-assistant-db/ -t ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
 docker build ./nginx/ -t ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}

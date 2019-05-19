@@ -58,6 +58,39 @@ services:
       - ${esphomeyaml_live_mount:-./empty/:/opt/.dummy}
       - ./esphome-core:/esphome-core
       
+  grafana:
+    depends_on:
+      - home_assistant_db
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    environment:
+      #- GF_SERVER_DOMAIN=spencer-laptop/grafana/
+      - GF_SERVER_ROOT_URL=https://spencer-laptop/grafana/
+    image: ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
+    networks:
+      - web
+    secrets:
+      - source: home_assistant_cert_bundle
+        target: cert_bundle
+        #uid: "999" # This is set in Postgres' Dockerfile
+        #mode: 0400
+      - source: home_assistant_key
+        target: key
+        #uid: "999" # This is set in Postgres' Dockerfile
+        #mode: 0400
+      - source: ca
+        target: ca
+      - source: grafana_timeseries_db_username
+        target: timeseries_db_username
+      - source: grafana_timeseries_db_password
+        target: timeseries_db_password
+      - source: grafana_domain
+        target: domain
+    volumes:
+      - grafana:/var/lib/grafana
+
   
   home_assistant:
     depends_on:
@@ -385,6 +418,21 @@ secrets:
   ca_bundle:
     name: ${stack_name:-technocore}_ca_bundle
     external: true
+  grafana_cert_bundle:
+    name: ${stack_name:-technocore}_grafana_cert_bundle
+    external: true
+  grafana_key:
+    name: ${stack_name:-technocore}_grafana_key
+    external: true
+  grafana_timeseries_db_username:
+    name: ${stack_name:-technocore}_grafana_timeseries_db_username
+    external: true
+  grafana_timeseries_db_password:
+    name: ${stack_name:-technocore}_grafana_timeseries_db_password
+    external: true
+  grafana_domain:
+    name: ${stack_name:-technocore}_grafana_domain
+    external: true
   home_assistant_cert_bundle:
     name: ${stack_name:-technocore}_home_assistant_cert_bundle
     external: true
@@ -516,6 +564,7 @@ secrets:
     external: true
 volumes:
   esphomeyaml:
+  grafana:
   home-assistant:
   home-assistant-db:
   jupyter:
