@@ -1,17 +1,18 @@
 version: '3.5'
 services:
   docs:
-    command: jekyll serve
     deploy:
         mode: global
         restart_policy:
           condition: any
+    environment:
+      - HUGO_THEME=meghna-hugo
+      - HUGO_WATCH=true
+      # TODO: This should actually be set via a domain secret.
+      - HUGO_BASEURL=${HOSTNAME}
     image: ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
     networks:
       - web
-    ports:
-      - "4000:4000"
-      - 35729:35729
     secrets:
       - source: docs_cert_bundle
         target: wiki_cert
