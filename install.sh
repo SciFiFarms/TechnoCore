@@ -4,7 +4,6 @@ if [ -f ".env" ]; then
 source .env
 fi
 source utilities/aliases.sh
-TECHNOCORE_REINSTALL=1
 # TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
 debug_output=/dev/null
 
@@ -46,11 +45,9 @@ declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs p
 # Remove old stack if one is found.
 if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then
     echo "Previous ${stack_name:-technocore} install detected. "
-    if [ -v TECHNOCORE_REINSTALL ]; then
         echo "Removing stack ${stack_name:-technocore}"
         source utilities/clean.sh
     fi
-fi
 
 # Load the installer functions. 
 for file in ./installer/bash/*; do
