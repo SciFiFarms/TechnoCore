@@ -131,6 +131,30 @@ services:
       - home-assistant-db:/var/lib/postgresql/data
       - ${home_assistant_db_live_mount:-./empty/:/opt/.dummy}
       
+  jupyter:
+    depends_on:
+      - home_assistant_db
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
+    networks:
+      - web
+    secrets:
+      - source: jupyter_cert_bundle
+        target: cert_bundle
+        uid: "999" # This is set in Postgres' Dockerfile
+        mode: 0400
+      - source: jupyter_key
+        target: key
+        uid: "999" # This is set in Postgres' Dockerfile
+        mode: 0400
+      - source: ca
+        target: ca
+    volumes:
+      - jupyter:/var/lib/jupyter
+
   mqtt:
     depends_on:
       - vault
@@ -353,6 +377,12 @@ secrets:
   home_assistant_db_key:
     name: ${stack_name:-technocore}_home_assistant_db_key
     external: true
+  jupyter_cert_bundle:
+    name: ${stack_name:-technocore}_jupyter_cert_bundle
+    external: true
+  jupyter_key:
+    name: ${stack_name:-technocore}_jupyter_key
+    external: true
   mqtt_cert_bundle:
     name: ${stack_name:-technocore}_mqtt_cert_bundle
     external: true
@@ -435,6 +465,7 @@ volumes:
   esphomeyaml:
   home-assistant:
   home-assistant-db:
+  jupyter:
   mqtt:
   node-red:
   portainer:

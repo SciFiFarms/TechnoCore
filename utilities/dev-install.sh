@@ -86,6 +86,7 @@ add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml.git esphome
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml-Wrapper.git esphomeyaml-wrapper
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant.git home-assistant
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant-DB.git home-assistant-db
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Jupyter.git jupyter
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Node-RED.git node-red
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-NGINX.git nginx
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Portainer.git portainer
