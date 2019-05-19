@@ -1,7 +1,7 @@
 #!/bin/bash
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 if [ -f "${technocore_folder}/../.env" ]; then
-source ${technocore_folder}/../.env 
+    source ${technocore_folder}/../.env 
 fi
 
 # TODO: Make these reference docker-compose.yaml like clean.sh does.
@@ -19,4 +19,4 @@ docker build ./vault/ -t ${image_provider:-scififarms}/technocore-vault:${TAG:-l
 docker build ./vernemq/ -t ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
 docker build ./jupyter/ -t ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
 docker build ./influxdb/ -t ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
-docker build ./prometheus/ -t ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
+docker build ./loki/ -t ${image_provider:-scififarms}/technocore-loki:${TAG:-latest}

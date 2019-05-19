@@ -37,6 +37,9 @@
 			"path": "prometheus"
 		},
 		{
+			"path": "loki"
+		},
+		{
 			"path": "home-assistant-db"
 		},
 		{
