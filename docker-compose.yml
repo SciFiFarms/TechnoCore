@@ -36,6 +36,7 @@ services:
       - TAG=${TAG:-latest}
       # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
       - host_working_dir=$PWD
+      #- debug=${esphomeyaml_debug}
       - esphome_core=./esphome-core:/esphome-core
       - esphome_app=${esphomeyaml_app_live_mount}
     image: ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
@@ -50,7 +51,7 @@ services:
         target: mqtt_password
       - source: esphomeyaml_token
         target: token
-      - source: home_assistant_domain
+      - source: esphomeyaml_domain
         target: domain
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
@@ -544,6 +545,9 @@ secrets:
     external: true
   esphomeyaml_token:
     name: ${stack_name:-technocore}_esphomeyaml_token
+    external: true
+  esphomeyaml_domain:
+    name: ${stack_name:-technocore}_esphomeyaml_domain
     external: true
   portainer_acme_env:
     name: ${stack_name:-technocore}_portainer_acme_env

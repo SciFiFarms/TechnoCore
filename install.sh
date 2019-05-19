@@ -98,9 +98,11 @@ create_secret home_assistant_timeseries_db_password "Not yet set."
 if [ $# -eq 1 ]; then
     hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
     create_secret home_assistant_domain "$hostname_trimmed"
+    create_secret esphomeyaml_domain "$hostname_trimmed"
     create_secret grafana_domain "$hostname_trimmed"
 else
     create_secret home_assistant_domain "Not yet set."
+    create_secret esphomeyaml_domain "Not yet set."
     create_secret grafana_domain "Not yet set."
 fi
 
