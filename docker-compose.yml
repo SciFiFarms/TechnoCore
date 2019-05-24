@@ -108,8 +108,6 @@ services:
     image: ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
     networks:
       - web
-    ports:
-      - 9090:9090
     secrets:
       - source: health_cert_bundle
         target: cert_bundle
