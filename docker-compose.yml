@@ -653,6 +653,12 @@ secrets:
   timeseries_db_home_assistant_password:
     name: ${stack_name:-technocore}_timeseries_db_home_assistant_password
     external: true
+  timeseries_db_cert_bundle:
+    name: ${stack_name:-technocore}_timeseries_db_cert_bundle
+    external: true
+  timeseries_db_key:
+    name: ${stack_name:-technocore}_timeseries_db_key
+    external: true
   vault_cert_bundle:
     name: ${stack_name:-technocore}_vault_cert_bundle
     external: true
