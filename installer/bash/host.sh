@@ -37,20 +37,6 @@ create_secret(){
 extract_from_json(){
     grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
 }
-# $1: The number of characters to generate
-# We have to use >&2, which sends output to stderr because we're passing 
-# the password into the caller via stdout. Ugly, but functional.
-generate_password(){
-    local response
-    echo "Creating password of length $1" >&2
-    until response=$(vault_i write -force -format=json /sys/tools/random/${1})
-    do
-        echo "Couldn't reach Vault. Will retry after sleep." >&2
-        sleep 5
-    done
-    local password=$(extract_from_json random_bytes "$response")
-    echo "$password"
-}
 
 # $1: The username to create
 # This is tightly coupled with the migrations in the portainer image. If you 
