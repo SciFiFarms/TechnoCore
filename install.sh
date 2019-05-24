@@ -114,10 +114,12 @@ if [ $# -eq 1 ]; then
     create_secret home_assistant_domain "$hostname_trimmed"
     create_secret esphomeyaml_domain "$hostname_trimmed"
     create_secret grafana_domain "$hostname_trimmed"
+    create_secret health_domain "$hostname_trimmed"
 else
     create_secret home_assistant_domain "Not yet set."
     create_secret esphomeyaml_domain "Not yet set."
     create_secret grafana_domain "Not yet set."
+    create_secret health_domain "Not yet set."
 fi
 
 create_vault_user_and_token esphomeyaml

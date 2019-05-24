@@ -117,6 +117,8 @@ services:
         target: key
       - source: ca
         target: ca
+      - source: health_domain
+        target: domain
     volumes:
       - health:/prometheus
   
@@ -629,6 +631,9 @@ secrets:
     external: true
   health_key:
     name: ${stack_name:-technocore}_health_key
+    external: true
+  health_domain:
+    name: ${stack_name:-technocore}_health_domain
     external: true
   timeseries_db_admin_username:
     name: ${stack_name:-technocore}_timeseries_db_admin_username
