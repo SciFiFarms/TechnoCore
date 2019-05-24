@@ -24,7 +24,7 @@ fi
 
 # Add user permission to use docker if not already setup.
 # https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
-if ! getent group docker | grep -w "$USER" > /dev/null ; then
+if getent group docker | grep -w "$USER" > /dev/null ; then
     # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
     echo "Adding $(logname) to docker group"
     usermod -a -G docker $(logname)
@@ -45,8 +45,8 @@ add_aliases_if_missing()
     if ! grep -Fq "$alias_path" ${home_folder}/.bashrc ; then
         echo "source $alias_path" >> ${home_folder}/.bashrc
         echo "Added source $alias_path to ${home_folder}/.bashrc"
-    else
-        echo "$alias_path was already in ${home_folder}/.bashrc, skipping."
+    #else
+    #    echo "aliases.sh was present in ${home_folder}/.bashrc, skipping addition."
     fi
 }
 add_aliases_if_missing
