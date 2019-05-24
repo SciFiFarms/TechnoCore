@@ -104,6 +104,10 @@ create_secret grafana_timeseries_db_password "Not yet set."
 create_secret home_assistant_timeseries_db_username "Not yet set."
 create_secret home_assistant_timeseries_db_password "Not yet set."
 
+create_secret nextcloud_exporter_url "Not yet set."
+create_secret nextcloud_exporter_password "Not yet set."
+create_secret nextcloud_exporter_username "Not yet set."
+
 # TODO: Make an actual flag for dev mode. --dev. 
 if [ $# -eq 1 ]; then
     hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)

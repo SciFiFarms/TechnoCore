@@ -11,6 +11,7 @@ docker build ./esphomeyaml-wrapper/ -t ${image_provider:-scififarms}/technocore-
 docker build ./grafana/ -t ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
 docker build ./home-assistant/ -t ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
 docker build ./home-assistant-db/ -t ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
+docker build ./nextcloud-exporter/ -t ${image_provider:-scififarms}/technocore-nextcloud-exporter:${TAG:-latest}
 docker build ./nginx/ -t ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
 docker build ./node-red/ -t ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
 docker build ./portainer/ -t ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}

@@ -1,5 +1,22 @@
 version: '3.5'
 services:
+  # Collects container metrics for Prometheus
+  cadvisor:
+    command: -logtostderr -docker_only
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: google/cadvisor
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
   docs:
     deploy:
         mode: global
@@ -289,6 +306,41 @@ services:
       - ${nginx_config_folder_live_mount:-./empty/:/opt/.config_folder_dummy}
       - ${nginx_config_file_live_mount:-./empty/:/opt/.config_file_dummy}
 
+  nextcloud_exporter:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: ${image_provider:-scififarms}/technocore-nextcloud-exporter:${TAG:-latest}
+    networks:
+      - web
+    secrets:
+      - source: nextcloud_exporter_url
+        target: url
+      - source: nextcloud_exporter_username
+        target: username
+      - source: nextcloud_exporter_password
+        target: password
+  
+  node_exporter:
+    command:       
+      - '--path.procfs=/host/proc'       
+      - '--path.sysfs=/host/sys'       
+      - '--path.rootfs=/host'       
+      - '--collector.filesystem.ignored-mount-points="^(/rootfs|/host|)/(sys|proc|dev|host|etc)($$|/)"'       
+      - '--collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'       
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: prom/node-exporter       
+    networks:
+      - web
+    volumes:       
+      - /proc:/host/proc:ro       
+      - /sys:/host/sys:ro       
+      - /:/rootfs:ro       
+
   node_red:
     environment:
       # Needed to be able to connect with Home Assistant
@@ -514,6 +566,15 @@ secrets:
     external: true
   mqtt_token:
     name: ${stack_name:-technocore}_mqtt_token
+    external: true
+  nextcloud_exporter_url:
+    name: ${stack_name:-technocore}_nextcloud_exporter_url
+    external: true
+  nextcloud_exporter_username:
+    name: ${stack_name:-technocore}_nextcloud_exporter_username
+    external: true
+  nextcloud_exporter_password:
+    name: ${stack_name:-technocore}_nextcloud_exporter_password
     external: true
   node_red_cert_bundle:
     name: ${stack_name:-technocore}_node_red_cert_bundle

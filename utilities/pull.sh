@@ -18,4 +18,4 @@ docker pull ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-loki:${TAG:-latest}
-docker pull ${image_provider:-scififarms}/technocore-health:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-nextcloud-exporter:${TAG:-latest}

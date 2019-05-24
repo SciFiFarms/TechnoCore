@@ -37,6 +37,9 @@
 			"path": "prometheus"
 		},
 		{
+			"path": "nextcloud-exporter"
+		},
+		{
 			"path": "loki"
 		},
 		{
