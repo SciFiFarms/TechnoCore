@@ -118,7 +118,7 @@ services:
       - source: ca
         target: ca
     volumes:
-      - health:/var/lib/health
+      - health:/prometheus
   
   home_assistant:
     depends_on:
