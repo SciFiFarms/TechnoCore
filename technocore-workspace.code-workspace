@@ -1,8 +1,8 @@
 {
 	"folders": [
-		/*{
+		{
 			"path": "hals"
-		},*/
+		},
 		{
 			"path": "nginx"
 		},
@@ -10,7 +10,7 @@
 			"path": "home-assistant"
 		},
 		{
-			"path": "esphomeyaml"
+			"path": "esphome"
 		},
 		{
 			"path": "portainer"
@@ -52,7 +52,7 @@
 			"path": "dogfish"
 		},
 		{
-			"path": "esphomeyaml-wrapper"
+			"path": "esphome-wrapper"
 		},
 		{
 			"path": "docs"

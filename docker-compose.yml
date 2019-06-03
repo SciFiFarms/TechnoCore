@@ -40,7 +40,7 @@ services:
     volumes:
       - ${docs_live_mount:-./empty/:/opt/.dummy}
 
-  esphomeyaml:
+  esphome:
     depends_on:
       - mqtt
     deploy:
@@ -50,31 +50,31 @@ services:
     environment:
       - image_provider=${image_provider:-scififarms}
       - stack_name=${stack_name:-technocore}
-      - service_name=esphomeyaml
+      - service_name=esphome
       - TAG=${TAG:-latest}
       # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
       - host_working_dir=$PWD
-      #- debug=${esphomeyaml_debug}
+      #- debug=${esphome_debug}
       - esphome_core=./esphome-core:/esphome-core
-      - esphome_app=${esphomeyaml_app_live_mount}
-    image: ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
+      - esphome_app=${esphome_app_live_mount}
+    image: ${image_provider:-scififarms}/technocore-esphome-wrapper:${TAG:-latest}
     networks:
       - web
     secrets:
       - source: ca_bundle
         target: ca
-      - source: esphomeyaml_mqtt_username
+      - source: esphome_mqtt_username
         target: mqtt_username
-      - source: esphomeyaml_mqtt_password
+      - source: esphome_mqtt_password
         target: mqtt_password
-      - source: esphomeyaml_token
+      - source: esphome_token
         target: token
-      - source: esphomeyaml_domain
+      - source: esphome_domain
         target: domain
     user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${esphomeyaml_live_mount:-./empty/:/opt/.dummy}
+      - ${esphome_live_mount:-./empty/:/opt/.dummy}
       - ./esphome-core:/esphome-core
       - esphome-build:/tmp/esphome-build/
       
@@ -589,17 +589,17 @@ secrets:
   nginx_key:
     name: ${stack_name:-technocore}_nginx_key
     external: true
-  esphomeyaml_mqtt_username:
-    name: ${stack_name:-technocore}_esphomeyaml_mqtt_username
+  esphome_mqtt_username:
+    name: ${stack_name:-technocore}_esphome_mqtt_username
     external: true
-  esphomeyaml_mqtt_password:
-    name: ${stack_name:-technocore}_esphomeyaml_mqtt_password
+  esphome_mqtt_password:
+    name: ${stack_name:-technocore}_esphome_mqtt_password
     external: true
-  esphomeyaml_token:
-    name: ${stack_name:-technocore}_esphomeyaml_token
+  esphome_token:
+    name: ${stack_name:-technocore}_esphome_token
     external: true
-  esphomeyaml_domain:
-    name: ${stack_name:-technocore}_esphomeyaml_domain
+  esphome_domain:
+    name: ${stack_name:-technocore}_esphome_domain
     external: true
   portainer_acme_env:
     name: ${stack_name:-technocore}_portainer_acme_env
@@ -677,7 +677,7 @@ secrets:
     name: ${stack_name:-technocore}_docs_key
     external: true
 volumes:
-  esphomeyaml:
+  esphome:
   esphome-build:
   grafana:
   home-assistant:

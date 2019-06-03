@@ -8,8 +8,8 @@ docker pull ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
-docker pull ${image_provider:-scififarms}/technocore-esphomeyaml:${TAG:-latest}
-docker pull ${image_provider:-scififarms}/technocore-esphomeyaml-wrapper:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-esphome:${TAG:-latest}
+docker pull ${image_provider:-scififarms}/technocore-esphome-wrapper:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
 docker pull ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}

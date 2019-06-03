@@ -86,8 +86,8 @@ create_secret home_assistant_mqtt_username "Not yet set."
 create_secret home_assistant_mqtt_password "Not yet set."
 create_secret node_red_mqtt_username "Not yet set."
 create_secret node_red_mqtt_password "Not yet set."
-create_secret esphomeyaml_mqtt_username "Not yet set."
-create_secret esphomeyaml_mqtt_password "Not yet set."
+create_secret esphome_mqtt_username "Not yet set."
+create_secret esphome_mqtt_password "Not yet set."
 create_secret portainer_acme_env "Not yet set."
 
 # If any of these need to change, you'll also need to update influxdb with the 
@@ -112,17 +112,17 @@ create_secret nextcloud_exporter_username "Not yet set."
 if [ $# -eq 1 ]; then
     hostname_trimmed=$(echo ${HOSTNAME} | cut -d"." -f 1)
     create_secret home_assistant_domain "$hostname_trimmed"
-    create_secret esphomeyaml_domain "$hostname_trimmed"
+    create_secret esphome_domain "$hostname_trimmed"
     create_secret grafana_domain "$hostname_trimmed"
     create_secret health_domain "$hostname_trimmed"
 else
     create_secret home_assistant_domain "Not yet set."
-    create_secret esphomeyaml_domain "Not yet set."
+    create_secret esphome_domain "Not yet set."
     create_secret grafana_domain "Not yet set."
     create_secret health_domain "Not yet set."
 fi
 
-create_vault_user_and_token esphomeyaml
+create_vault_user_and_token esphome
 create_vault_user_and_token portainer
 create_vault_user_and_token mqtt
 

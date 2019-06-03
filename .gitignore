@@ -5,8 +5,8 @@ ca.pem
 
 docs
 dogfish
-esphomeyaml
-esphomeyaml-wrapper
+esphome
+esphome-wrapper
 grafana
 ha_homie
 hals
