@@ -62,43 +62,40 @@ The first 4 are all a regular user should need.
   - [TechnoCore's documentation on Home Assistant](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_home-assistant.md)
   - [TechnoCore-Home-Assistant: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant)
   - [TechnoCore-Home-Assistant: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant)
-- **[esphomeyaml](https://esphomelib.com/esphomeyaml/)** - Configures and flashes the ESP8266s and ESP32s.
-  - [Esphomeyaml's Documentation](https://esphomelib.com/index.html)
-  - [Esphomeyaml's Getting Started](https://esphomelib.com/esphomeyaml/guides/getting_started_hassio.html#dashboard-interface) 
-  - [Esphomeyaml's Devices](https://esphomelib.com/esphomeyaml/index.html)
-  - [TechnoCore's documentation on esphomeyaml](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_esphomeyaml.md)
-  - [TechnoCore-esphomeyaml: Git repo](https://github.com/SciFiFarms/TechnoCore-esphomeyaml)
-  - [TechnoCore-esphomeyaml: Docker Hub](https://hub.docker.com/r/scififarms/technocore-esphomeyaml)
+- **[ESPHome](https://esphome.io/)** - Configures and flashes the ESP8266s and ESP32s.
+  - [ESPHome's Documentation](https://esphome.io/)
+  - [ESPHome's Getting Started](https://esphome.io/guides/getting_started_hassio.html#dashboard-interface) 
+  - [ESPHome's Devices](https://esphome.io/index.html#devices)
+  - [TechnoCore's documentation on ESPHome](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/esphome.md)
+  - [TechnoCore-ESPHome: Git repo](https://github.com/SciFiFarms/TechnoCore-ESPHome)
+  - [TechnoCore-ESPHome: Docker Hub](https://hub.docker.com/r/scififarms/technocore-esphome)
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of TechnoCore. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
   - [Node-RED's Documentation](https://nodered.org/docs/)
   - [TechnoCore's documentation on Node-RED](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_node-red.md)
+  - [Great video on using Node-RED with Home Assistant](https://www.youtube.com/watch?v=dYN1Lp-XYKA)
   - [TechnoCore-Node-RED: Git repo](https://github.com/SciFiFarms/TechnoCore-Node-RED)
   - [TechnoCore-Node-RED: Docker Hub](https://hub.docker.com/r/scififarms/technocore-node-red)
-- **[Portainer](https://www.portainer.io/)** - Provides a GUI for Docker as well as the service responsible for initializing all the other services.
-  - [Portainer's Documentation](https://portainer.readthedocs.io/en/stable/)
-  - [TechnoCore's documentation on Portainer](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_portainer.md)
-  - [TechnoCore-Portainer: Git repo](https://github.com/SciFiFarms/TechnoCore-Portainer)
-  - [TechnoCore-Portainer: Docker Hub](https://hub.docker.com/r/scififarms/technocore-portainer)
-- **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-  - [Docker's Documentation](https://docs.docker.com/)
-  - [TechnoCore's documentation on Docker](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docker.md)
-- **[Jekyll](https://jekyllrb.com/)** - Jekyll powers TechnoCore's documentation. 
-  - [Jekyll's Documentation](https://jekyllrb.com/docs/)
-  - [TechnoCore's documentation on Jekyll](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
-  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
-  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
 - **[NGINX](https://nginx.org/)** - Is the gateway to TechnoCore. All HTTP, HTTPS, and MQTT traffic gets forwarded by NGINX. 
   - [NGINX's Documentation](http://nginx.org/en/docs/)
   - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
   - [TechnoCore-NGINX: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX)
   - [TechnoCore-NGINX: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx)
+
+- **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
+  - [Docker's Documentation](https://docs.docker.com/)
+  - [TechnoCore's documentation on Docker](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docker.md)
+- **[Portainer](https://www.portainer.io/)** - Provides a GUI for Docker as well as the service responsible for initializing all the other services.
+  - [Portainer's Documentation](https://portainer.readthedocs.io/en/stable/)
+  - [TechnoCore's documentation on Portainer](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_portainer.md)
+  - [TechnoCore-Portainer: Git repo](https://github.com/SciFiFarms/TechnoCore-Portainer)
+  - [TechnoCore-Portainer: Docker Hub](https://hub.docker.com/r/scififarms/technocore-portainer)
 - **[VerneMQ (MQTT Provider)](https://vernemq.com/)** - MQTT is the communication backbone of TechnoCore. It is what enables sensors to talk with services and services to talk with each other. 
   - [VerneMQ's Documentation](https://vernemq.com/docs/)
   - [TechnoCore's documentation on VerneMQ](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vernemq.md)
   - [TechnoCore-VerneMQ: Git repo](https://github.com/SciFiFarms/TechnoCore-VerneMQ)
   - [TechnoCore-VerneMQ: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vernemq)
 - **[Vault](https://www.vaultproject.io/)** - Is the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
-  - [Vault's Documentation(https://www.vaultproject.io/docs/)
+  - [Vault's Documentation](https://www.vaultproject.io/docs/)
   - [TechnoCore's documentation on Vault](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vault.md)
   - [TechnoCore-Vault: Git repo](https://github.com/SciFiFarms/TechnoCore-Vault)
   - [TechnoCore-Vault: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vault)
@@ -113,6 +110,11 @@ The first 4 are all a regular user should need.
   - [TechnoCore's documentation on PostgreSQL](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_postgresql.md)
   - [TechnoCore-Home-Assistant-DB: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant-DB)
   - [TechnoCore-Home-Assistant-DB: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant-db)
+- **[Jekyll](https://jekyllrb.com/)** - Jekyll powers TechnoCore's documentation. 
+  - [Jekyll's Documentation](https://jekyllrb.com/docs/)
+  - [TechnoCore's documentation on Jekyll](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
+  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
+  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
 - **[PlatformIO (Flashing ESPs)](https://platformio.org/)** - The PlatformIO service allows for flashing ESPs and is triggered from Home Assistant.
   - [PlatformIO's Documentation](https://docs.platformio.org/)
   - [TechnoCore's documentation on PlatformIO](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_platformio.md)
