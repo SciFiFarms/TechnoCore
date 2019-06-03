@@ -76,6 +76,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${esphomeyaml_live_mount:-./empty/:/opt/.dummy}
       - ./esphome-core:/esphome-core
+      - esphome-build:/tmp/esphome-build/
       
   grafana:
     depends_on:
@@ -677,6 +678,7 @@ secrets:
     external: true
 volumes:
   esphomeyaml:
+  esphome-build:
   grafana:
   home-assistant:
   home-assistant-db:
