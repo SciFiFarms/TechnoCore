@@ -84,9 +84,9 @@ Note: ESPHome is the most recent addition to TechnoCore, and I'm still exploring
   - Mounted the /config folder to a folder on the server, and then used NextCloud to sync changes between my local machine and the server. 
     This is my current solution. 
   - Mounted the /config folder to a folder on the server, and then used sshfs to mount that folder on my local machine. To do this, you'll need to setup passwordless ssh to your server, and the add something like the following to your /etc/fstab:
-    ```technocore@technocore:/home/technocore/technocore/esphomeyaml/config /home/spencer/src/technocore/hals fuse.sshfs noauto,x-systemd.automount,_netdev,users,idmap=user,allow_other,reconnect 0 0```
+    ```technocore@technocore:/home/technocore/technocore/esphome/config /home/spencer/src/technocore/hals fuse.sshfs noauto,x-systemd.automount,_netdev,users,idmap=user,allow_other,reconnect 0 0```
     This worked OK when I was on the local network, but broke when I left the network. 
-  - Used the text editor from within ESPHomeYaml. This worked OK, but doesn't have a way of editing files in folders, nor of creating symlinks. 
+  - Used the text editor from within ESPHome. This worked OK, but doesn't have a way of editing files in folders, nor of creating symlinks. 
 
 ### Configuring Your TechnoCore instance
 You can configure TechnoCore via the .env file. All available settings should already be set in there, so you can see everything that is settable there. Once you make a change you'll need to run the following from your TechnoCore directory:
