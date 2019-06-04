@@ -425,6 +425,19 @@ services:
       - portainer-acme:/acme.sh/
       - ${portainer_live_mount:-./empty/:/opt/.dummy}
       - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
+  
+  promtail:
+    command: -config.file=/etc/promtail/docker-config.yaml
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: grafana/promtail:master-922f1da
+    #image: ${image_provider:-scififarms}/technocore-promtail:${TAG:-latest}
+    networks:
+      - web
+    volumes:
+      - /var/log:/var/log
       
   timeseries_db:
     deploy:
