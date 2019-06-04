@@ -77,6 +77,8 @@ Note: If you're using the developer install (`sudo ./install.sh --dev`), then it
 
 ### Home Assistant
 TechnoCore is a stack built to support Home Assistant, so to it's worth checking out the [Home Assistant Documentation](https://www.home-assistant.io/docs/) to get an idea of what TechnoCore and Home Assistant can do. 
+Here is an example of how I have my Home Assistant interface set up:
+![Home Assistant interface](images/home-assistant.png?raw=true)
 
 ### ESPHome
 ESPs are the eyes and ears of TechnoCore. They aren't mandatory, but I'd highly recommend looking around [ESPHome's Documentation](https://esphome.io/) to see what is possible and how it works. 
@@ -87,6 +89,10 @@ Note: ESPHome is the most recent addition to TechnoCore, and I'm still exploring
     ```technocore@technocore:/home/technocore/technocore/esphome/config /home/spencer/src/technocore/hals fuse.sshfs noauto,x-systemd.automount,_netdev,users,idmap=user,allow_other,reconnect 0 0```
     This worked OK when I was on the local network, but broke when I left the network. 
   - Used the text editor from within ESPHome. This worked OK, but doesn't have a way of editing files in folders, nor of creating symlinks. 
+
+### Grafana
+Grafana provides a great window into the data TechnoCore is working with. It's beautiful and easy to use. 
+![Grafana interface](images/grafana.png?raw=true)
 
 ### Configuring Your TechnoCore instance
 You can configure TechnoCore via the .env file. All available settings should already be set in there, so you can see everything that is settable there. Once you make a change you'll need to run the following from your TechnoCore directory:
