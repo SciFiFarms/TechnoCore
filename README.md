@@ -89,6 +89,7 @@ Note: ESPHome is the most recent addition to TechnoCore, and I'm still exploring
     ```technocore@technocore:/home/technocore/technocore/esphome/config /home/spencer/src/technocore/hals fuse.sshfs noauto,x-systemd.automount,_netdev,users,idmap=user,allow_other,reconnect 0 0```
     This worked OK when I was on the local network, but broke when I left the network. 
   - Used the text editor from within ESPHome. This worked OK, but doesn't have a way of editing files in folders, nor of creating symlinks. 
+![ESPHome interface](images/esphome.png?raw=true)
 
 ### Grafana
 Grafana provides a great window into the data TechnoCore is working with. It's beautiful and easy to use. 
