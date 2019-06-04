@@ -53,7 +53,7 @@ add_aliases_if_missing
 
 # List of services that need TLS.
 # This list is duplicated in portainer/mqtt-scripts/renew-tls.sh. 
-declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx jupyter grafana logs health timeseries_db )
+declare -a services=(vault home_assistant mqtt home_assistant_db node_red docs portainer nginx jupyter grafana loki health timeseries_db )
 
 # Remove old stack if one is found.
 if  docker stack ls | grep -w technocore > /dev/null || docker secret ls | grep -w technocore_ca > /dev/null ; then

@@ -221,7 +221,7 @@ services:
     volumes:
       - jupyter:/var/lib/jupyter
 
-  logs:
+  loki:
     deploy:
       mode: global
       restart_policy:
@@ -230,14 +230,14 @@ services:
     networks:
       - web
     secrets:
-      - source: logs_cert_bundle
+      - source: loki_cert_bundle
         target: cert_bundle
-      - source: logs_key
+      - source: loki_key
         target: key
       - source: ca
         target: ca
     volumes:
-      - logs:/var/lib/loki
+      - loki:/var/lib/loki
 
   mqtt:
     depends_on:
@@ -547,11 +547,11 @@ secrets:
   jupyter_key:
     name: ${stack_name:-technocore}_jupyter_key
     external: true
-  logs_cert_bundle:
-    name: ${stack_name:-technocore}_logs_cert_bundle
+  loki_cert_bundle:
+    name: ${stack_name:-technocore}_loki_cert_bundle
     external: true
-  logs_key:
-    name: ${stack_name:-technocore}_logs_key
+  loki_key:
+    name: ${stack_name:-technocore}_loki_key
     external: true
   mqtt_cert_bundle:
     name: ${stack_name:-technocore}_mqtt_cert_bundle
@@ -683,7 +683,7 @@ volumes:
   home-assistant:
   home-assistant-db:
   jupyter:
-  logs:
+  loki:
   mqtt:
   node-red:
   portainer:
