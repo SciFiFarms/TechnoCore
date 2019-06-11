@@ -1,4 +1,11 @@
 version: '3.5'
+
+x-logging-defaults: &logging-defaults
+  logging:
+    driver: "journald"
+    options:
+      tag: "{{.Name}}"
+
 services:
   # Collects container metrics for Prometheus
   cadvisor:
@@ -8,6 +15,7 @@ services:
       restart_policy:
         condition: any
     image: google/cadvisor:v0.33.0
+    <<: *logging-defaults
     networks:
       - web
     volumes:
@@ -28,6 +36,7 @@ services:
       # TODO: This should actually be set via a domain secret.
       - HUGO_BASEURL=${HOSTNAME}
     image: ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -58,6 +67,7 @@ services:
       - esphome_core=./esphome-core:/esphome-core
       - esphome_app=${esphome_app_live_mount}
     image: ${image_provider:-scififarms}/technocore-esphome-wrapper:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -89,6 +99,7 @@ services:
       #- GF_SERVER_DOMAIN=spencer-laptop/grafana/
       - GF_SERVER_ROOT_URL=https://spencer-laptop/grafana/
     image: ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -107,6 +118,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -133,6 +145,7 @@ services:
     environment:
       - DOCKER_HOSTNAME=${HOSTNAME}
     image: ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       web:
         # This was nessesary in order to get Node-RED to connect with Home Assistant.
@@ -179,6 +192,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -205,6 +219,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -227,6 +242,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-loki:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -247,6 +263,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       web:
         aliases:
@@ -288,6 +305,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     ports:
@@ -313,6 +331,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-nextcloud-exporter:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -335,6 +354,7 @@ services:
       restart_policy:
         condition: any
     image: prom/node-exporter:v0.18.0
+    <<: *logging-defaults
     networks:
       - web
     volumes:       
@@ -355,6 +375,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     ports:
@@ -399,6 +420,7 @@ services:
       restart_policy:
         condition: any
     image: ${image_provider:-scififarms}/technocore-portainer:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     ports:
@@ -439,6 +461,7 @@ services:
     environment:
       LOKI_URL: http://loki:3100
     image: ${image_provider:-scififarms}/technocore-fluentd:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     volumes:
@@ -455,6 +478,7 @@ services:
         condition: any
     #environment:
     image: ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       - web
     secrets:
@@ -487,6 +511,7 @@ services:
       # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
       #- VAULT_CA=true
     image: ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
+    <<: *logging-defaults
     networks:
       web:
         aliases:
