@@ -43,6 +43,9 @@
 			"path": "loki"
 		},
 		{
+			"path": "fluentd"
+		},
+		{
 			"path": "new_docs"
 		},
 		{

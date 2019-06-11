@@ -21,3 +21,4 @@ docker build ./jupyter/ -t ${image_provider:-scififarms}/technocore-jupyter:${TA
 docker build ./influxdb/ -t ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
 docker build ./prometheus/ -t ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
 docker build ./loki/ -t ${image_provider:-scififarms}/technocore-loki:${TAG:-latest}
+docker build ./fluentd/ -t ${image_provider:-scififarms}/technocore-fluentd:${TAG:-latest}

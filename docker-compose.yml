@@ -426,18 +426,27 @@ services:
       - ${portainer_live_mount:-./empty/:/opt/.dummy}
       - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
   
-  promtail:
-    command: -config.file=/etc/promtail/docker-config.yaml
+  fluentd:
+    command:
+      - "fluentd"
+      - "-v"
+      - "-p"
+      - "/fluentd/plugins"
     deploy:
       mode: global
       restart_policy:
         condition: any
-    image: grafana/promtail:master-922f1da
-    #image: ${image_provider:-scififarms}/technocore-promtail:${TAG:-latest}
+    environment:
+      LOKI_URL: http://loki:3100
+    image: ${image_provider:-scififarms}/technocore-fluentd:${TAG:-latest}
     networks:
       - web
     volumes:
       - /var/log:/var/log
+      # Needed for journald log ingestion:
+      - /etc/machine-id:/etc/machine-id
+      - /dev/log:/dev/log
+      - /var/run/systemd/journal/:/var/run/systemd/journal/
       
   timeseries_db:
     deploy:
