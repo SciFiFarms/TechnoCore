@@ -546,6 +546,18 @@ secrets:
   ca_bundle:
     name: ${stack_name:-technocore}_ca_bundle
     external: true
+  esphome_mqtt_username:
+    name: ${stack_name:-technocore}_esphome_mqtt_username
+    external: true
+  esphome_mqtt_password:
+    name: ${stack_name:-technocore}_esphome_mqtt_password
+    external: true
+  esphome_token:
+    name: ${stack_name:-technocore}_esphome_token
+    external: true
+  esphome_domain:
+    name: ${stack_name:-technocore}_esphome_domain
+    external: true
   grafana_cert_bundle:
     name: ${stack_name:-technocore}_grafana_cert_bundle
     external: true
@@ -588,6 +600,30 @@ secrets:
   home_assistant_timeseries_db_password:
     name: ${stack_name:-technocore}_home_assistant_timeseries_db_password
     external: true
+  timeseries_db_admin_username:
+    name: ${stack_name:-technocore}_timeseries_db_admin_username
+    external: true
+  timeseries_db_admin_password:
+    name: ${stack_name:-technocore}_timeseries_db_admin_password
+    external: true
+  timeseries_db_grafana_username:
+    name: ${stack_name:-technocore}_timeseries_db_grafana_username
+    external: true
+  timeseries_db_grafana_password:
+    name: ${stack_name:-technocore}_timeseries_db_grafana_password
+    external: true
+  timeseries_db_home_assistant_username:
+    name: ${stack_name:-technocore}_timeseries_db_home_assistant_username
+    external: true
+  timeseries_db_home_assistant_password:
+    name: ${stack_name:-technocore}_timeseries_db_home_assistant_password
+    external: true
+  timeseries_db_cert_bundle:
+    name: ${stack_name:-technocore}_timeseries_db_cert_bundle
+    external: true
+  timeseries_db_key:
+    name: ${stack_name:-technocore}_timeseries_db_key
+    external: true
   jupyter_cert_bundle:
     name: ${stack_name:-technocore}_jupyter_cert_bundle
     external: true
@@ -624,29 +660,23 @@ secrets:
   nextcloud_exporter_password:
     name: ${stack_name:-technocore}_nextcloud_exporter_password
     external: true
-  node_red_cert_bundle:
-    name: ${stack_name:-technocore}_node_red_cert_bundle
-    external: true
-  node_red_key:
-    name: ${stack_name:-technocore}_node_red_key
-    external: true
   nginx_cert_bundle:
     name: ${stack_name:-technocore}_nginx_cert_bundle
     external: true
   nginx_key:
     name: ${stack_name:-technocore}_nginx_key
     external: true
-  esphome_mqtt_username:
-    name: ${stack_name:-technocore}_esphome_mqtt_username
+  node_red_cert_bundle:
+    name: ${stack_name:-technocore}_node_red_cert_bundle
     external: true
-  esphome_mqtt_password:
-    name: ${stack_name:-technocore}_esphome_mqtt_password
+  node_red_key:
+    name: ${stack_name:-technocore}_node_red_key
     external: true
-  esphome_token:
-    name: ${stack_name:-technocore}_esphome_token
+  node_red_mqtt_username:
+    name: ${stack_name:-technocore}_node_red_mqtt_username
     external: true
-  esphome_domain:
-    name: ${stack_name:-technocore}_esphome_domain
+  node_red_mqtt_password:
+    name: ${stack_name:-technocore}_node_red_mqtt_password
     external: true
   portainer_acme_env:
     name: ${stack_name:-technocore}_portainer_acme_env
@@ -666,12 +696,6 @@ secrets:
   portainer_token:
     name: ${stack_name:-technocore}_portainer_token
     external: true
-  node_red_mqtt_username:
-    name: ${stack_name:-technocore}_node_red_mqtt_username
-    external: true
-  node_red_mqtt_password:
-    name: ${stack_name:-technocore}_node_red_mqtt_password
-    external: true
   health_cert_bundle:
     name: ${stack_name:-technocore}_health_cert_bundle
     external: true
@@ -680,30 +704,6 @@ secrets:
     external: true
   health_domain:
     name: ${stack_name:-technocore}_health_domain
-    external: true
-  timeseries_db_admin_username:
-    name: ${stack_name:-technocore}_timeseries_db_admin_username
-    external: true
-  timeseries_db_admin_password:
-    name: ${stack_name:-technocore}_timeseries_db_admin_password
-    external: true
-  timeseries_db_grafana_username:
-    name: ${stack_name:-technocore}_timeseries_db_grafana_username
-    external: true
-  timeseries_db_grafana_password:
-    name: ${stack_name:-technocore}_timeseries_db_grafana_password
-    external: true
-  timeseries_db_home_assistant_username:
-    name: ${stack_name:-technocore}_timeseries_db_home_assistant_username
-    external: true
-  timeseries_db_home_assistant_password:
-    name: ${stack_name:-technocore}_timeseries_db_home_assistant_password
-    external: true
-  timeseries_db_cert_bundle:
-    name: ${stack_name:-technocore}_timeseries_db_cert_bundle
-    external: true
-  timeseries_db_key:
-    name: ${stack_name:-technocore}_timeseries_db_key
     external: true
   vault_cert_bundle:
     name: ${stack_name:-technocore}_vault_cert_bundle
@@ -729,12 +729,12 @@ volumes:
   grafana:
   home-assistant:
   home-assistant-db:
+  timeseries-db:
   jupyter:
   loki:
   mqtt:
   node-red:
   portainer:
   portainer-acme:
-  timeseries-db:
   health:
   vault:
