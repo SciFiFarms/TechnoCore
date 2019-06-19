@@ -1,23 +1,24 @@
 # Contributing to TechnoCore :D
 #### Table of contents:
-- [Contributing to TechnoCore :D](#contributing-to-technocore-d)
-      - [Table of contents:](#table-of-contents)
-  - [Contributing](#contributing)
-    - [Creating an issue](#creating-an-issue)
-      - [Labels](#labels)
-    - [Report a bug](#report-a-bug)
-  - [Community](#community)
-  - [Development](#development)
-    - [Overview](#overview)
-    - [Developer Environment](#developer-environment)
-    - [Debugging (how to find out what went wrong)](#debugging-how-to-find-out-what-went-wrong)
-      - [Viewing Logs](#viewing-logs)
-      - [Changing verbosity of logs](#changing-verbosity-of-logs)
-      - [Documentation Coming Soon](#documentation-coming-soon)
-    - [Finding things](#finding-things)
-    - [Working on an issue](#working-on-an-issue)
-    - [Run tests](#run-tests)
-    - [Conventions](#conventions)
+- [Contributing to TechnoCore :D](#Contributing-to-TechnoCore-D)
+      - [Table of contents:](#Table-of-contents)
+  - [Contributing](#Contributing)
+    - [\# TODO:](#TODO)
+    - [Creating an issue](#Creating-an-issue)
+      - [Labels](#Labels)
+    - [Report a bug](#Report-a-bug)
+  - [Community](#Community)
+  - [Development](#Development)
+    - [Overview](#Overview)
+    - [Developer Environment](#Developer-Environment)
+    - [Debugging (how to find out what went wrong)](#Debugging-how-to-find-out-what-went-wrong)
+      - [Viewing Logs](#Viewing-Logs)
+      - [Changing verbosity of logs](#Changing-verbosity-of-logs)
+      - [Documentation Coming Soon](#Documentation-Coming-Soon)
+    - [Finding things](#Finding-things)
+    - [Working on an issue](#Working-on-an-issue)
+    - [Run tests](#Run-tests)
+    - [Conventions](#Conventions)
 
 ## Contributing
 My hope is that TechnoCore changes the world, but I can't do it alone. So thank you for considering contributing to TechnoCore. 
@@ -25,6 +26,10 @@ My hope is that TechnoCore changes the world, but I can't do it alone. So thank 
 TechnoCore is a very new project and in need of lots of love. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code, the list goes on and on. If you're looking for something to contribute, checkout the [open issues](https://github.com/SciFiFarms/TechnoCore/issues). If you have an idea that isn't in the issues, please make one! I'd love to heard about it. 
 
 My goal is to be welcoming to newcomers and encourage diverse new contributors from all backgrounds. Please see the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+### \# TODO:
+I've littered ` TODO:` - always in caps - throughout the code base with little improvements that would make the code better. There are currently 80 something of these. If you [search](https://github.com/search?l=&q=org%3ASciFiFarms+%22TODO%3A%22+-extension%3A.js&type=Code) for that, you might just find something. Many of these are ripe for refactoring and I suspect would be a good place to start if you wanted a project that would help you learn how TechnoCore works, but in small bites. 
+Unfortunately, GitHub's search is underwhelming and only shows the first two occurrences in a file. Running the utilities/dev-install.sh script (to clone all the TechnoCore repos) and then using your IDE to do a case sensitive search for "TODO:" will show you more results. I've found excluding .js files or the Home Assistant repo from the search to filter a lot of the noise as well. 
 
 ### Creating an issue
 
@@ -84,8 +89,8 @@ The first 4 are all a regular user should need.
 - **[Jupyter](https://jupyter.org/)** - Provides data science and python capabilities 
   - [Jupyter's Documentation](https://jupyter.org/documentation)
   - [TechnoCore's documentation on Jupyter](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_jupyter.md)
-  - [TechnoCore-Node-RED: Git repo](https://github.com/SciFiFarms/TechnoCore-Jupyter)
-  - [TechnoCore-Node-RED: Docker Hub](https://hub.docker.com/r/scififarms/technocore-jupyter)
+  - [TechnoCore-Jupyter: Git repo](https://github.com/SciFiFarms/TechnoCore-Jupyter)
+  - [TechnoCore-Jupyter: Docker Hub](https://hub.docker.com/r/scififarms/technocore-jupyter)
 - **[NGINX](https://nginx.org/)** - Is the gateway to TechnoCore. All HTTP, HTTPS, and MQTT traffic gets forwarded by NGINX. 
   - [NGINX's Documentation](http://nginx.org/en/docs/)
   - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
