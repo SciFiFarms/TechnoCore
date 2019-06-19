@@ -82,7 +82,7 @@ If you'd like to access the services directly rather than through Home Assistant
     - The best way to view the useful docs is to reference the [Overview table](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
     - The docs aren't very usable as a cohesive site. This has been my dumping grounds for all my thoughts for the last year, and thus are in need of some serious reorganization. See https://github.com/SciFiFarms/TechnoCore-Docs/issues/2 for more information. 
     
-You can find out more about these services, along with the rest of the stack, in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview) in (CONTRIBUTING.md)[https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md]. 
+You can find out more about these services, along with the rest of the stack, in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview) in [CONTRIBUTING.md](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md).
 
 Note: If you're using the developer install (`sudo ./install.sh --dev`), then it's likely accessing these through the Home Assistant interface won't work and you'll have to navigate to them directly. 
 
@@ -94,6 +94,7 @@ Here is an example of how I have my Home Assistant interface set up:
 
 ### ESPHome
 ESPs are the eyes and ears of TechnoCore. They aren't mandatory, but I'd highly recommend looking around [ESPHome's Documentation](https://esphome.io/) to see what is possible and how it works. 
+
 Note: I'm still exploring how to manage the ESPs in a sane and DRY way. Here are the methods I've employed:
   - Mounted the /config folder to a folder on the server, and then used NextCloud to sync changes between my local machine and the server. 
     This is my current solution. 
@@ -170,4 +171,4 @@ More specifically, I'd like to thank everyone who has worked on the following pr
 - **[Open Agriculture Initiative](https://www.media.mit.edu/groups/open-agriculture-openag/overview/)** - for providing the blueprint that got me started. When I discovered their **M**inimum **V**iable **P**roduct, I started building it that week. TechnoCore is solving a different problem and takes a different approach accordingly, and Open Ag deserve credit for being the project that kicked it all off.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPL 3 - see the [LICENSE.md](LICENSE.md) file for details
