@@ -1,8 +1,13 @@
-# Contributing to TechnoCore :D
+# Contributing to TechnoCore
+## Contributing
+My hope is that TechnoCore changes the world, but I can't do it alone. So thank you for considering contributing to TechnoCore. 
+
+TechnoCore is a very new project and in need of lots of love. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code, the list goes on and on. If you're looking for something to contribute, checkout the [open issues](https://github.com/SciFiFarms/TechnoCore/issues). If you have an idea that isn't in the issues, please make one! I'd love to heard about it. 
+
 #### Table of contents:
-- [Contributing to TechnoCore :D](#Contributing-to-TechnoCore-D)
-      - [Table of contents:](#Table-of-contents)
+- [Contributing to TechnoCore](#Contributing-to-TechnoCore)
   - [Contributing](#Contributing)
+      - [Table of contents:](#Table-of-contents)
     - [\# TODO:](#TODO)
     - [Creating an issue](#Creating-an-issue)
       - [Labels](#Labels)
@@ -10,7 +15,7 @@
   - [Community](#Community)
   - [Development](#Development)
     - [Overview](#Overview)
-    - [Developer Environment](#Developer-Environment)
+  - [Developer Environment](#Developer-Environment)
     - [Debugging (how to find out what went wrong)](#Debugging-how-to-find-out-what-went-wrong)
       - [Viewing Logs](#Viewing-Logs)
       - [Changing verbosity of logs](#Changing-verbosity-of-logs)
@@ -19,11 +24,6 @@
     - [Working on an issue](#Working-on-an-issue)
     - [Run tests](#Run-tests)
     - [Conventions](#Conventions)
-
-## Contributing
-My hope is that TechnoCore changes the world, but I can't do it alone. So thank you for considering contributing to TechnoCore. 
-
-TechnoCore is a very new project and in need of lots of love. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code, the list goes on and on. If you're looking for something to contribute, checkout the [open issues](https://github.com/SciFiFarms/TechnoCore/issues). If you have an idea that isn't in the issues, please make one! I'd love to heard about it. 
 
 My goal is to be welcoming to newcomers and encourage diverse new contributors from all backgrounds. Please see the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
@@ -164,11 +164,11 @@ The first 4 are all a regular user should need.
   - [TechnoCore's documentation on Linux](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_linux.md)
 - **[espressif/ESP8266](https://espressif.com)** - The ESP8266 is a $5 WiFi chip that you can connect senors to.
 
-### Developer Environment 
+## Developer Environment 
 
 ### Debugging (how to find out what went wrong)
 #### Viewing Logs
-The best way I've found to debug so far is using `docker service logs -f SERVICE_NAME`
+The best way to view logs is via Grafana's Explore interafce. It's accessible from the menu on the left of Home Assistant. Alteratively, I also use `docker service logs -f SERVICE_NAME`
 To get a list of the service names, run `docker service ls`
 #### Changing verbosity of logs
 - To increase logging verbosity in Node-RED, change node-red/data/settings.js logging: console: level to "trace".
