@@ -1,5 +1,5 @@
 # TechnoCore
-Fundamentally TechnoCore is a stack built to support Home Assistant. It strives to make IoT cheap, easy, and secure. Ultimately, it will be used to automate a vertical farm. You can see more about the technology used so support this goal in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
+Fundamentally TechnoCore is a stack built to support Home Assistant. It strives to make IoT cheap, easy, and secure. Ultimately, it will be used to automate a vertical farm. You can see more about the technology used to support this goal in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
 
 #### Table of contents:
 - [TechnoCore](#TechnoCore)
