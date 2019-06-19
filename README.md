@@ -1,5 +1,5 @@
 # TechnoCore
-Fundamentally TechnoCore is a stack built to support Home Assistant. It strives to make IoT cheap, easy, and secure. Ultimately, it will be used to automate a vertical farm. You can see more about how it works in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
+Fundamentally TechnoCore is a stack built to support Home Assistant. It strives to make IoT cheap, easy, and secure. Ultimately, it will be used to automate a vertical farm. You can see more about the technology used so support this goal in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
 
 #### Table of contents:
 - [TechnoCore](#TechnoCore)
@@ -81,7 +81,9 @@ If you'd like to access the services directly rather than through Home Assistant
     - These are my notes, links, and instructions on each service. 
     - The best way to view the useful docs is to reference the [Overview table](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview).
     - The docs aren't very usable as a cohesive site. This has been my dumping grounds for all my thoughts for the last year, and thus are in need of some serious reorganization. See https://github.com/SciFiFarms/TechnoCore-Docs/issues/2 for more information. 
+    
 You can find out more about these services, along with the rest of the stack, in the [Overview](https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md#overview) in (CONTRIBUTING.md)[https://github.com/SciFiFarms/TechnoCore/blob/master/CONTRIBUTING.md]. 
+
 Note: If you're using the developer install (`sudo ./install.sh --dev`), then it's likely accessing these through the Home Assistant interface won't work and you'll have to navigate to them directly. 
 
 ### Home Assistant
