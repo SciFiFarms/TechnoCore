@@ -46,17 +46,6 @@ add_repo_if_missing()
     fi
 }
 
-add_aliases_if_missing()
-{
-    alias_path="$(pwd)/utilities/aliases.sh"
-    # TODO: This check always adds the path :/.
-    if ! grep -Fq ~/.bashrc "$alias_path"; then
-        echo "source $alias_path" >> ~/.bashrc
-        echo "Added source $alias_path to ~/.bashrc"
-    else
-        echo "$alias_path was already in ~/.bashrc, skipping."
-    fi
-}
 
 # TODO: Add example.env to repo
 # It may ultimately make more sense to do something more complicated so that
@@ -67,7 +56,7 @@ add_aliases_if_missing()
 add_env_if_missing()
 {
     if [ ! -f .env ]; then
-        cp example.env .env
+        cp dev.env .env
         echo "Created .env file from example."
     else
         echo ".env already exists."
@@ -82,13 +71,20 @@ add_aliases_if_missing
 
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Docs.git docs
 add_repo_if_missing git@github.com:SciFiFarms/dogfish.git dogfish
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml.git esphomeyaml
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-esphomeyaml-Wrapper.git esphomeyaml-wrapper
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome.git esphome
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome-Wrapper.git esphome-wrapper
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Grafana.git grafana
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant.git home-assistant
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant-DB.git home-assistant-db
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Jupyter.git jupyter
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Loki.git loki
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-fluentd.git fluentd
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-nextcloud-exporter.git nextcloud-exporter
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Node-RED.git node-red
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-NGINX.git nginx
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Portainer.git portainer
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Prometheus.git prometheus
+add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-InfluxDB.git influxdb
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Vault.git vault
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-VerneMQ.git vernemq
 add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome-Core.git esphome-core

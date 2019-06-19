@@ -1,7 +1,9 @@
 #!/bin/bash
 
 technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/../"
-source ${technocore_folder}.env 
+if [ -f "${technocore_folder}/../.env" ]; then
+    source ${technocore_folder}.env 
+fi
 
 # $@ the arguments to pass into yq. See http://mikefarah.github.io/yq/
 # Alternatives: https://stackoverflow.com/questions/5014632/how-can-i-parse-a-yaml-file-from-a-linux-shell-script
@@ -30,7 +32,7 @@ remove_volume() {
 }
 
 # Remove the stack
-docker stack rm $stack_name 2> /dev/null
+docker stack rm ${stack_name:-technocore} 2> /dev/null
 sleep 10
 
 # Remove all the secrets
@@ -52,5 +54,5 @@ do
     fi
     #echo $(eval echo $volume)
     volume=$(eval echo $volume | cut -f1 -d:)
-    remove_volume ${stack_name}_$volume
+    remove_volume ${stack_name:-technocore}_$volume
 done

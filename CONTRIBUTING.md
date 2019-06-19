@@ -1,30 +1,35 @@
-# Contributing to TechnoCore :D
-#### Table of contents:
-- [Contributing to TechnoCore :D](#contributing-to-technocore-d)
-      - [Table of contents:](#table-of-contents)
-  - [Contributing](#contributing)
-    - [Creating an issue](#creating-an-issue)
-      - [Labels](#labels)
-    - [Report a bug](#report-a-bug)
-  - [Community](#community)
-  - [Development](#development)
-    - [Overview](#overview)
-    - [Developer Environment](#developer-environment)
-    - [Debugging (how to find out what went wrong)](#debugging-how-to-find-out-what-went-wrong)
-      - [Viewing Logs](#viewing-logs)
-      - [Changing verbosity of logs](#changing-verbosity-of-logs)
-      - [Documentation Coming Soon](#documentation-coming-soon)
-    - [Finding things](#finding-things)
-    - [Working on an issue](#working-on-an-issue)
-    - [Run tests](#run-tests)
-    - [Conventions](#conventions)
-
+# Contributing to TechnoCore
 ## Contributing
 My hope is that TechnoCore changes the world, but I can't do it alone. So thank you for considering contributing to TechnoCore. 
 
 TechnoCore is a very new project and in need of lots of love. There are many ways to contribute, from writing tutorials or blog posts, improving the documentation, submitting bug reports and feature requests or writing code, the list goes on and on. If you're looking for something to contribute, checkout the [open issues](https://github.com/SciFiFarms/TechnoCore/issues). If you have an idea that isn't in the issues, please make one! I'd love to heard about it. 
 
+#### Table of contents:
+- [Contributing to TechnoCore](#Contributing-to-TechnoCore)
+  - [Contributing](#Contributing)
+      - [Table of contents:](#Table-of-contents)
+    - [\# TODO:](#TODO)
+    - [Creating an issue](#Creating-an-issue)
+      - [Labels](#Labels)
+    - [Report a bug](#Report-a-bug)
+  - [Community](#Community)
+  - [Development](#Development)
+    - [Overview](#Overview)
+  - [Developer Environment](#Developer-Environment)
+    - [Debugging (how to find out what went wrong)](#Debugging-how-to-find-out-what-went-wrong)
+      - [Viewing Logs](#Viewing-Logs)
+      - [Changing verbosity of logs](#Changing-verbosity-of-logs)
+      - [Documentation Coming Soon](#Documentation-Coming-Soon)
+    - [Finding things](#Finding-things)
+    - [Working on an issue](#Working-on-an-issue)
+    - [Run tests](#Run-tests)
+    - [Conventions](#Conventions)
+
 My goal is to be welcoming to newcomers and encourage diverse new contributors from all backgrounds. Please see the [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+### \# TODO:
+I've littered ` TODO:` - always in caps - throughout the code base with little improvements that would make the code better. There are currently 80 something of these. If you [search](https://github.com/search?l=&q=org%3ASciFiFarms+%22TODO%3A%22+-extension%3A.js&type=Code) for that, you might just find something. Many of these are ripe for refactoring and I suspect would be a good place to start if you wanted a project that would help you learn how TechnoCore works, but in small bites. 
+Unfortunately, GitHub's search is underwhelming and only shows the first two occurrences in a file. Running the utilities/dev-install.sh script (to clone all the TechnoCore repos) and then using your IDE to do a case sensitive search for "TODO:" will show you more results. I've found excluding .js files or the Home Assistant repo from the search to filter a lot of the noise as well. 
 
 ### Creating an issue
 
@@ -62,43 +67,58 @@ The first 4 are all a regular user should need.
   - [TechnoCore's documentation on Home Assistant](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_home-assistant.md)
   - [TechnoCore-Home-Assistant: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant)
   - [TechnoCore-Home-Assistant: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant)
-- **[esphomeyaml](https://esphomelib.com/esphomeyaml/)** - Configures and flashes the ESP8266s and ESP32s.
-  - [Esphomeyaml's Documentation](https://esphomelib.com/index.html)
-  - [Esphomeyaml's Getting Started](https://esphomelib.com/esphomeyaml/guides/getting_started_hassio.html#dashboard-interface) 
-  - [Esphomeyaml's Devices](https://esphomelib.com/esphomeyaml/index.html)
-  - [TechnoCore's documentation on esphomeyaml](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_esphomeyaml.md)
-  - [TechnoCore-esphomeyaml: Git repo](https://github.com/SciFiFarms/TechnoCore-esphomeyaml)
-  - [TechnoCore-esphomeyaml: Docker Hub](https://hub.docker.com/r/scififarms/technocore-esphomeyaml)
+- **[ESPHome](https://esphome.io/)** - Configures and flashes the ESP8266s and ESP32s.
+  - [ESPHome's Documentation](https://esphome.io/)
+  - [ESPHome's Getting Started](https://esphome.io/guides/getting_started_hassio.html#dashboard-interface) 
+  - [ESPHome's Devices](https://esphome.io/index.html#devices)
+  - [TechnoCore's documentation on ESPHome](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/esphome.md)
+  - [TechnoCore-ESPHome: Git repo](https://github.com/SciFiFarms/TechnoCore-ESPHome)
+  - [TechnoCore-ESPHome: Docker Hub](https://hub.docker.com/r/scififarms/technocore-esphome)
+- **[Grafana](https://grafana.com/)** - Makes graphing data easy and beautiful. 
+  - [Grafana's Documentation](https://grafana.com/docs/)
+  - [Grafana Dashboards](https://grafana.com/dashboards)
+  - [TechnoCore's documentation on Grafana](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/grafana.md)
+  - [TechnoCore-Grafana: Git repo](https://github.com/SciFiFarms/TechnoCore-Grafana)
+  - [TechnoCore-Grafana: Docker Hub](https://hub.docker.com/r/scififarms/technocore-grafana)
 - **[Node-RED](https://nodered.org/)** - Can be thought of as the brain of TechnoCore. It is responsible for taking the input, be it sensor, or one of the 2,000+ nodes currently available, processes it using Javascript, and then adjusts switches, levels, and states accordingly.
   - [Node-RED's Documentation](https://nodered.org/docs/)
   - [TechnoCore's documentation on Node-RED](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_node-red.md)
+  - [Great video on using Node-RED with Home Assistant](https://www.youtube.com/watch?v=dYN1Lp-XYKA)
   - [TechnoCore-Node-RED: Git repo](https://github.com/SciFiFarms/TechnoCore-Node-RED)
   - [TechnoCore-Node-RED: Docker Hub](https://hub.docker.com/r/scififarms/technocore-node-red)
-- **[Portainer](https://www.portainer.io/)** - Provides a GUI for Docker as well as the service responsible for initializing all the other services.
-  - [Portainer's Documentation](https://portainer.readthedocs.io/en/stable/)
-  - [TechnoCore's documentation on Portainer](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_portainer.md)
-  - [TechnoCore-Portainer: Git repo](https://github.com/SciFiFarms/TechnoCore-Portainer)
-  - [TechnoCore-Portainer: Docker Hub](https://hub.docker.com/r/scififarms/technocore-portainer)
-- **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
-  - [Docker's Documentation](https://docs.docker.com/)
-  - [TechnoCore's documentation on Docker](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docker.md)
-- **[Jekyll](https://jekyllrb.com/)** - Jekyll powers TechnoCore's documentation. 
-  - [Jekyll's Documentation](https://jekyllrb.com/docs/)
-  - [TechnoCore's documentation on Jekyll](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
-  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
-  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
+- **[Jupyter](https://jupyter.org/)** - Provides data science and python capabilities 
+  - [Jupyter's Documentation](https://jupyter.org/documentation)
+  - [TechnoCore's documentation on Jupyter](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_jupyter.md)
+  - [TechnoCore-Jupyter: Git repo](https://github.com/SciFiFarms/TechnoCore-Jupyter)
+  - [TechnoCore-Jupyter: Docker Hub](https://hub.docker.com/r/scififarms/technocore-jupyter)
 - **[NGINX](https://nginx.org/)** - Is the gateway to TechnoCore. All HTTP, HTTPS, and MQTT traffic gets forwarded by NGINX. 
   - [NGINX's Documentation](http://nginx.org/en/docs/)
   - [TechnoCore's documentation on NGINX](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_nginx.md)
   - [TechnoCore-NGINX: Git repo](https://github.com/SciFiFarms/TechnoCore-NGINX)
   - [TechnoCore-NGINX: Docker Hub](https://hub.docker.com/r/scififarms/technocore-nginx)
+- **[Prometheus](https://prometheus.io/)** - Collects and stores metrics for all the services. Viewed through Grafana.
+  - [Prometheus's Documentation](https://prometheus.io/docs/introduction/overview/)
+  - [TechnoCore's documentation on Prometheus](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_prometheus.md)
+  - [TechnoCore-Prometheus: Git repo](https://github.com/SciFiFarms/TechnoCore-Prometheus)
+  - [TechnoCore-Prometheus: Docker Hub](https://hub.docker.com/r/scififarms/technocore-prometheus)
+  - [Exporter: cAdvisor](https://github.com/google/cadvisor)
+  - [Exporter: nextcloud-exporter](https://github.com/xperimental/nextcloud-exporter)
+  - [Exporter: Node exporter](https://github.com/prometheus/node_exporter)
+- **[Docker](https://www.docker.com/)** - TechnoCore would not be possible without Docker. It enables infrastructure as code allowing users to easily set up complicated stacks and developers to easily make changes. 
+  - [Docker's Documentation](https://docs.docker.com/)
+  - [TechnoCore's documentation on Docker](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docker.md)
+- **[Portainer](https://www.portainer.io/)** - Provides a GUI for Docker as well as the service responsible for initializing all the other services.
+  - [Portainer's Documentation](https://portainer.readthedocs.io/en/stable/)
+  - [TechnoCore's documentation on Portainer](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_portainer.md)
+  - [TechnoCore-Portainer: Git repo](https://github.com/SciFiFarms/TechnoCore-Portainer)
+  - [TechnoCore-Portainer: Docker Hub](https://hub.docker.com/r/scififarms/technocore-portainer)
 - **[VerneMQ (MQTT Provider)](https://vernemq.com/)** - MQTT is the communication backbone of TechnoCore. It is what enables sensors to talk with services and services to talk with each other. 
   - [VerneMQ's Documentation](https://vernemq.com/docs/)
   - [TechnoCore's documentation on VerneMQ](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vernemq.md)
   - [TechnoCore-VerneMQ: Git repo](https://github.com/SciFiFarms/TechnoCore-VerneMQ)
   - [TechnoCore-VerneMQ: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vernemq)
 - **[Vault](https://www.vaultproject.io/)** - Is the private key infrastructure that enables secure authentication and communication between devices, services, and browsers.
-  - [Vault's Documentation(https://www.vaultproject.io/docs/)
+  - [Vault's Documentation](https://www.vaultproject.io/docs/)
   - [TechnoCore's documentation on Vault](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_vault.md)
   - [TechnoCore-Vault: Git repo](https://github.com/SciFiFarms/TechnoCore-Vault)
   - [TechnoCore-Vault: Docker Hub](https://hub.docker.com/r/scififarms/technocore-vault)
@@ -108,11 +128,31 @@ The first 4 are all a regular user should need.
 - **[acme.sh](https://github.com/Neilpang/acme.sh)** - Makes LetsEncrypt crazy easy to use.
   - [acme.sh's Documentation](https://github.com/Neilpang/acme.sh/wiki)
   - [TechnoCore's documentation on acme.sh](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_acme.sh.md)
+- **[InfluxDB](https://www.influxdata.com/)** - Database back end for storing sensor data.
+  - [InfluxDB's Documentation](https://docs.influxdata.com/influxdb/v1.7/)
+  - [TechnoCore's documentation on InfluxDB](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_influxdb.md)
+  - [TechnoCore-InfluxDB: Git repo](https://github.com/SciFiFarms/TechnoCore-InfluxDB)
+  - [TechnoCore-InfluxDB: Docker Hub](https://hub.docker.com/r/scififarms/technocore-influxdb)
 - **[PostgreSQL](https://www.postgresql.org/)** - Database back end for Home Assistant.
   - [PostgreSQL's Documentation](https://www.postgresql.org/docs/)
   - [TechnoCore's documentation on PostgreSQL](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_postgresql.md)
   - [TechnoCore-Home-Assistant-DB: Git repo](https://github.com/SciFiFarms/TechnoCore-Home-Assistant-DB)
   - [TechnoCore-Home-Assistant-DB: Docker Hub](https://hub.docker.com/r/scififarms/technocore-home-assistant-db)
+- **[Loki](https://grafana.com/loki)** - Collects and stores logs. Like Prometheus.
+  - [Loki's Documentation](https://github.com/grafana/loki#loki-like-prometheus-but-for-logs)
+  - [TechnoCore's documentation on Loki](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/logs.md)
+  - [TechnoCore-Loki: Git repo](https://github.com/SciFiFarms/TechnoCore-Loki)
+  - [TechnoCore-Loki: Docker Hub](https://hub.docker.com/r/scififarms/technocore-loki)
+- **[HUGO](https://gohugo.io/)** - HUGO powers TechnoCore's documentation. 
+  - [HUGO's Documentation](https://gohugo.io/documentation/)
+  - [TechnoCore's documentation on HUGO](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
+  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
+  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
+- **[Jekyll](https://jekyllrb.com/)** - Jekyll originally powered TechnoCore's documentation. 
+  - [Jekyll's Documentation](https://jekyllrb.com/docs/)
+  - [TechnoCore's documentation on Jekyll](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_docs.md)
+  - [TechnoCore-Docs: Git repo](https://github.com/SciFiFarms/TechnoCore-Docs)
+  - [TechnoCore-Docs: Docker Hub](https://hub.docker.com/r/scififarms/technocore-docs)
 - **[PlatformIO (Flashing ESPs)](https://platformio.org/)** - The PlatformIO service allows for flashing ESPs and is triggered from Home Assistant.
   - [PlatformIO's Documentation](https://docs.platformio.org/)
   - [TechnoCore's documentation on PlatformIO](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_platformio.md)
@@ -124,11 +164,11 @@ The first 4 are all a regular user should need.
   - [TechnoCore's documentation on Linux](https://github.com/SciFiFarms/TechnoCore-Docs/blob/master/pages/allthing/allthing_linux.md)
 - **[espressif/ESP8266](https://espressif.com)** - The ESP8266 is a $5 WiFi chip that you can connect senors to.
 
-### Developer Environment 
+## Developer Environment 
 
 ### Debugging (how to find out what went wrong)
 #### Viewing Logs
-The best way I've found to debug so far is using `docker service logs -f SERVICE_NAME`
+The best way to view logs is via Grafana's Explore interafce. It's accessible from the menu on the left of Home Assistant. Alteratively, I also use `docker service logs -f SERVICE_NAME`
 To get a list of the service names, run `docker service ls`
 #### Changing verbosity of logs
 - To increase logging verbosity in Node-RED, change node-red/data/settings.js logging: console: level to "trace".

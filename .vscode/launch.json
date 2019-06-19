@@ -23,12 +23,12 @@
             "host": "localhost"
         },
         {
-            "name": "Debug esphomeyaml",
+            "name": "Debug esphome",
             "type": "python",
             "request": "attach",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/esphomeyaml/",
+                    "localRoot": "${workspaceFolder}/esphome/",
                     "remoteRoot": "/usr/src/app/"
                 }
             ],

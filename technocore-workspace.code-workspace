@@ -1,8 +1,8 @@
 {
 	"folders": [
-		/*{
+		{
 			"path": "hals"
-		},*/
+		},
 		{
 			"path": "nginx"
 		},
@@ -10,7 +10,7 @@
 			"path": "home-assistant"
 		},
 		{
-			"path": "esphomeyaml"
+			"path": "esphome"
 		},
 		{
 			"path": "portainer"
@@ -25,13 +25,37 @@
 			"path": "vault"
 		},
 		{
+			"path": "jupyter"
+		},
+		{
+			"path": "grafana"
+		},
+		{
+			"path": "influxdb"
+		},
+		{
+			"path": "prometheus"
+		},
+		{
+			"path": "nextcloud-exporter"
+		},
+		{
+			"path": "loki"
+		},
+		{
+			"path": "fluentd"
+		},
+		{
+			"path": "new_docs"
+		},
+		{
 			"path": "home-assistant-db"
 		},
 		{
 			"path": "dogfish"
 		},
 		{
-			"path": "esphomeyaml-wrapper"
+			"path": "esphome-wrapper"
 		},
 		{
 			"path": "docs"
@@ -55,5 +79,8 @@
 			"tyriar.sort-lines"
 		],
 	"unwantedRecommendations": []
+	},
+	"settings": {
+		"scm.providers.visible": 50
 	}
 }
