@@ -121,7 +121,7 @@ services:
         target: domain
     volumes:
       - grafana:/var/lib/grafana
-
+  
   grocy:
     deploy:
       mode: global
@@ -495,6 +495,41 @@ services:
       - /etc/machine-id:/etc/machine-id
       - /dev/log:/dev/log
       - /var/run/systemd/journal/:/var/run/systemd/journal/
+
+  mariadb:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: 'bitnami/mariadb:latest'
+    environment:
+      - MARIADB_USER=suitecrm
+      - MARIADB_DATABASE=suitecrm
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - web
+    volumes:
+      - 'mariadb:/bitnami'
+  
+  suitecrm:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: 'bitnami/suitecrm:latest'
+    environment:
+      - MARIADB_HOST=mariadb
+      - MARIADB_PORT_NUMBER=3306
+      - SUITECRM_DATABASE_USER=suitecrm
+      - SUITECRM_DATABASE_NAME=suitecrm
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '8080:80'
+      - '44380:443'
+    networks:
+      - web
+    volumes:
+      - 'suitecrm:/bitnami'
       
   timeseries_db:
     deploy:
@@ -752,14 +787,17 @@ volumes:
   esphome:
   esphome-build:
   grafana:
+  grocy:
   home-assistant:
   home-assistant-db:
   timeseries-db:
   jupyter:
   loki:
+  mariadb:
   mqtt:
   node-red:
   portainer:
   portainer-acme:
   health:
+  suitecrm:
   vault:
