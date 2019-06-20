@@ -25,6 +25,16 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
 
+  snmp_exporter:
+    deploy:
+        mode: global
+        restart_policy:
+          condition: any
+    image: ricardbejarano/snmp_exporter:0.15.0
+    <<: *logging-defaults
+    networks:
+      - web
+
   docs:
     deploy:
         mode: global
