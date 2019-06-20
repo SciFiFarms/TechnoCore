@@ -122,6 +122,21 @@ services:
     volumes:
       - grafana:/var/lib/grafana
 
+  grocy:
+    deploy:
+      mode: global
+      restart_policy:
+        condition: any
+    image: linuxserver/grocy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+    volumes:
+      - grocy:/config
+    ports:
+      - 9283:80
+
   health:
     deploy:
       mode: global
