@@ -4,6 +4,13 @@ if [ -f "${technocore_folder}/../.env" ]; then
     source ${technocore_folder}/../.env 
 fi
 
+build_images() {
+    # For each services folder - Or Dockerfile?
+        #Build it and tag it.
+
+
+}
+
 # TODO: Make these reference docker-compose.yaml like clean.sh does.
 docker build ./docs/ -t ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
 docker build -f ./esphome/docker/Dockerfile ./esphome/ -t ${image_provider:-scififarms}/technocore-esphome:${TAG:-latest}
