@@ -1,0 +1,4 @@
+#!/bin/bash
+source ${TECHNOCORE_LIB:-/usr/local/lib/technocore/}compose.sh
+
+get_compose | docker stack deploy --compose-file - ${STACK_NAME:-technocore}
