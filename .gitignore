@@ -1,26 +1,11 @@
 ca.pem
-*_old
 *.backup
 .env
 
-/docs
-/dogfish
-/esphome
-/esphome-wrapper
-/grafana
-/ha_homie
-/hals
-/home-assistant
-/home-assistant-db
-/homie
-/influxdb
-/jupyter
-/loki
-/nextcloud-exporter
-/node-red
-/nginx
-/portainer
-/prometheus
-/scifi.farm
-/vault
-/vernemq
+ignore/
+
+# Everything in the services folder should get included via `technocore generate_gitmodules`. 
+# This allows for different services to be present and visible in VS Code. 
+.gitmodules
+services/*/*
+
