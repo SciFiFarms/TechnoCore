@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+. init.sh
+
+source ${TECHNOCORE_LIB}/compose.sh
+
+get_compose 
