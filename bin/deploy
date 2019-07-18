@@ -3,5 +3,10 @@
 
 source ${TECHNOCORE_LIB}/compose.sh
 
+# TODO: Move this to a sidecar. 
+# Update DuckDNS entry with the internal IP address. 
+ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
+# How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
+echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
 
 get_compose | docker stack deploy --compose-file - ${STACK_NAME:-technocore}
