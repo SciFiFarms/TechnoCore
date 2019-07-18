@@ -1,0 +1,6 @@
+services/*/*
+ignore/*
+
+# Can include files using !. 
+!services/*/config.yml
+!services/*/defaults.sh

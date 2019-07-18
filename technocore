@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+# This file is intended to be ran in the host OS and basically just passes the commands onto the TechnoCore service. 
+. ./init.sh
+
+docker run \
+    --rm \
+    -it \
+    -v $(pwd)/.env:/var/lib/technocore/.env \
+    -v $(pwd)/.gitmodules:/var/lib/technocore/.gitmodules \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e SERVER_HOSTNAME=${HOSTNAME} \
+    ${image_provider:-scififarms}/technocore:${TAG:-latest} \
+    $@
+    # TODO: This should be an option. 
+    #-v $(pwd)/services:/var/lib/technocore/ \
+
+#function technocore()
+#{
+#docker exec -i $(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_technocore | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_technocore | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 1) /bin/bash $@
+#}
