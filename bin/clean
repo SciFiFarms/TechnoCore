@@ -26,7 +26,7 @@ docker stack rm ${stack_name:-technocore} 2> /dev/null
 sleep 10
 
 # Remove all the secrets
-for secret in $(yq read docker-compose.yml 'secrets.*.name')
+for secret in $(get_compose | yq read - 'secrets.*.name')
 do
     if [ "$secret" = "-" ]; then
         continue
