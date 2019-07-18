@@ -1,12 +1,7 @@
 #!/bin/bash
-init
+. init.sh
+source ${TECHNOCORE_LIB}/compose.sh
 
-technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )/../../../../"
-if [ -f "${technocore_folder}/../.env" ]; then
-    source ${technocore_folder}.env 
-fi
-
-source ${TECHNOCORE_LIB:-/usr/local/lib/technocore/}compose.sh
 
 remove_volume() {
     echo "Removing volume $1."

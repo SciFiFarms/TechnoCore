@@ -1,8 +1,5 @@
-#!/bin/bash
-technocore_folder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-if [ -f "${technocore_folder}/../.env" ]; then
-    source ${technocore_folder}/../.env 
-fi
+#!/usr/bin/env bash
+. ./init.sh
 
 build_images() {
     # For each services folder - Or Dockerfile?
