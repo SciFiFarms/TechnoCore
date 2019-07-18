@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+. ./init.sh
+
+build_images() {
+    docker build $TECHNOCORE_ROOT -t ${image_provider:-scififarms}/technocore:${TAG:-latest}
+
+    # TODO: Might be able to build only modified services by touching a file (/tmp/${STACK_NAME}_build.time) 
+    #       and then use find -newer /tmp/${STACK_NAME}_build.time to get only the changed files.
+    #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
+    if [ -z $1 ]; then
+        echo "Detectded"
+        exit;
+    fi
+    for folder in $TECHNOCORE_SERVICES/*; do
+        for dockerfile in $(find $folder -name "Dockerfile"); do
+            folder_short=$(echo $folder | rev | cut -d '/' -f 1 | rev)
+            docker build -f $dockerfile $folder -t ${image_provider:-scififarms}/technocore-$folder_short:${TAG:-latest}
+            break; # Only build the first found Dockerfile for each service. Some had multiple files.
+        done
+    done
+
+    # TODO: Add check that everything built successfully. Or leave to GoCD?
+}
+build_images
