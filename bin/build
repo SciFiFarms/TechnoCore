@@ -7,7 +7,8 @@ build_images() {
     # TODO: Might be able to build only modified services by touching a file (/tmp/${STACK_NAME}_build.time) 
     #       and then use find -newer /tmp/${STACK_NAME}_build.time to get only the changed files.
     #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
-    if [ -z $1 ]; then
+    if [[ $1 ]]; then
+        docker build -f services/$1/Dockerfile services/$1/ -t ${image_provider:-scififarms}/technocore-$1:${TAG:-latest}
         echo "Detectded"
         exit;
     fi
@@ -21,4 +22,4 @@ build_images() {
 
     # TODO: Add check that everything built successfully. Or leave to GoCD?
 }
-build_images
+build_images $@
