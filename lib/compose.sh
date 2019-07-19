@@ -29,19 +29,21 @@ set_service_flag (){
 # Outputs the composite compose.yml file. 
 # Loads all defaults.sh files in ./services/*/
 get_compose(){
-    # First load the default settings.
+    # First load the users .env. 
+    if [ -f ".env" ]; then
+        source .env
+    fi
+
+    # Then start setting unset defaults. 
+    default_to INGRESS_TYPE subdomain
     for env in $TECHNOCORE_SERVICES/*/defaults.sh; do
         if [ -f "$env" ]; then
-            . $env
+            source $env
         else
             echo "No services to load."
         fi
     done
 
-    # Then load the users .env. This gives priority to the .env settings.
-    if [ -f ".env" ]; then
-        source .env
-    fi
 
     # Looping like this is prone to issues with whitespaces. I think this case is OK 
     # because the keys have to be single words and I'm not interested in the values. 
