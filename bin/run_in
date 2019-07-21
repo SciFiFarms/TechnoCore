@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+. init.sh
+
+# Runs a given command in a specific service
+# $1: Service to run command in
+# $2: Command to run
+docker exec -it $(docker service ps -f desired-state=running --no-trunc ${STACK_NAME:-technocore}_$1 \
+    | grep ${STACK_NAME:-technocore} \
+    | tr -s " " \
+    | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${STACK_NAME:-technocore}_$1 \
+    | grep ${STACK_NAME:-technocore} \
+    | tr -s " " \
+    | cut -d " " -f 1) ${@:2}
