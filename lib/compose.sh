@@ -8,6 +8,45 @@ default_to (){
     fi
 }
 
+# $1: The service that the credentials are for. 
+# The secrets are in the format ${STACK_NAME}_${SERVICE_NAME}_${MOUNT_POINT}
+# This takes $SERVICE_NAME and will generate usernames and passwords for any 
+# credentials listed in the generated compose file that start with ${STACK_NAME}_${SERVICE_NAME} 
+# and end in _username or _password. 
+# The exception is if there is an admin username/password. In that case, ${STACK_NAME}_admin... does 
+# not get created because there is no admin service.
+generate_credentials_for (){
+    credential_provider=$1
+    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+        if [ "$secret" = "-" ]; then
+            continue
+        fi
+
+        # TODO: Add flag to recreate all secrets. Would need to add below... Or just work into secret_exists
+        if secret_exists $secret; then
+            continue
+        fi
+
+        if [[ "$secret" =~ ^${STACK_NAME:?STACK_NAME must be set}_${credential_provider}_(.*)_username ]]; then
+            service=${BASH_REMATCH[1]}
+            password=$(generate_password 32)
+            create_secret ${credential_provider} ${service}_username $service
+            create_secret ${credential_provider} ${service}_password "$password"
+
+            # There isn't an admin service, so don't create a secret for it.
+            if [ "$service" = "admin" ]; then continue; fi
+
+            create_secret ${service} ${credential_provider}_username $service
+            create_secret ${service} ${credential_provider}_password "$password"
+        fi
+    done
+}
+
+# $1: Secret to check existence of
+secret_exists(){
+    docker secret ls | grep -w $secret > /dev/null
+}
+
 # $1: The service folder name
 # $2: The default setting
 set_service_flag (){

@@ -3,10 +3,35 @@
 
 source ${TECHNOCORE_LIB}/compose.sh
 
+# $1: The compose file.
+generate_secrets(){
+    for script in $TECHNOCORE_SERVICES/*/secrets.sh; do
+        if [ -f "$script" ]; then
+            source $script "$1"
+        else
+            echo "Could not find $script script."
+        fi
+    done
+
+    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+        if [ "$secret" = "-" ]; then
+            continue
+        fi
+        
+        #echo -e "\n\n\nMy secret: $secret"
+        if ! docker secret ls | grep -w $secret > /dev/null; then
+            echo "Creating secret $secret"
+            echo -e "Not yet set." | docker secret create ${secret} - > /dev/null
+        fi
+    done
+}
+
 # TODO: Move this to a sidecar. 
 # Update DuckDNS entry with the internal IP address. 
 ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
 # How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
 echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
+
+generate_secrets "$(get_compose)"
 
 get_compose | docker stack deploy --compose-file - ${STACK_NAME:-technocore}
