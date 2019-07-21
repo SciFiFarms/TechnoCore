@@ -20,7 +20,7 @@ set_service_flag (){
     default_to $service_flag $2
 
     if [[ "${!service_flag}" ]]; then
-        config_location=$(pwd)/${service_name}/config.yml
+        config_location=$TECHNOCORE_SERVICES/${service_name}/compose.yml
         export $service_flag=$config_location
         export SERVICE_CONFIG_${service_name/-/_}=$config_location
     fi

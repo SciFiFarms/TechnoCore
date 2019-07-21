@@ -6,13 +6,13 @@ docker run \
     --rm \
     -it \
     -v $(pwd)/.env:/var/lib/technocore/.env \
-    -v $(pwd)/.gitmodules:/var/lib/technocore/.gitmodules \
+    -v $(pwd)/services:/var/lib/technocore/ \
+    -v $(pwd)/lib:/usr/local/lib/technocore/ \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e SERVER_HOSTNAME=${HOSTNAME} \
     ${image_provider:-scififarms}/technocore:${TAG:-latest} \
     $@
     # TODO: This should be an option. 
-    #-v $(pwd)/services:/var/lib/technocore/ \
 
 #function technocore()
 #{

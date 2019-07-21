@@ -2,5 +2,5 @@ services/*/*
 ignore/*
 
 # Can include files using !. 
-!services/*/config.yml
+!services/*/compose.yml
 !services/*/defaults.sh
