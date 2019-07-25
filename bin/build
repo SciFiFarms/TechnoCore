@@ -13,11 +13,12 @@ build_image() {
     if [[ $3 ]]; then
         dash=
     fi 
+    echo -e "\nBuilding folder $dockerfile_folder"
     if [ -f $dockerfile_folder/Dockerfile ]; then
         docker build -f $dockerfile_folder/Dockerfile $context_folder -t ${image_provider:-scififarms}/technocore${dash}$folder_short:${TAG:-latest}
     else
         for dockerfile in $(find $dockerfile_folder -name "Dockerfile"); do
-            docker build -f $dockerfile $context_folder -t ${image_provider:-scififarms}/technocore${dash}$folder_short:${TAG:-latest}
+            echo "Building Dockerfile: $dockerfile"
         done
     fi
     echo "Done"
@@ -37,7 +38,7 @@ build_images() {
     fi
 
     errors=
-    build_image ../technocore $TECHNOCORE_ROOT true
+    { error=$(build_image ../technocore $TECHNOCORE_ROOT true 2>&1 1>&$out); } {out}>&1
 
     for folder in $TECHNOCORE_SERVICES/*; do
         # Collecting errors to display at the end.
@@ -49,7 +50,7 @@ build_images() {
         fi
     done
     if [[ "$errors" != "" ]] ; then
-        echo -e "Errors: $errors"
+        echo -e "\n\n\nErrors: $errors"
     fi
 }
 build_images $@

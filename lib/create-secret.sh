@@ -42,20 +42,19 @@ create_secret(){
     local mount_point=$2
     local secret_name=${STACK_NAME}_${service_name}_${mount_point}
     local secret=$3
-    echo "Service: $service_name"
 
     # If the secret exists, we'll have to do a lot more to swap it out.
     if docker secret ls | grep -w $secret_name > /dev/null; then
         if ! docker service ls | grep -w ${STACK_NAME}_$service_name > /dev/null; then
-            #echo "Updated existing secret $1"
+            echo "Updated existing secret $1"
             create_existing_secret $@
         else
-            #echo "Updated existing secret without service $1"
+            echo "Updated existing secret without service $1"
             docker secret rm $secret_name
             echo -e "$secret" | docker secret create ${secret_name} - > /dev/null
         fi
     else
-        #echo "Created new secret"
+        echo "Created new secret $secret_name"
         echo -e "$secret" | docker secret create ${secret_name} - > /dev/null
     fi
 }

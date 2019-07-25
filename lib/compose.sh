@@ -95,8 +95,6 @@ get_compose(){
     done
 
     export HASHED_PASSWORD=$(openssl passwd -apr1 $ADMIN_PASSWORD)
-    # TODO: Add 2> $SOME_FLAG or something like that. Want to send to std_out or /dev/null. 
-    # Perhaps separate out the generation of included configs from the call to docker-compose.
-    # Taken from the bottom of https://github.com/docker/cli/issues/939
     docker-compose $included_configs config 
+    >&2 echo "Included configs: $included_configs"
 }
