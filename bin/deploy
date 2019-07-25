@@ -5,6 +5,7 @@ source ${TECHNOCORE_LIB}/compose.sh
 
 # $1: The compose file.
 generate_secrets(){
+    # Gen secrets from services.
     for script in $TECHNOCORE_SERVICES/*/secrets.sh; do
         if [ -f "$script" ]; then
             source $script "$1"
@@ -13,6 +14,27 @@ generate_secrets(){
         fi
     done
 
+    # TODO: It would be nice to put this into a function. Look at 
+    #       generate_password_for in compose.sh as well.
+    # Gen any admin passwords
+    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+        if [ "$secret" = "-" ]; then
+            continue
+        fi
+        
+        if docker secret ls | grep -w $secret > /dev/null; then
+            continue # Secret already exists.
+        fi
+
+         if [[ "$secret" =~ (${STACK_NAME}_.*_admin_password) ]]; then
+            secret=${BASH_REMATCH[1]}
+            echo "Creating secret $secret"
+            # TODO: This should use a centralized create secret call.
+            echo -e "$(generate_password 32)" | docker secret create ${secret} - > /dev/null
+        fi
+    done
+
+    # Gen any non existent secrets
     for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
         if [ "$secret" = "-" ]; then
             continue
@@ -20,7 +42,8 @@ generate_secrets(){
         
         #echo -e "\n\n\nMy secret: $secret"
         if ! docker secret ls | grep -w $secret > /dev/null; then
-            echo "Creating secret $secret"
+            echo "Creating secret $secret with default value \"Not yet set.\""
+            # TODO: This should use a centralized create secret call.
             echo -e "Not yet set." | docker secret create ${secret} - > /dev/null
         fi
     done

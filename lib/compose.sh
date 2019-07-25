@@ -15,9 +15,9 @@ default_to (){
 # and end in _username or _password. 
 # The exception is if there is an admin username/password. In that case, ${STACK_NAME}_admin... does 
 # not get created because there is no admin service.
-generate_credentials_for (){
-    credential_provider=$1
-    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+generate_password_for (){
+    local credential_provider=$1
+    for secret in $(echo "$COMPLETE_COMPOSE" | yq read - 'secrets.*.name') ;do
         if [ "$secret" = "-" ]; then
             continue
         fi
@@ -27,16 +27,14 @@ generate_credentials_for (){
             continue
         fi
 
-        if [[ "$secret" =~ ^${STACK_NAME:?STACK_NAME must be set}_${credential_provider}_(.*)_username ]]; then
-            service=${BASH_REMATCH[1]}
-            password=$(generate_password 32)
-            create_secret ${credential_provider} ${service}_username $service
-            create_secret ${credential_provider} ${service}_password "$password"
+        if [[ "$secret" =~ ${STACK_NAME:?STACK_NAME must be set}_${credential_provider}_(.*)_password ]]; then
+            local service=${BASH_REMATCH[1]}
 
             # There isn't an admin service, so don't create a secret for it.
             if [ "$service" = "admin" ]; then continue; fi
 
-            create_secret ${service} ${credential_provider}_username $service
+            local password=$(generate_password 32)
+            create_secret ${credential_provider} ${service}_password "$password"
             create_secret ${service} ${credential_provider}_password "$password"
         fi
     done
