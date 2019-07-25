@@ -8,20 +8,23 @@ build_image() {
     local dockerfile_folder=$1
     local context_folder=$2
     local dash=-
-    local folder_short=${dockerfile_folder##*/}
-    echo -e "\nBuilding folder $dockerfile_folder"
+    local folder_short=-${dockerfile_folder##*/}
     if [[ $3 ]]; then
-        dash=
+        folder_short=
     fi 
+
     echo -e "\nBuilding folder $dockerfile_folder"
     if [ -f $dockerfile_folder/Dockerfile ]; then
-        docker build -f $dockerfile_folder/Dockerfile $context_folder -t ${image_provider:-scififarms}/technocore${dash}$folder_short:${TAG:-latest}
+        docker build -f $dockerfile_folder/Dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
     else
         for dockerfile in $(find $dockerfile_folder -name "Dockerfile"); do
+            folder_short=$(dirname "$dockerfile")
+            folder_short=-${folder_short##*/}
+
             echo "Building Dockerfile: $dockerfile"
+            docker build -f $dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
         done
     fi
-    echo "Done"
 }
 
 build_images() {
