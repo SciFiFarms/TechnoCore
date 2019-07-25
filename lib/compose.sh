@@ -3,8 +3,20 @@
 # $1: The setting name
 # $2: The value to be set
 default_to (){
-    if [ ! ${!1} ]; then
+    if [ ! "${!1}" ]; then
         export $1=$2
+    fi
+}
+
+# $1: SERVICE_NAME
+# $2: The path prefix to set. Eg. prometheus
+path_prefix (){
+    if [[ "$INGRESS_TYPE" == "subdomain" ]]; then
+        #echo "SUBDOMAIN"
+        export ${1}_PATH_PREFIX=/
+    else
+        #echo "PATH_PREFX"
+        export ${1}_PATH_PREFIX=/${2}/
     fi
 }
 
