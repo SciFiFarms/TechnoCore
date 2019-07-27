@@ -55,11 +55,7 @@ ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
 # How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
 echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
 
-COMPLETE_COMPOSE=$(get_compose)
-if [[ "$COMPLETE_COMPOSE" == "" ]]; then
-    >&2 echo "There was an error generating the compose file. Exiting."
-    exit 1;
-fi
+generate_complete_compose
 
 generate_secrets "$COMPLETE_COMPOSE"
 

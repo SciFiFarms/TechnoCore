@@ -25,8 +25,10 @@ remove_volume() {
 docker stack rm ${stack_name:-technocore} 2> /dev/null
 sleep 10
 
+generate_complete_compose
+
 # Remove all the secrets
-for secret in $(get_compose | yq read - 'secrets.*.name')
+for secret in $(echo "$COMPLETE_COMPOSE" | yq read - 'secrets.*.name')
 do
     if [ "$secret" = "-" ]; then
         continue
@@ -37,7 +39,7 @@ do
 done
 
 # Remove all the volumes
-for volume in $(get_compose | yq read - 'volumes' | cut -f1 -d:)
+for volume in $(echo "$COMPLETE_COMPOSE" | yq read - 'volumes' | cut -f1 -d:)
 do
     if [ ! $volume -o "$volume" = "-" ]; then
         continue

@@ -108,3 +108,11 @@ get_compose(){
     docker-compose $included_configs config 
     >&2 echo "Included configs: $included_configs"
 }
+
+generate_complete_compose() {
+    COMPLETE_COMPOSE=$(get_compose)
+    if [[ "$COMPLETE_COMPOSE" == "" ]]; then
+        >&2 echo "There was an error generating the compose file. Exiting."
+        exit 1;
+    fi
+}
