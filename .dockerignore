@@ -1,5 +1,7 @@
 services/*/*
 ignore/*
+hals/
+.git/*
 
 # Can include files using !. 
 !services/*/compose.yml
