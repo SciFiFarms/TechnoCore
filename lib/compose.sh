@@ -1,4 +1,5 @@
 #!/bin/env bash
+export LOGGING_DRIVER=${LOGGING_DRIVER:-journald}
 
 # $1: The setting name
 # $2: The value to be set
@@ -87,6 +88,9 @@ get_compose(){
     default_to INGRESS_TYPE subdomain
     for env in $TECHNOCORE_SERVICES/*/defaults.sh; do
         if [ -f "$env" ]; then
+            # Get the last folder and make it the default service name.
+            service_name=$(dirname $env)
+            service_name=${service_name##*/}
             source $env
         else
             echo "No services to load."
