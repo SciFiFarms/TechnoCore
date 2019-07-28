@@ -107,7 +107,6 @@ get_compose(){
         fi
     done
 
-    export HASHED_PASSWORD=$(openssl passwd -apr1 $ADMIN_PASSWORD)
     docker-compose $included_configs config 
     >&2 echo "Included configs: $included_configs"
 }
