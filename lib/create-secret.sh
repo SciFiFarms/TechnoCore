@@ -45,11 +45,11 @@ create_secret(){
 
     # If the secret exists, we'll have to do a lot more to swap it out.
     if docker secret ls | grep -w $secret_name > /dev/null; then
-        if ! docker service ls | grep -w ${STACK_NAME}_$service_name > /dev/null; then
-            echo "Updated existing secret $1"
+        if docker service ls | grep -w ${STACK_NAME}_$service_name > /dev/null; then
+            echo "Updated existing secret $secret_name"
             create_existing_secret $@
         else
-            echo "Updated existing secret without service $1"
+            echo "Updated existing secret without service $secret_name"
             docker secret rm $secret_name
             echo -e "$secret" | docker secret create ${secret_name} - > /dev/null
         fi
