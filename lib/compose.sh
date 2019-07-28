@@ -1,5 +1,5 @@
 #!/bin/env bash
-export LOGGING_DRIVER=${LOGGING_DRIVER:-journald}
+export LOGGING_DRIVER=${LOGGING_DRIVER:-json-file}
 
 # $1: The setting name
 # $2: The value to be set
