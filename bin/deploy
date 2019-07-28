@@ -26,7 +26,7 @@ generate_secrets(){
             continue # Secret already exists.
         fi
 
-         if [[ "$secret" =~ (${STACK_NAME}_.*_admin_password) ]]; then
+        if [[ "$secret" =~ (${STACK_NAME}_.*_admin_password) ]]; then
             secret=${BASH_REMATCH[1]}
             echo "Creating secret $secret"
             # TODO: This should use a centralized create secret call.
@@ -50,10 +50,10 @@ generate_secrets(){
 }
 
 # TODO: Move this to a sidecar. 
-# Update DuckDNS entry with the internal IP address. 
-ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
-# How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
-echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
+## Update DuckDNS entry with the internal IP address. 
+#ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
+## How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
+#echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
 
 generate_complete_compose
 
