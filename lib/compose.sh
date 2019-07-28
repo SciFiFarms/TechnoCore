@@ -18,7 +18,7 @@ path_prefix (){
         export ${1}_PATH_PREFIX=/
     else
         #echo "PATH_PREFX"
-        export ${1}_PATH_PREFIX=/${2}/
+        export ${1//-/_}_PATH_PREFIX=/${2}/
     fi
 }
 
@@ -65,7 +65,7 @@ set_service_flag (){
     # This one is actually technocore.
     local service_name=${1^^}
     local service_folder=${2:-$1}
-    local service_flag=SERVICE_${service_name/-/_}
+    local service_flag=SERVICE_${service_name//-/_}
 
     # TODO: Could do some logic to detect if $2 suggests a no response. 
     default_to $service_flag $2
