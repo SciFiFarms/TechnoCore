@@ -30,23 +30,6 @@ check_subrepo_dependancy()
     fi
 }
 
-# Adds the repo if it is missing. 
-# $1: The url of the repo to add
-# $2: The location to add the repo
-# $3 (optional): The branch to checkout.
-add_repo_if_missing()
-{
-    # TODO: Pop args into named variables here. 
-    # OR just figure out how to add the -b flag when set. 
-    if [ ! -d "$2" ]; then
-        git clone $1 $2 $3
-        echo "Added $2 repo"
-    else
-        echo "$2 already exists. Will not overwrite repo."
-    fi
-}
-
-
 # TODO: Add example.env to repo
 # It may ultimately make more sense to do something more complicated so that
 # .env files can be stacked. Something like docker-compose with multiple -f options.
@@ -69,25 +52,6 @@ check_subrepo_dependancy
 
 add_aliases_if_missing
 
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Docs.git docs
-add_repo_if_missing git@github.com:SciFiFarms/dogfish.git dogfish
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome.git esphome
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome-Wrapper.git esphome-wrapper
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Grafana.git grafana
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant.git home-assistant
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Home-Assistant-DB.git home-assistant-db
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Jupyter.git jupyter
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Loki.git loki
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-fluentd.git fluentd
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-nextcloud-exporter.git nextcloud-exporter
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Node-RED.git node-red
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-NGINX.git nginx
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Portainer.git portainer
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Prometheus.git prometheus
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-InfluxDB.git influxdb
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-Vault.git vault
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-VerneMQ.git vernemq
-add_repo_if_missing git@github.com:SciFiFarms/TechnoCore-ESPHome-Core.git esphome-core
 
 add_env_if_missing
 
