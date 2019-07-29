@@ -21,6 +21,11 @@ echo "path = repo-template" >> $gitmodules_path
 echo "url = dummy_string_to_satisfy_vscode" >> $gitmodules_path
 echo "" >> $gitmodules_path
 
+echo "[submodule \"deploy\"]" >> $gitmodules_path
+echo "path = deploy" >> $gitmodules_path
+echo "url = dummy_string_to_satisfy_vscode" >> $gitmodules_path
+echo "" >> $gitmodules_path
+
 for folder in $TECHNOCORE_SERVICES/*; do
     # Will not run if no directories are available
     # https://unix.stackexchange.com/questions/86722/how-do-i-loop-through-only-directories-in-bash
