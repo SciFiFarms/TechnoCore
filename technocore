@@ -2,8 +2,10 @@
 # This file is intended to be ran in the host OS and basically just passes the commands onto the TechnoCore service. 
 . ./init.sh
 services=
+libs=
 if [ -z $PROD ]; then
    services="-v $(pwd)/services:/var/lib/technocore/"
+    libs="-v $(pwd)/lib:/usr/local/lib/technocore/"
 fi
 
 docker run \
@@ -11,7 +13,7 @@ docker run \
     -it \
     -v $(pwd)/.env:/var/lib/technocore/.env \
     $services \
-    -v $(pwd)/lib:/usr/local/lib/technocore/ \
+    $libs \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e SERVER_HOSTNAME=${HOSTNAME} \
     ${image_provider:-scififarms}/technocore:${TAG:-latest} \
