@@ -1,41 +1,8 @@
 version: '3.5'
 
-x-logging-defaults: &logging-defaults
-  logging:
-    driver: "journald"
-    options:
-      tag: "{{.Name}}"
-
 services:
   # Collects container metrics for Prometheus
-  cadvisor:
-    command: -logtostderr -docker_only
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: google/cadvisor:v0.33.0
-    <<: *logging-defaults
-    networks:
-      - web
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /:/rootfs:ro
-      - /var/run:/var/run
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-
-  snmp_exporter:
-    deploy:
-        mode: global
-        restart_policy:
-          condition: any
-    image: ricardbejarano/snmp_exporter:0.15.0
-    <<: *logging-defaults
-    networks:
-      - web
-
-  docs:
+ docs:
     deploy:
         mode: global
         restart_policy:
@@ -98,29 +65,7 @@ services:
       - ./esphome-core:/esphome-core
       - esphome-build:/tmp/esphome-build/
       
-  grafana:
-    depends_on:
-      - home_assistant_db
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    environment:
-      #- GF_SERVER_DOMAIN=spencer-laptop/grafana/
-      - GF_SERVER_ROOT_URL=https://spencer-laptop/grafana/
-    image: ${image_provider:-scififarms}/technocore-grafana:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: grafana_timeseries_db_username
-        target: timeseries_db_username
-      - source: grafana_timeseries_db_password
-        target: timeseries_db_password
-      - source: grafana_domain
-        target: domain
-    volumes:
-      - grafana:/var/lib/grafana
+
   
   grocy:
     deploy:
@@ -137,27 +82,6 @@ services:
     ports:
       - 9283:80
 
-  health:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-prometheus:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: health_cert_bundle
-        target: cert_bundle
-      - source: health_key
-        target: key
-      - source: ca
-        target: ca
-      - source: health_domain
-        target: domain
-    volumes:
-      - health:/prometheus
-  
   home_assistant:
     depends_on:
       - home_assistant_db
@@ -261,24 +185,6 @@ services:
     volumes:
       - jupyter:/var/lib/jupyter
 
-  loki:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-loki:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: loki_cert_bundle
-        target: cert_bundle
-      - source: loki_key
-        target: key
-      - source: ca
-        target: ca
-    volumes:
-      - loki:/var/lib/loki
 
   mqtt:
     depends_on:
@@ -349,43 +255,6 @@ services:
     volumes:
       - ${nginx_config_folder_live_mount:-./empty/:/opt/.config_folder_dummy}
       - ${nginx_config_file_live_mount:-./empty/:/opt/.config_file_dummy}
-
-  nextcloud_exporter:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-nextcloud-exporter:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: nextcloud_exporter_url
-        target: url
-      - source: nextcloud_exporter_username
-        target: username
-      - source: nextcloud_exporter_password
-        target: password
-  
-  node_exporter:
-    command:       
-      - '--path.procfs=/host/proc'       
-      - '--path.sysfs=/host/sys'       
-      - '--path.rootfs=/host'       
-      - '--collector.filesystem.ignored-mount-points="^(/rootfs|/host|)/(sys|proc|dev|host|etc)($$|/)"'       
-      - '--collector.filesystem.ignored-fs-types="^(sys|proc|auto|cgroup|devpts|ns|au|fuse\.lxc|mqueue)(fs|)$$"'       
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: prom/node-exporter:v0.18.0
-    <<: *logging-defaults
-    networks:
-      - web
-    volumes:       
-      - /proc:/host/proc:ro       
-      - /sys:/host/sys:ro       
-      - /:/rootfs:ro       
 
   node_red:
     environment:
@@ -473,29 +342,6 @@ services:
       - ${portainer_live_mount:-./empty/:/opt/.dummy}
       - ${portainer_migrations_live_mount:-./empty/:/opt/.migrations_dummy}
   
-  fluentd:
-    command:
-      - "fluentd"
-      - "-v"
-      - "-p"
-      - "/fluentd/plugins"
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    environment:
-      LOKI_URL: http://loki:3100
-    image: ${image_provider:-scififarms}/technocore-fluentd:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    volumes:
-      - /var/log:/var/log
-      # Needed for journald log ingestion:
-      - /etc/machine-id:/etc/machine-id
-      - /dev/log:/dev/log
-      - /var/run/systemd/journal/:/var/run/systemd/journal/
-
   mariadb:
     deploy:
       mode: global
@@ -531,31 +377,6 @@ services:
     volumes:
       - 'suitecrm:/bitnami'
       
-  timeseries_db:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    #environment:
-    image: ${image_provider:-scififarms}/technocore-influxdb:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: timeseries_db_admin_username
-        target: admin_username
-      - source: timeseries_db_admin_password
-        target: admin_password
-      - source: timeseries_db_home_assistant_username
-        target: home_assistant_username
-      - source: timeseries_db_home_assistant_password
-        target: home_assistant_password
-      - source: timeseries_db_grafana_username
-        target: grafana_username
-      - source: timeseries_db_grafana_password
-        target: grafana_password
-    volumes:
-      - timeseries-db:/var/lib/influxdb
 
   vault:
     deploy:
@@ -618,21 +439,7 @@ secrets:
   esphome_domain:
     name: ${stack_name:-technocore}_esphome_domain
     external: true
-  grafana_cert_bundle:
-    name: ${stack_name:-technocore}_grafana_cert_bundle
-    external: true
-  grafana_key:
-    name: ${stack_name:-technocore}_grafana_key
-    external: true
-  grafana_timeseries_db_username:
-    name: ${stack_name:-technocore}_grafana_timeseries_db_username
-    external: true
-  grafana_timeseries_db_password:
-    name: ${stack_name:-technocore}_grafana_timeseries_db_password
-    external: true
-  grafana_domain:
-    name: ${stack_name:-technocore}_grafana_domain
-    external: true
+
   home_assistant_cert_bundle:
     name: ${stack_name:-technocore}_home_assistant_cert_bundle
     external: true
@@ -660,30 +467,7 @@ secrets:
   home_assistant_timeseries_db_password:
     name: ${stack_name:-technocore}_home_assistant_timeseries_db_password
     external: true
-  timeseries_db_admin_username:
-    name: ${stack_name:-technocore}_timeseries_db_admin_username
-    external: true
-  timeseries_db_admin_password:
-    name: ${stack_name:-technocore}_timeseries_db_admin_password
-    external: true
-  timeseries_db_grafana_username:
-    name: ${stack_name:-technocore}_timeseries_db_grafana_username
-    external: true
-  timeseries_db_grafana_password:
-    name: ${stack_name:-technocore}_timeseries_db_grafana_password
-    external: true
-  timeseries_db_home_assistant_username:
-    name: ${stack_name:-technocore}_timeseries_db_home_assistant_username
-    external: true
-  timeseries_db_home_assistant_password:
-    name: ${stack_name:-technocore}_timeseries_db_home_assistant_password
-    external: true
-  timeseries_db_cert_bundle:
-    name: ${stack_name:-technocore}_timeseries_db_cert_bundle
-    external: true
-  timeseries_db_key:
-    name: ${stack_name:-technocore}_timeseries_db_key
-    external: true
+
   jupyter_cert_bundle:
     name: ${stack_name:-technocore}_jupyter_cert_bundle
     external: true
@@ -711,15 +495,7 @@ secrets:
   mqtt_token:
     name: ${stack_name:-technocore}_mqtt_token
     external: true
-  nextcloud_exporter_url:
-    name: ${stack_name:-technocore}_nextcloud_exporter_url
-    external: true
-  nextcloud_exporter_username:
-    name: ${stack_name:-technocore}_nextcloud_exporter_username
-    external: true
-  nextcloud_exporter_password:
-    name: ${stack_name:-technocore}_nextcloud_exporter_password
-    external: true
+  
   nginx_cert_bundle:
     name: ${stack_name:-technocore}_nginx_cert_bundle
     external: true
