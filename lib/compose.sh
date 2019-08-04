@@ -10,15 +10,17 @@ default_to (){
     fi
 }
 
-# $1: SERVICE_NAME
+# $1: service-name (folder name in services/...)
 # $2: The path prefix to set. Eg. prometheus
 path_prefix (){
+    local service_name=${1^^}
+    service_name=${service_name//-/_}
     if [[ "$INGRESS_TYPE" == "subdomain" ]]; then
         #echo "SUBDOMAIN"
-        export ${1}_PATH_PREFIX=/
+        export ${service_name}_PATH_PREFIX=/
     else
         #echo "PATH_PREFX"
-        export ${1//-/_}_PATH_PREFIX=/${2}/
+        export ${service_name}_PATH_PREFIX=/${2}/
     fi
 }
 
@@ -76,6 +78,33 @@ set_service_flag (){
     fi
 }
 
+# $1: service-name (folder name in services/...)
+# $2: subdomain or path prefix (no slashes)
+generate_domain_list(){
+    local env_var=${1^^}
+    env_var=${env_var//-/_}_ROUTING_LABEL
+    local prefix=${2:?Need second argument for generate_domain_list}
+
+    # TODO: Have this conditionally happen based on subdomain?
+    local routing_value=$(echo "Host:${prefix}.$DOMAIN")
+
+    for domain in $(echo $EXTRA_DOMAINS | tr "," "\t"); do
+        routing_value=${routing_value},${prefix}.$domain
+    done
+
+    # Counting the length of the rule will keep it consistent with how Traefik works.
+    export ${env_var}_PRIORITY=$(echo $routing_value | wc -c)
+
+    if [ "$DEFAULT_SERVICE" = "$1" ]; then
+        routing_value="${routing_value},$DOMAIN,$EXTRA_DOMAINS"
+        # 1 is the lowest priority. This way, the plain domain gets picked only 
+        # if no other domains get matched.
+        export ${env_var}_PRIORITY="1"
+    fi
+
+    export $env_var=$routing_value
+}
+
 # Outputs the composite compose.yml file. 
 # Loads all defaults.sh files in ./services/*/
 get_compose(){
@@ -86,12 +115,24 @@ get_compose(){
 
     # Then start setting unset defaults. 
     default_to INGRESS_TYPE subdomain
+
+    # These are set by default, but each service can override. 
+    local service_name=
+    local prefix=
     for env in $TECHNOCORE_SERVICES/*/defaults.sh; do
         if [ -f "$env" ]; then
             # Get the last folder and make it the default service name.
             service_name=$(dirname $env)
             service_name=${service_name##*/}
+            prefix=$service_name
+
+            # TODO: Have this reference an x-arg in the compose file rather than 
+            # running a script. 
+            # This allows for the service to override service names or path prefixes.
             source $env
+            path_prefix $service_name $prefix
+            generate_domain_list $service_name $prefix
+
         else
             echo "No services to load."
         fi

@@ -4,7 +4,7 @@
 services=
 libs=
 if [ -z $PROD ]; then
-   services="-v $(pwd)/services:/var/lib/technocore/"
+    services="-v $(pwd)/services:/var/lib/technocore/"
     libs="-v $(pwd)/lib:/usr/local/lib/technocore/"
 fi
 
