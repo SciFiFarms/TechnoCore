@@ -31,6 +31,7 @@
 		"cSpell.words": [
 			"technocore"
 		],
-		"git.detectSubmodulesLimit": 100
+		"git.detectSubmodulesLimit": 100,
+		"diffEditor.ignoreTrimWhitespace": false
 	}
 }
