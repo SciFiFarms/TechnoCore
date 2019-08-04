@@ -2,6 +2,11 @@ ca.pem
 *.backup
 .env
 
+# These are used in development and allow me to keep all related files under one 
+# searchable project.
+repo-template/
+deploy/
+hals/
 ignore/
 
 # Everything in the services folder should get included via `technocore generate_gitmodules`. 
