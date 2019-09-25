@@ -1,5 +1,7 @@
 #!/bin/env bash
 export LOGGING_DRIVER=${LOGGING_DRIVER:-json-file}
+# Could alternatively use ./empty:/opt/.dummy
+export EMPTY_MOUNT=/dev/null:/dev/null
 
 # $1: The setting name
 # $2: The value to be set
@@ -7,6 +9,29 @@ default_to (){
     # This checks that the variable's existence. It WILL detect empty strings as set.
     if [[ ! ${!1} && ${!1-unset} ]]; then
         export $1=$2
+    fi
+}
+
+# Uppercases and turns '-'s and ' ' into '_'s. an example-name => AN_EXAMPLE_NAME
+# $1: The string to convert
+bashify (){
+    local string=${1^^}
+    string=${string//\//_}
+    string=${string// /_}
+    echo "${string//-/_}"
+}
+
+# $1: Type of mount: dev | live
+# $2: The path to mount (from services dir)
+# $3: The path to mount in the container.
+function generate_mount() {
+    mount_type=$(bashify $1)
+
+    env_var=$(bashify $1)_MOUNT_$(bashify $service_name)_$(bashify $2)
+    env_var_enabled=${env_var}_ENABLED
+
+    if [[ "${!env_var_enabled}" != "" ]]; then
+        export $env_var="$HOST_SERVICES_DIR/$service_name/$2:$3"
     fi
 }
 
