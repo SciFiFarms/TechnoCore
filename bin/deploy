@@ -26,11 +26,15 @@ generate_secrets(){
             continue # Secret already exists.
         fi
 
-        if [[ "$secret" =~ (${STACK_NAME}_.*_admin_password) ]]; then
+        if [[ "$secret" =~ (${STACK_NAME}_(.*)_admin_password) ]]; then
             secret=${BASH_REMATCH[1]}
-            echo "Creating secret $secret"
-            # TODO: This should use a centralized create secret call.
-            echo -e "$(generate_password 32)" | docker secret create ${secret} - > /dev/null
+            service=${BASH_REMATCH[2]}
+            echo "Creating secret $secret for $service"
+            if [ ! -z $TECHNOCORE_ADMIN_PASSWORD ]; then
+                create_secret ${service} admin_password "$TECHNOCORE_ADMIN_PASSWORD"
+            else
+                create_secret ${service} admin_password "$(generate_password 32)"
+            fi
         fi
     done
 

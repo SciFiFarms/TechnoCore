@@ -50,6 +50,9 @@ path_prefix (){
 }
 
 # $1: The service that the credentials are for. 
+# $2: (Optional) The password to set. 
+#     This option probably won't be used in production, but is handy for developing and testing.
+#     If it presents any trouble, it should be removed.
 # The secrets are in the format ${STACK_NAME}_${SERVICE_NAME}_${MOUNT_POINT}
 # This takes $SERVICE_NAME and will generate usernames and passwords for any 
 # credentials listed in the generated compose file that start with ${STACK_NAME}_${SERVICE_NAME} 
@@ -74,9 +77,14 @@ generate_password_for (){
             # There isn't an admin service, so don't create a secret for it.
             if [ "$service" = "admin" ]; then continue; fi
 
-            local password=$(generate_password 32)
-            create_secret ${credential_provider} ${service}_password "$password"
-            create_secret ${service} ${credential_provider}_password "$password"
+            if [ -z $2 ]; then
+                local password=$(generate_password 32)
+                create_secret ${credential_provider} ${service}_password "$password"
+                create_secret ${service} ${credential_provider}_password "$password"
+            else
+                create_secret ${credential_provider} ${service}_password "$2"
+                create_secret ${service} ${credential_provider}_password "$2"
+            fi
         fi
     done
 }
