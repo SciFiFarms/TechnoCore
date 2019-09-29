@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-TECHNOCORE_ROOT=$(pwd)
 set -a
+    TECHNOCORE_ROOT=$(pwd)
     TECHNOCORE_LIB=$TECHNOCORE_ROOT/lib
     TECHNOCORE_SERVICES=$TECHNOCORE_ROOT/services
 

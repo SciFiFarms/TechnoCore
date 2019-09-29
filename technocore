@@ -16,6 +16,7 @@ docker run \
     $libs \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e SERVER_HOSTNAME=${HOSTNAME} \
+    -e TECHNOCORE_ROOT=$TECHNOCORE_ROOT \
     -e HOST_SERVICES_DIR=${TECHNOCORE_SERVICES} \
     ${image_provider:-scififarms}/technocore:${TAG:-latest} \
     $@
