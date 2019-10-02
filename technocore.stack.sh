@@ -23,6 +23,7 @@ add_repo_if_missing TechnoCore-Alertmanager
 add_repo_if_missing TechnoCore-Fail2ban 
 add_repo_if_missing TechnoCore-Grav 
 add_repo_if_missing TechnoCore-Nextcloud
+add_repo_if_missing TechnoCore-Nextcloud-Onlyoffice
 add_repo_if_missing TechnoCore-Ouroboros
 add_repo_if_missing TechnoCore-traefik-subdomain
 
