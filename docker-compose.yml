@@ -26,47 +26,6 @@ services:
     volumes:
       - ${docs_live_mount:-./empty/:/opt/.dummy}
 
-  esphome:
-    depends_on:
-      - mqtt
-    deploy:
-        mode: global
-        restart_policy:
-          condition: any
-    environment:
-      - image_provider=${image_provider:-scififarms}
-      - stack_name=${stack_name:-technocore}
-      - service_name=esphome
-      - TAG=${TAG:-latest}
-      # This is used to allow the wrapper to mount the /config folder to the correct place on the host.
-      - host_working_dir=$PWD
-      #- debug=${esphome_debug}
-      - esphome_core=./esphome-core:/esphome-core
-      - esphome_app=${esphome_app_live_mount}
-    image: ${image_provider:-scififarms}/technocore-esphome-wrapper:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: ca_bundle
-        target: ca
-      - source: esphome_mqtt_username
-        target: mqtt_username
-      - source: esphome_mqtt_password
-        target: mqtt_password
-      - source: esphome_token
-        target: token
-      - source: esphome_domain
-        target: domain
-    user: "0" # I suspect I'll be able to remove this. I'd like to do that. 
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${esphome_live_mount:-./empty/:/opt/.dummy}
-      - ./esphome-core:/esphome-core
-      - esphome-build:/tmp/esphome-build/
-      
-
-  
   grocy:
     deploy:
       mode: global
@@ -81,84 +40,6 @@ services:
       - grocy:/config
     ports:
       - 9283:80
-
-  home_assistant:
-    depends_on:
-      - home_assistant_db
-      - mqtt
-      - vault
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    environment:
-      - DOCKER_HOSTNAME=${HOSTNAME}
-    image: ${image_provider:-scififarms}/technocore-home-assistant:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      web:
-        # This was nessesary in order to get Node-RED to connect with Home Assistant.
-        aliases:
-          - home_assistant.local
-          - home_assistant.scifi.farm
-    ports:
-      - "8123:8123"
-      - "5678:5678"
-    secrets:
-      - source: home_assistant_cert_bundle
-        target: cert_bundle
-      - source: home_assistant_key
-        target: key
-        mode: 0400
-      - source: ca_bundle
-        target: ca
-      - source: home_assistant_mqtt_username
-        target: mqtt_username
-      - source: home_assistant_mqtt_password
-        target: mqtt_password
-      - source: home_assistant_domain
-        target: domain
-      - source: home_assistant_timeseries_db_username
-        target: timeseries_db_username
-      - source: home_assistant_timeseries_db_password
-        target: timeseries_db_password
-    # TODO: Currently, Home Assistant runs as root. Need to figure out how to run Home Assistant as a user while being hosted on a server.
-    #user: ${UID}
-    volumes:
-      # Might need to change from "/config/.storage" to "/config". 
-      # "/config/.storage" is where the users are kept, but we might want to save
-      # changes made to the /config/ dir too. 
-      - home-assistant:/config/.storage/
-      # This allows for realtime editing of Home Assistant configs and scripts. 
-      - ${home_assistant_config_live_mount:-./empty/:/opt/.dummy}
-      - ${home_assistant_src_live_mount:-./empty/:/opt/.src_dummy}
-      
-  home_assistant_db:
-    depends_on:
-      - vault
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-home-assistant-db:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: home_assistant_db_cert_bundle
-        target: cert_bundle
-        uid: "999" # This is set in Postgres' Dockerfile
-        mode: 0400
-      - source: home_assistant_db_key
-        target: key
-        uid: "999" # This is set in Postgres' Dockerfile
-        mode: 0400
-      - source: ca
-        target: ca
-    user: postgres 
-    volumes:
-      - home-assistant-db:/var/lib/postgresql/data
-      - ${home_assistant_db_live_mount:-./empty/:/opt/.dummy}
       
   jupyter:
     depends_on:
@@ -184,77 +65,6 @@ services:
         target: ca
     volumes:
       - jupyter:/var/lib/jupyter
-
-
-  mqtt:
-    depends_on:
-      - vault
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-vernemq:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      web:
-        aliases:
-          - mqtt.local
-          - mqtt.scifi.farm
-    # For some reason, the vmq-admin tool stops working if ANY port is set. 
-    # Fortunately, I was able to use NGINX to do the port forwarding instead.
-    # See https://github.com/SciFiFarms/TechnoCore-VerneMQ/pull/4 for more.
-    #ports:
-    #  - "8883:8883"
-    #  - "1883:1883"
-    secrets:
-      - source: mqtt_mqtt_username
-        target: mqtt_username
-      - source: mqtt_mqtt_password
-        target: mqtt_password
-      - source: mqtt_cert_bundle
-        target: cert_bundle
-      - source: mqtt_key
-        target: key
-      - source: ca_bundle
-        target: ca
-      - source: mqtt_token
-        target: token
-      - source: portainer_mqtt_username
-        target: portainer_mqtt_username
-      - source: portainer_mqtt_password
-        target: portainer_mqtt_password
-    volumes:
-      - mqtt:/vernemq/etc 
-      # Used for working with migrations.
-      - ${mqtt_live_mount:-./empty/:/opt/.dummy}
-    # Hostname is needed to persist data. 
-    hostname: mqtt
-    
-  nginx:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-nginx:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    ports:
-      - "8883:8883"
-      - "1883:1883"
-      - "80:80"
-      - "443:443"
-      - "6052:6052"
-    secrets:
-      - source: nginx_cert_bundle
-        target: cert_bundle
-      - source: nginx_key
-        target: key
-      - source: ca_bundle
-        target: ca
-    volumes:
-      - ${nginx_config_folder_live_mount:-./empty/:/opt/.config_folder_dummy}
-      - ${nginx_config_file_live_mount:-./empty/:/opt/.config_file_dummy}
 
   node_red:
     environment:
@@ -378,45 +188,6 @@ services:
       - 'suitecrm:/bitnami'
       
 
-  vault:
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    environment:
-      - SKIP_SETCAP=true
-      - VAULT_ADDR=https://vault.local:8200
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- CONTAINER_HOSTNAME=vault
-      - VAULT_CACERT=/run/secrets/ca
-      # This has been disabled because I don't think they are needed... But not sure enough to remove yet.
-      #- VAULT_CA=true
-    image: ${image_provider:-scififarms}/technocore-vault:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      web:
-        aliases:
-          - vault.local
-          - vault.scifi.farm
-    secrets:
-      - source: vault_key
-        target: key
-      - source: vault_cert_bundle
-        target: cert_bundle
-      - source: ca_bundle
-        target: ca
-      - source: ca_bundle
-        target: /etc/ssl/certs/ca-certificates.crt
-      - source: vault_unseal
-        target: vault_unseal
-      - source: vault_token
-        target: vault_token
-    ports:
-      - "8200:8200"
-    volumes:
-      - vault:/vault/file
-      - ${vault_live_mount:-./empty/:/opt/.dummy}
-
 networks:
   web:
     attachable: true
@@ -440,34 +211,6 @@ secrets:
     name: ${stack_name:-technocore}_esphome_domain
     external: true
 
-  home_assistant_cert_bundle:
-    name: ${stack_name:-technocore}_home_assistant_cert_bundle
-    external: true
-  home_assistant_domain:
-    name: ${stack_name:-technocore}_home_assistant_domain
-    external: true
-  home_assistant_key:
-    name: ${stack_name:-technocore}_home_assistant_key
-    external: true
-  home_assistant_mqtt_username:
-    name: ${stack_name:-technocore}_home_assistant_mqtt_username
-    external: true
-  home_assistant_mqtt_password:
-    name: ${stack_name:-technocore}_home_assistant_mqtt_password
-    external: true
-  home_assistant_db_cert_bundle:
-    name: ${stack_name:-technocore}_home_assistant_db_cert_bundle
-    external: true
-  home_assistant_db_key:
-    name: ${stack_name:-technocore}_home_assistant_db_key
-    external: true
-  home_assistant_timeseries_db_username:
-    name: ${stack_name:-technocore}_home_assistant_timeseries_db_username
-    external: true
-  home_assistant_timeseries_db_password:
-    name: ${stack_name:-technocore}_home_assistant_timeseries_db_password
-    external: true
-
   jupyter_cert_bundle:
     name: ${stack_name:-technocore}_jupyter_cert_bundle
     external: true
@@ -479,28 +222,6 @@ secrets:
     external: true
   loki_key:
     name: ${stack_name:-technocore}_loki_key
-    external: true
-  mqtt_cert_bundle:
-    name: ${stack_name:-technocore}_mqtt_cert_bundle
-    external: true
-  mqtt_key:
-    name: ${stack_name:-technocore}_mqtt_key
-    external: true
-  mqtt_mqtt_username:
-    name: ${stack_name:-technocore}_mqtt_mqtt_username
-    external: true
-  mqtt_mqtt_password:
-    name: ${stack_name:-technocore}_mqtt_mqtt_password
-    external: true
-  mqtt_token:
-    name: ${stack_name:-technocore}_mqtt_token
-    external: true
-  
-  nginx_cert_bundle:
-    name: ${stack_name:-technocore}_nginx_cert_bundle
-    external: true
-  nginx_key:
-    name: ${stack_name:-technocore}_nginx_key
     external: true
   node_red_cert_bundle:
     name: ${stack_name:-technocore}_node_red_cert_bundle
@@ -541,18 +262,6 @@ secrets:
   health_domain:
     name: ${stack_name:-technocore}_health_domain
     external: true
-  vault_cert_bundle:
-    name: ${stack_name:-technocore}_vault_cert_bundle
-    external: true
-  vault_key:
-    name: ${stack_name:-technocore}_vault_key
-    external: true
-  vault_unseal:
-    name: ${stack_name:-technocore}_vault_unseal
-    external: true
-  vault_token:
-    name: ${stack_name:-technocore}_vault_token
-    external: true
   docs_cert_bundle:
     name: ${stack_name:-technocore}_docs_cert_bundle
     external: true
@@ -560,20 +269,12 @@ secrets:
     name: ${stack_name:-technocore}_docs_key
     external: true
 volumes:
-  esphome:
   esphome-build:
-  grafana:
   grocy:
-  home-assistant:
-  home-assistant-db:
-  timeseries-db:
-  jupyter:
   loki:
   mariadb:
-  mqtt:
   node-red:
   portainer:
   portainer-acme:
   health:
   suitecrm:
-  vault:
