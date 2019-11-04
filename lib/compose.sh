@@ -111,6 +111,17 @@ set_service_flag (){
     fi
 }
 
+# Adds extra configuration for specific services set by $1
+# $1: Service name
+set_optional_service (){
+    current_service_var=SERVICE_$(bashify ${service_name})
+    service_var=SERVICE_$(bashify $1)
+    echo "$service_var=${!service_var}" >&2
+    if [ ! -z "${!service_var}" ] && [ ! -z "${!current_service_var}" ] ; then
+        export SERVICE_CONFIG_$(bashify ${service_name}_$1)=${TECHNOCORE_SERVICES}/$service_name/$1.yml
+    fi
+}
+
 # $1: service-name (folder name in services/...)
 # $2: subdomain or path prefix (no slashes)
 generate_domain_list(){
