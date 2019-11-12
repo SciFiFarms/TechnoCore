@@ -116,7 +116,7 @@ set_service_flag (){
 set_optional_service (){
     current_service_var=SERVICE_$(bashify ${service_name})
     service_var=SERVICE_$(bashify $1)
-    echo "$service_var=${!service_var}" >&2
+    echo "Exporting optional service: $service_var=${!service_var}" >&2
     if [ ! -z "${!service_var}" ] && [ ! -z "${!current_service_var}" ] ; then
         export SERVICE_CONFIG_$(bashify ${service_name}_$1)=${TECHNOCORE_SERVICES}/$service_name/$1.yml
     fi
