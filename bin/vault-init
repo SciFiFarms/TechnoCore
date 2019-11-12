@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+. init.sh
+
+docker stop ${STACK_NAME:-technocore}_vault_init_app  
+docker run --rm --name ${STACK_NAME:-technocore}_vault_init_app -e 'VAULT_CONFIG_DIR=/vault/setup' -e 'VAULT_ADDR=http://127.0.0.1:8200' -v ${STACK_NAME:-technocore}_vault:/vault/file ${image_provider:-scififarms}/technocore-vault:${TAG:-latest} &
+sleep 3
+
+initResponse=$(run_in -i vault_init_app vault operator init -key-shares=1 -key-threshold=1) 
+unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs) 
+rootToken=$(grep -C 1 "Root Token" <<< "$initResponse" | cut -d : -f 2 | xargs) 
+
+create_secret vault unseal $unsealKey
+create_secret vault token $rootToken
+run_in vault_init_app audit enable file file_path=stdout
+
+docker stop ${STACK_NAME:-technocore}_vault_init_app  
+docker service rm ${STACK_NAME}_vault_init
+echo 'Finished deploy, sleeping until service is updated/restarted.'
