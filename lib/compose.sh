@@ -129,9 +129,11 @@ generate_domain_list(){
     env_var=${env_var//-/_}_ROUTING_LABEL
     local prefix=${2:?Need second argument for generate_domain_list}
 
-    # TODO: Have this conditionally happen based on subdomain?
+    # TODO: This can be used to update with traefik 2.0 format. 
+    # local routing_value=$(echo "Host(\`${prefix}.$DOMAIN\`)")
     local routing_value=$(echo "Host:${prefix}.$DOMAIN")
 
+    # This will need to be updated when using traefik 2.0. 
     for domain in $(echo $EXTRA_DOMAINS | tr "," "\t"); do
         routing_value=${routing_value},${prefix}.$domain
     done
