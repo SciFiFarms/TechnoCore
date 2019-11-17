@@ -10,6 +10,7 @@ RUN curl -L https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd
 
 WORKDIR /var/lib/technocore
 COPY ${DEFAULT_DEPLOY_STACK}.stack.sh /var/lib/technocore/stack.sh
+RUN ln -s /mnt/technocore/.env /var/lib/technocore/.env
 RUN /var/lib/technocore/stack.sh
 
 COPY bin/ /usr/local/bin
