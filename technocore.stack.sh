@@ -7,10 +7,9 @@ add_repo_if_missing()
 {
     local folder=${1,,}
     local folder=${folder/technocore-/}
-    # TODO: Pop args into named variables here. 
-    # OR just figure out how to add the -b flag when set. 
+    local branch=${2:-master}
     if [ ! -d "$folder" ]; then
-        git clone https://github.com/SciFiFarms/$1.git $folder $2
+        git clone https://github.com/SciFiFarms/$1.git $folder -b $branch
         echo "Added $folder repo"
     else
         echo "$folder already exists. Will not overwrite repo."
@@ -27,7 +26,7 @@ add_repo_if_missing TechnoCore-Nextcloud-Onlyoffice
 add_repo_if_missing TechnoCore-Ouroboros
 add_repo_if_missing TechnoCore-traefik-subdomain
 
-add_repo_if_missing TechnoCore-ESPHome 
+add_repo_if_missing TechnoCore-ESPHome master
 add_repo_if_missing TechnoCore-ESPHome-Wrapper 
 add_repo_if_missing TechnoCore-Home-Assistant 
 add_repo_if_missing TechnoCore-Home-Assistant-DB 
