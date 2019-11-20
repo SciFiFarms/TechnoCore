@@ -1,5 +1,20 @@
 #!/usr/bin/env sh
 
+which docker
+
+if [ $? -eq 0 ]
+then
+    docker --version | grep "Docker version"
+    if [ $? -eq 0 ]
+    then
+        echo "Docker is installed. *Proceed*"
+    else
+        . ./docker-check.sh
+    fi
+else
+    . ./docker-check.sh
+fi
+
 set -a
     TECHNOCORE_ROOT=$(pwd)
     TECHNOCORE_LIB=$TECHNOCORE_ROOT/lib
