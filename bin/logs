@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+. init.sh
+
+docker service logs -f ${STACK_NAME:-technocore}_$1

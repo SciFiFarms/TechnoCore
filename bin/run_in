@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+. init.sh
+
+# Runs a given command in a specific service
+# $1: -optional flags for docker exec. 
+# $1: Service to run command in
+# $2...: Command to run
+
+# TODO: Do some kind of validation. Don't run if there isn't a container to run for example. 
+# TODO: Default to bash or sh if no command given.
+
+# This was needed because some of the services need -it, and others need -i. 
+# https://serverfault.com/questions/897847/what-does-the-input-device-is-not-a-tty-exactly-mean-in-docker-run-output
+# https://medium.com/@ismailyenigul/docker-error-in-crontab-the-input-device-is-not-a-tty-7280cc42cf19
+
+options=-it
+case $1 in -*)
+    options=$1
+    shift
+esac
+# TODO: Right now, this only supports using the current instance. It would be cool to make STACK_NAME optional
+docker exec $options $( docker ps -a -f status=running --format="{{.ID}} {{.Names}}" | grep -w ${STACK_NAME}_$1 | cut -d " " -f 1 | head -n 1 ) ${@:2}

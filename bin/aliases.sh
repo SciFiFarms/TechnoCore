@@ -5,6 +5,8 @@ fi
 
 alias backup_hals='cp -ruL . ~/Nextcloud/${stack_name:-technocore}/hals/'
 
+
+# TODO: These should be create the command and default to using bash with a list that specifies sh (or some other shell)
 # One liner to exec in a docker service by name instead of hash. 
 alias run_mqtt='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_mqtt | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_mqtt | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 1) /bin/bash'
 alias run_node_red='docker exec -it $(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_node_red | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 2).$(docker service ps -f desired-state=running --no-trunc ${stack_name:-technocore}_node_red | grep ${stack_name:-technocore} | tr -s " " | cut -d " " -f 1) /bin/bash'

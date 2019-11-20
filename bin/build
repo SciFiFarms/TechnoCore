@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+. ./init.sh
+
+# $1: Folder to build.
+# $2: Context folder.
+# $3: Wether or not to include a -. If set, do not include dash.
+build_image() {
+    local dockerfile_folder=$1
+    local context_folder=$2
+    local dash=-
+    local folder_short=-${dockerfile_folder##*/}
+    if [[ $3 ]]; then
+        folder_short=
+    fi 
+
+    echo -e "\nBuilding folder $dockerfile_folder"
+    if [ -f $dockerfile_folder/Dockerfile ]; then
+        docker build -f $dockerfile_folder/Dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
+    else
+        for dockerfile in $(find $dockerfile_folder -name "Dockerfile"); do
+            folder_short=$(dirname "$dockerfile")
+            folder_short=-${folder_short##*/}
+
+            echo "Building Dockerfile: $dockerfile"
+            docker build -f $dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
+        done
+    fi
+}
+
+build_images() {
+    # TODO: Might be able to build only modified services by touching a file (/tmp/${STACK_NAME}_build.time) 
+    #       and then use find -newer /tmp/${STACK_NAME}_build.time to get only the changed files.
+    #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
+    if [[ $1 ]]; then
+        if [[ "$1" == "technocore" ]]; then
+            build_image ../technocore $TECHNOCORE_ROOT true
+        else
+            build_image $TECHNOCORE_SERVICES/$1 $TECHNOCORE_SERVICES/$1
+        fi
+        exit;
+    fi
+
+    errors=
+    { error=$(build_image ../technocore $TECHNOCORE_ROOT true 2>&1 1>&$out); } {out}>&1
+
+    for folder in $TECHNOCORE_SERVICES/*; do
+        # Collecting errors to display at the end.
+        # https://stackoverflow.com/questions/3130375/bash-script-store-stderr-in-a-variable
+        { error=$(build_image $folder $folder 2>&1 1>&$out); } {out}>&1
+        error=$(echo "$error" | xargs )
+        if [[ "$error" != "" ]]; then
+            errors="${errors}\n$folder: $error"
+        fi
+    done
+    if [[ "$errors" != "" ]] ; then
+        echo -e "\n\n\nErrors: $errors"
+    fi
+}
+build_images $@

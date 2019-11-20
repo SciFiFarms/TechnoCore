@@ -1,68 +1,13 @@
 {
 	"folders": [
-		{
-			"path": "hals"
-		},
-		{
-			"path": "nginx"
-		},
-		{
-			"path": "home-assistant"
-		},
-		{
-			"path": "esphome"
-		},
-		{
-			"path": "portainer"
-		},
-		{
-			"path": "vernemq"
-		},
-		{
-			"path": "node-red"
-		},
-		{
-			"path": "vault"
-		},
-		{
-			"path": "jupyter"
-		},
-		{
-			"path": "grafana"
-		},
-		{
-			"path": "influxdb"
-		},
-		{
-			"path": "prometheus"
-		},
-		{
-			"path": "nextcloud-exporter"
-		},
-		{
-			"path": "loki"
-		},
-		{
-			"path": "fluentd"
-		},
-		{
-			"path": "new_docs"
-		},
-		{
-			"path": "home-assistant-db"
-		},
-		{
-			"path": "dogfish"
-		},
-		{
-			"path": "esphome-wrapper"
-		},
-		{
-			"path": "docs"
-		},
+		// Everything in the services folder should get included via `technocore generate_gitsubmodules`. 
+		// This allows for different services to be present and visible in VS Code. 
 		{
 			"path": "."
 		}
+		//{
+		//	"path": "hals"
+		//},
 	],
 	"extensions": {
 		"recommendations": [
@@ -81,6 +26,12 @@
 	"unwantedRecommendations": []
 	},
 	"settings": {
-		"scm.providers.visible": 50
+		"scm.providers.visible": 50,
+		"search.useIgnoreFiles": false,
+		"cSpell.words": [
+			"technocore"
+		],
+		"git.detectSubmodulesLimit": 100,
+		"diffEditor.ignoreTrimWhitespace": false
 	}
 }
