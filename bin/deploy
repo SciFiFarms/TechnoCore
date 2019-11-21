@@ -49,8 +49,16 @@ generate_secrets(){
             echo "Creating secret $secret with default value \"Not yet set.\""
             # TODO: This should use a centralized create secret call.
             echo -e "Not yet set." | docker secret create ${secret} - > /dev/null
+            local last_secret=$secret
         fi
     done
+
+    if [ -z $last_secret ]; then
+        until docker secret ls | grep $last_secret; do
+            echo "Waiting on creation of last secret: $last_secret"
+            sleep 1
+        done
+    fi
 }
 
 # TODO: Move this to a sidecar. 
