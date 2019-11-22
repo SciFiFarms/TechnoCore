@@ -38,6 +38,7 @@ generate_secrets(){
         fi
     done
 
+    local last_secret=
     # Gen any non existent secrets
     for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
         if [ "$secret" = "-" ]; then
@@ -49,11 +50,14 @@ generate_secrets(){
             echo "Creating secret $secret with default value \"Not yet set.\""
             # TODO: This should use a centralized create secret call.
             echo -e "Not yet set." | docker secret create ${secret} - > /dev/null
-            local last_secret=$secret
+            last_secret=$secret
         fi
     done
 
-    if [ -z $last_secret ]; then
+    # On slower machines, it seemed like the services were deployed before the 
+    # secrets had been created. This pauses until all the secrets are created to 
+    # account for that.
+    if [ ! -z $last_secret ]; then
         until docker secret ls | grep $last_secret; do
             echo "Waiting on creation of last secret: $last_secret"
             sleep 1
