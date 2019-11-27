@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 . init.sh
 
-docker stop ${STACK_NAME:-technocore}_vault_init_app  
-docker run --rm --name ${STACK_NAME:-technocore}_vault_init_app -e 'VAULT_CONFIG_DIR=/vault/setup' -e 'VAULT_ADDR=http://127.0.0.1:8200' -v ${STACK_NAME:-technocore}_vault:/vault/file ${image_provider:-scififarms}/technocore-vault:${TAG:-latest} &
-sleep 3
+# I have to wait until the vault service has started, otherwise the secret creation 
+# process can and will be in a state where the unseal or token secrets don't exist when
+# the vault service is coming up. 
+until ping -c 1 vault; do
+    echo "Sleeping until Vault starts"
+    sleep 2
+done
+
+docker run --rm --name ${STACK_NAME:-technocore}_vault_init_app -e 'VAULT_CONFIG_DIR=/vault/setup' -e 'VAULT_ADDR=http://127.0.0.1:8200' -v ${STACK_NAME:-technocore}_vault:/vault/file ${image_provider:-scififarms}/technocore-vault:${TAG:-latest} -main "/docker-entrypoint.sh server" &
+# This is needed because getting the initResponse before the server has even started causes failures.
+until run_in -i vault_init_app vault status | grep Initialized; do
+    echo "Waiting for vault to come up. Sleeping."
+    sleep 1
+done
 
 initResponse=$(run_in -i vault_init_app vault operator init -key-shares=1 -key-threshold=1) 
+#echo -e "init: $initResponse\n END"
 unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs) 
 rootToken=$(grep -C 1 "Root Token" <<< "$initResponse" | cut -d : -f 2 | xargs) 
 
