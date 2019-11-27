@@ -33,6 +33,7 @@ add_repo_if_missing TechnoCore-Home-Assistant-DB
 add_repo_if_missing TechnoCore-Vault 
 add_repo_if_missing TechnoCore-VerneMQ 
 add_repo_if_missing TechnoCore-InfluxDB 
+add_repo_if_missing TechnoCore-Syncthing
 
 #add_repo_if_missing TechnoCore-Loki 
 
