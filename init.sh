@@ -1,5 +1,12 @@
 #!/usr/bin/env sh
 
+function install_docker () {
+    echo "Installing Docker. Press ctrl-c to quit"
+    # Give the user time to respond
+    sleep 5
+    curl https://get.docker.com/ | sh
+}
+
 which docker
 
 if [ $? -eq 0 ]
@@ -9,11 +16,12 @@ then
     then
         echo "Docker is installed. *Proceed*"
     else
-        . ./docker-check.sh
+        install_docker
     fi
 else
-    . ./docker-check.sh
+    install_docker
 fi
+
 
 set -a
     TECHNOCORE_ROOT=$(pwd)
