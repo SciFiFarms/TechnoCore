@@ -1,30 +1,6 @@
 version: '3.5'
 
 services:
-  # Collects container metrics for Prometheus
- docs:
-    deploy:
-        mode: global
-        restart_policy:
-          condition: any
-    environment:
-      - HUGO_THEME=meghna-hugo
-      - HUGO_WATCH=true
-      # TODO: This should actually be set via a domain secret.
-      - HUGO_BASEURL=${HOSTNAME}
-    image: ${image_provider:-scififarms}/technocore-docs:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: docs_cert_bundle
-        target: wiki_cert
-      - source: docs_key
-        target: wiki_key
-      - source: ca
-        target: ca
-    volumes:
-      - ${docs_live_mount:-./empty/:/opt/.dummy}
 
   grocy:
     deploy:
@@ -41,69 +17,7 @@ services:
     ports:
       - 9283:80
       
-  jupyter:
-    depends_on:
-      - home_assistant_db
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-jupyter:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    secrets:
-      - source: jupyter_cert_bundle
-        target: cert_bundle
-        uid: "999" # This is set in Postgres' Dockerfile
-        mode: 0400
-      - source: jupyter_key
-        target: key
-        uid: "999" # This is set in Postgres' Dockerfile
-        mode: 0400
-      - source: ca
-        target: ca
-    volumes:
-      - jupyter:/var/lib/jupyter
 
-  node_red:
-    environment:
-      # Needed to be able to connect with Home Assistant
-      - NODE_EXTRA_CA_CERTS=/run/secrets/ca
-    depends_on:
-      - home_assistant
-      - mqtt
-      - vault
-    deploy:
-      mode: global
-      restart_policy:
-        condition: any
-    image: ${image_provider:-scififarms}/technocore-node-red:${TAG:-latest}
-    <<: *logging-defaults
-    networks:
-      - web
-    ports:
-      - "1880:1880"
-      # Used for debugging. Simply add "--inspect" to the "start" object in /usr/src/node-red/package.json
-      # Should be doable via env var: https://nodejs.org/api/cli.html#cli_node_options
-      - "9229:9229"
-    secrets:
-      - source: node_red_cert_bundle
-        target: cert_bundle
-      - source: node_red_key
-        target: key
-      - source: ca_bundle
-        target: ca
-      - source: node_red_mqtt_username
-        target: mqtt_username
-      - source: node_red_mqtt_password
-        target: mqtt_password
-    user: "0" #${UID}
-    volumes:
-      - node-red:/data
-      # If you docker cp [container hash]:/usr/src/node-red nr/src/
-      # You can work with live running code by uncommenting the following volume>
-      #- "./node-red:/usr/src/node-red"
 
   portainer:
     environment:
@@ -188,53 +102,7 @@ services:
       - 'suitecrm:/bitnami'
       
 
-networks:
-  web:
-    attachable: true
 secrets:
-  ca:
-    name: ${stack_name:-technocore}_ca
-    external: true
-  ca_bundle:
-    name: ${stack_name:-technocore}_ca_bundle
-    external: true
-  esphome_mqtt_username:
-    name: ${stack_name:-technocore}_esphome_mqtt_username
-    external: true
-  esphome_mqtt_password:
-    name: ${stack_name:-technocore}_esphome_mqtt_password
-    external: true
-  esphome_token:
-    name: ${stack_name:-technocore}_esphome_token
-    external: true
-  esphome_domain:
-    name: ${stack_name:-technocore}_esphome_domain
-    external: true
-
-  jupyter_cert_bundle:
-    name: ${stack_name:-technocore}_jupyter_cert_bundle
-    external: true
-  jupyter_key:
-    name: ${stack_name:-technocore}_jupyter_key
-    external: true
-  loki_cert_bundle:
-    name: ${stack_name:-technocore}_loki_cert_bundle
-    external: true
-  loki_key:
-    name: ${stack_name:-technocore}_loki_key
-    external: true
-  node_red_cert_bundle:
-    name: ${stack_name:-technocore}_node_red_cert_bundle
-    external: true
-  node_red_key:
-    name: ${stack_name:-technocore}_node_red_key
-    external: true
-  node_red_mqtt_username:
-    name: ${stack_name:-technocore}_node_red_mqtt_username
-    external: true
-  node_red_mqtt_password:
-    name: ${stack_name:-technocore}_node_red_mqtt_password
-    external: true
   portainer_acme_env:
     name: ${stack_name:-technocore}_portainer_acme_env
     external: true
@@ -262,18 +130,10 @@ secrets:
   health_domain:
     name: ${stack_name:-technocore}_health_domain
     external: true
-  docs_cert_bundle:
-    name: ${stack_name:-technocore}_docs_cert_bundle
-    external: true
-  docs_key:
-    name: ${stack_name:-technocore}_docs_key
-    external: true
 volumes:
-  esphome-build:
   grocy:
   loki:
   mariadb:
-  node-red:
   portainer:
   portainer-acme:
   health:

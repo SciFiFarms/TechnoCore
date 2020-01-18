@@ -11,46 +11,9 @@ add_CA_to_firefox(){
     done
 }
 
-# Remove the temporary vault container.
-remove_temp_containers(){
-    if [ $containerId ]; then
-        docker stop $containerId > /dev/null
-    fi
-}
-
-# $1: The name of the volume to create.
-create_volume(){
-    echo "Creating volume $(docker volume create ${stack_name:-technocore}_$1)"
-}
-
-# $1: The name of the secret.
-# $2: The value of the secret.
-# TODO: This is duplicated in portainer's dogfish instance. 
-create_secret(){
-    echo "Creating secret ${stack_name:-technocore}_$1"
-    echo -e "$2" | docker secret create "${stack_name:-technocore}_$1" - > /dev/null
-}
-
 # $1: The field to extract. 
 # $2: The JSON string.
 # TODO: This is duplicated in portainer's dogfish instance. 
 extract_from_json(){
     grep -Eo '"'$1'":.*?[^\\]"' <<< "$2" | cut -d \" -f 4
-}
-
-# $1: The username to create
-# This is tightly coupled with the migrations in the portainer image. If you 
-# want to create more mqtt users, add them as migrations in the portainer image. 
-create_mqtt_user(){
-    local response
-    echo "Creating MQTT user $1"
-    until response=$(vault_i write -force -format=json /sys/tools/random/32)
-    do
-        echo "Couldn't reach Vault. Will retry after sleep."
-        sleep 5
-    done
-    local password=$(extract_from_json random_bytes "$response")
-
-    create_secret ${1}_mqtt_username $1
-    create_secret ${1}_mqtt_password $password
 }
