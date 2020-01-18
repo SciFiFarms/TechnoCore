@@ -34,15 +34,15 @@ add_repo_if_missing TechnoCore-Vault
 add_repo_if_missing TechnoCore-VerneMQ 
 add_repo_if_missing TechnoCore-InfluxDB 
 add_repo_if_missing TechnoCore-Syncthing
+add_repo_if_missing TechnoCore-Jupyter 
+add_repo_if_missing TechnoCore-Node-RED 
 
 #add_repo_if_missing TechnoCore-Loki 
 
 #add_repo_if_missing TechnoCore-Docs 
 #add_repo_if_missing dogfish 
-#add_repo_if_missing TechnoCore-Jupyter 
 #add_repo_if_missing TechnoCore-fluentd 
 #add_repo_if_missing TechnoCore-nextcloud-exporter 
-#add_repo_if_missing TechnoCore-Node-RED 
 #add_repo_if_missing TechnoCore-NGINX 
 #add_repo_if_missing TechnoCore-Portainer 
 #add_repo_if_missing TechnoCore-ESPHome-Core 
