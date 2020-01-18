@@ -14,7 +14,6 @@ RUN ln -s /mnt/technocore/.env /var/lib/technocore/.env
 RUN /var/lib/technocore/stack.sh
 
 COPY bin/ /usr/local/bin
-COPY sidecars/ /usr/local/bin/sidecars
 COPY lib/ /usr/local/lib/technocore
 #COPY services/ /var/lib/technocore
 
