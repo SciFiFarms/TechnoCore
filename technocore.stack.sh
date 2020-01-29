@@ -36,6 +36,8 @@ add_repo_if_missing TechnoCore-InfluxDB
 add_repo_if_missing TechnoCore-Syncthing
 add_repo_if_missing TechnoCore-Jupyter 
 add_repo_if_missing TechnoCore-Node-RED 
+add_repo_if_missing TechnoCore-SMTP-Relay
+add_repo_if_missing TechnoCore-Mattermost
 
 #add_repo_if_missing TechnoCore-Loki 
 
