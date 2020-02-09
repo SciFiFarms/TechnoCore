@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# TODO: Figure out how to get this sourced automatically. 
+source ${lib_path}acme-helpers.sh
+
+while true
+do
+    if ! $(cat /run/secrets/acme_env | grep "Not yet set." > /dev/null) ; then
+        update_duckdns_tls "$(cat /run/secrets/acme_env)" renew 
+    fi
+    sleep 1d
+done
