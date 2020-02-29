@@ -3,7 +3,8 @@
 # $1: The number of characters to generate.
 generate_password(){
     # Inspired from https://raymii.org/s/snippets/OpenSSL_Password_Generator.html
-    openssl rand -base64 $1
+    # Seems like / in a password breaks somethings in Mattermost :/
+    openssl rand -base64 $1 | sed 's/\///'
 }
 
 # $1: The service this secret is for

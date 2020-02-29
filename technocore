@@ -7,14 +7,19 @@ if [ -z $PROD ]; then
     services="-v $(pwd)/services:/var/lib/technocore/"
     libs="-v $(pwd)/lib:/usr/local/lib/technocore/"
 fi
+# https://stackoverflow.com/questions/42248198/how-to-mount-a-single-file-in-a-volume
+#if [ IS WINDOW]; then
+#    WEIRD_WINDOWS_SLASH=/
+#fi
+
 
 docker run \
     --rm \
     -it \
-    -v $(pwd):/mnt/technocore/ \
+    -v ${WEIRD_WINDOWS_SLASH}$(pwd):/mnt/technocore/ \
     $services \
     $libs \
-    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v ${WEIRD_WINDOWS_SLASH}/var/run/docker.sock:/var/run/docker.sock \
     -e SERVER_HOSTNAME=${HOSTNAME} \
     -e TECHNOCORE_ROOT=$TECHNOCORE_ROOT \
     -e HOST_SERVICES_DIR=${TECHNOCORE_SERVICES} \
