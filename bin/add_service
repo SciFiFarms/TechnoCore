@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+. init.sh
+
+# TODO: Have add_service take a URL and add the repo (name striped of Technocore- and lowercased.) to the services folder.
+#       Should also run generate_gitmodules so that the new service is added. 
+

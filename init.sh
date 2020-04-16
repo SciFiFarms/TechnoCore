@@ -1,17 +1,27 @@
 #!/usr/bin/env sh
 
+function install_docker () {
+    echo "Installing Docker. Press ctrl-c to quit"
+    # Give the user time to respond
+    sleep 5
+    curl https://get.docker.com/ | sh
+}
+
 which docker
+
 if [ $? -eq 0 ]
 then
-	docker --version | grep "Docker version"
-	if [ $? -eq 0 ]
-        then echo "docker existing"
-	else
-        . ./docker-check.sh
-	fi
-	else
-        . ./docker-check.sh
+    docker --version | grep "Docker version"
+    if [ $? -eq 0 ]
+    then
+        echo "Docker is installed. *Proceed*"
+    else
+        install_docker
+    fi
+else
+    install_docker
 fi
+
 
 set -a
     TECHNOCORE_ROOT=$(pwd)

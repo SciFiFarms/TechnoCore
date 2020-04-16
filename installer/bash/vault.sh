@@ -27,26 +27,6 @@ create_TLS_certs(){
     done
 }
 
-initialize_vault(){
-    echo "Initializing Vault"
-    # I have to pass in a custom config to start vault without TLS.
-    containerId=$(docker run --rm -d -p 8200:8200 --name ${stack_name:-technocore}_vault --network $network_name -e "VAULT_CONFIG_DIR=/vault/setup" -e "VAULT_ADDR=http://127.0.0.1:8200" -v ${stack_name:-technocore}_vault:/vault/file ${image_provider:-scififarms}/technocore-vault:${TAG:-latest})
-    sleep 5
-    local initResponse=$(vault_i operator init -key-shares=1 -key-threshold=1)
-    local unsealKey=$(grep -C 1 "Unseal Key" <<< "$initResponse" | cut -d : -f 2 | xargs)
-    local rootToken=$(grep -C 1 "Root Token" <<< "$initResponse" | cut -d : -f 2 | xargs)
-    create_secret vault_unseal $unsealKey
-    create_secret vault_token $rootToken
-    vault_i operator unseal $unsealKey > /dev/null
-    vault_i login $rootToken > /dev/null
-    vault_i audit enable file file_path=stdout
-}
-
-# $1 = policy name. 
-create_token(){ 
-    vault_i token create -policy=$1 -ttl="720h" -display-name="$1" -field="token"
-}
-
 configure_CAs(){
     # Configure root CA
     vault_i secrets enable -path=rootca -description="${stack_name:-technocore} Root CA" -max-lease-ttl=87600h pki
@@ -66,11 +46,4 @@ configure_CAs(){
 
     create_secret ca_bundle "$caPem\n$caIntPem"
     create_secret ca "$caPem"
-}
-
-# $1: username/file prefix.
-create_vault_user_and_token(){
-    vault_i policy write $1 - < installer/vault/${1}_policy.hcl # $mqtt 
-    local token=$(create_token $1)
-    create_secret ${1}_token  $token
 }
