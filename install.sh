@@ -17,6 +17,7 @@ fi
 # Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
 if ! command -v docker >/dev/null 2>&1; then
     echo -e >&2 "Docker is required but not installed. Installing." 
+    echo -e >&2 "To quit and not install docker press ^-C"
     curl -fsSL get.docker.com | CHANNEL=stable sh > $debug_output
     systemctl enable docker > $debug_output
     systemctl start docker > $debug_output
