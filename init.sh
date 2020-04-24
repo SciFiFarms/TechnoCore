@@ -17,8 +17,6 @@ else
     if [ $? -eq 1 ]
     then
         install_docker
-    else
-        echo "Docker is installed. *Proceed*"
     fi
 fi
 
