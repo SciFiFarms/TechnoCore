@@ -9,17 +9,17 @@ function install_docker () {
 
 which docker
 
-if [ $? -eq 0 ]
+if [ $? -eq 1 ]
 then
-    docker --version | grep "Docker version"
-    if [ $? -eq 0 ]
-    then
-        echo "Docker is installed. *Proceed*"
-    else
-        install_docker
-    fi
-else
     install_docker
+else
+    docker --version | grep "Docker version"
+    if [ $? -eq 1 ]
+    then
+        install_docker
+    else
+        echo "Docker is installed. *Proceed*"
+    fi
 fi
 
 
