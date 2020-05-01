@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 install_docker () {
+    # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
     while true; do
         read -p "Installing Docker. Do you wish to proceed? " yn
         case $yn in
