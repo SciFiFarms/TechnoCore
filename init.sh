@@ -1,11 +1,14 @@
 #!/usr/bin/env sh
 
 install_docker () {
-    # TODO: allow the user to explicitly say yes to instaling docker
-    echo "Installing Docker. Press ctrl-c to quit"
-    # Give the user time to respond
-    sleep 5
-    curl https://get.docker.com/ | sh
+    while true; do
+        read -p "Installing Docker. Do you wish to proceed? " yn
+        case $yn in
+            [Yy]* ) curl https://get.docker.com/ | sh;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
 }
 
 which docker
