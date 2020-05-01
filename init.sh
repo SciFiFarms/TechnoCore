@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-function install_docker () {
+install_docker () {
+    # TODO: allow the user to explicitly say yes to instaling docker
     echo "Installing Docker. Press ctrl-c to quit"
     # Give the user time to respond
     sleep 5
