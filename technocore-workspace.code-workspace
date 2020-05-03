@@ -32,6 +32,10 @@
 			"technocore"
 		],
 		"git.detectSubmodulesLimit": 100,
-		"diffEditor.ignoreTrimWhitespace": false
+		"diffEditor.ignoreTrimWhitespace": false,
+		"files.associations": {
+			"*.yaml": "home-assistant"
+		},
+		"sqltools.useNodeRuntime": true
 	}
 }

@@ -1,3 +1,4 @@
+prod-data/*.
 services/*/*
 ignore/*
 hals/
