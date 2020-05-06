@@ -1,28 +1,58 @@
 #!/usr/bin/env sh
 
+command_exists() {
+	command -v "$@" > /dev/null 2>&1
+}
+
+enable_docker () {
+    systemctl enable docker > $debug_output
+    systemctl start docker > $debug_output
+}
+
+
+set_docker_permissions () {
+    # Source: https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+    if getent group docker | grep -w "$USER" > /dev/null ; then
+        # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
+        echo "Adding $(logname) to docker group"
+        usermod -a -G docker $(logname)
+    fi
+}
+
+
+start_docker_swarm () {
+    # Initialize the swarm if it isn't setup.
+    # Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
+    # would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
+    if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
+        echo "Initializing Docker Swarm"
+        docker swarm init > /dev/null
+    fi
+}
+
+
 install_docker () {
     # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
     while true; do
-        read -p "Installing Docker. Do you wish to proceed? " yn
+        read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
         case $yn in
-            [Yy]* ) curl https://get.docker.com/ | sh;;
+            [Yy]* ) curl -fsSL get.docker.com | sh > $debug_output;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac
     done
 }
 
-which docker
 
-if [ $? -eq 1 ]
-then
-    install_docker
+
+if command_exists docker && [ -e /var/run/docker.sock ]; then
+    set_docker_permissions
+    start_docker_swarm
 else
-    docker --version | grep "Docker version"
-    if [ $? -eq 1 ]
-    then
-        install_docker
-    fi
+    install_docker
+    enable_docker
+    set_docker_permissions
+    start_docker_swarm
 fi
 
 

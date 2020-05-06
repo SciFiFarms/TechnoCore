@@ -9,30 +9,6 @@ if ! [ $(id -u) = 0 ]; then
    exit 1
 fi
 
-# Source: https://stackoverflow.com/questions/592620/how-to-check-if-a-program-exists-from-a-bash-script
-if ! command -v docker >/dev/null 2>&1; then
-    echo -e >&2 "Docker is required but not installed. Installing." 
-    echo "To quit and not install docker press ^-C"
-    curl -fsSL get.docker.com | CHANNEL=stable sh > $debug_output
-    systemctl enable docker > $debug_output
-    systemctl start docker > $debug_output
-fi
-
-# Add user permission to use docker if not already setup.
-# https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
-if getent group docker | grep -w "$USER" > /dev/null ; then
-    # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
-    echo "Adding $(logname) to docker group"
-    usermod -a -G docker $(logname)
-fi
-
-# Initialize the swarm if it isn't setup.
-# Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
-# would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
-if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
-    echo "Initializing Docker Swarm"
-    docker swarm init > /dev/null
-fi
 
 add_aliases_if_missing()
 {
