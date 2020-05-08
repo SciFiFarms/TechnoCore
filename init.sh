@@ -5,8 +5,9 @@ command_exists() {
 }
 
 enable_docker () {
-    systemctl enable docker > $debug_output
-    systemctl start docker > $debug_output
+    # TODO: this assumes we the docker daemon can be interacted with systemctl - Update this to be more inclusive of all unix systems
+    systemctl enable docker
+    systemctl start docker
 }
 
 
@@ -36,7 +37,7 @@ install_docker () {
     while true; do
         read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
         case $yn in
-            [Yy]* ) curl -fsSL get.docker.com | sh > $debug_output;;
+            [Yy]* ) curl -fsSL get.docker.com | sh;;
             [Nn]* ) exit;;
             * ) echo "Please answer yes or no.";;
         esac
@@ -45,12 +46,14 @@ install_docker () {
 
 
 
-if command_exists docker && [ -e /var/run/docker.sock ]; then
-    set_docker_permissions
-    start_docker_swarm
+if command_exists docker; then
+    #enable_docker
+    #set_docker_permissions
+    #start_docker_swarm
+    echo "made it here"
 else
     install_docker
-    enable_docker
+    #enable_docker
     set_docker_permissions
     start_docker_swarm
 fi
