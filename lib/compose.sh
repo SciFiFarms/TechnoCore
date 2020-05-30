@@ -18,6 +18,7 @@ bashify (){
     local string=${1^^}
     string=${string//\//_}
     string=${string// /_}
+    string=${string//\./_}
     echo "${string//-/_}"
 }
 
@@ -116,7 +117,7 @@ set_service_flag (){
 set_optional_service (){
     current_service_var=SERVICE_$(bashify ${service_name})
     service_var=SERVICE_$(bashify $1)
-    echo "Exporting optional service: $service_var=${!service_var}" >&2
+    #echo "Exporting optional service: $service_var=${!service_var}" >&2
     if [ ! -z "${!service_var}" ] && [ ! -z "${!current_service_var}" ] ; then
         export SERVICE_CONFIG_$(bashify ${service_name}_$1)=${TECHNOCORE_SERVICES}/$service_name/$1.yml
     fi
@@ -158,6 +159,7 @@ get_compose(){
     if [ -f ".env" ]; then
         source .env
     fi
+    echo 
 
     # Then start setting unset defaults. 
     default_to INGRESS_TYPE subdomain
@@ -194,8 +196,8 @@ get_compose(){
         fi
     done
 
-    docker-compose $included_configs config 
-    >&2 echo "Included configs: $included_configs"
+    docker-compose $included_configs config 2> /dev/null
+    #>&2 echo "Included configs: $included_configs"
 }
 
 generate_complete_compose() {
