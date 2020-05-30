@@ -34,7 +34,7 @@
 		"git.detectSubmodulesLimit": 100,
 		"diffEditor.ignoreTrimWhitespace": false,
 		"files.associations": {
-			"*.yaml": "home-assistant"
+			"*.yaml": "yaml"
 		},
 		"sqltools.useNodeRuntime": true
 	}

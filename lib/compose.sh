@@ -18,6 +18,7 @@ bashify (){
     local string=${1^^}
     string=${string//\//_}
     string=${string// /_}
+    string=${string//\./_}
     echo "${string//-/_}"
 }
 

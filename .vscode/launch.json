@@ -6,6 +6,22 @@
     "configurations": [
         
         {
+            "name": "Debug chasgimqtt in Ummon",
+            "type": "python",
+            "request": "attach",
+            "justMyCode": false,
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/services/chasgimqtt",
+                    "remoteRoot": "/usr/src/app/src/chasgimqtt"
+                }
+            ],
+            "port": 5679,
+            "logToFile": true,
+            //"secret": "my_secret",
+            "host": "localhost"
+        },
+        {
             "name": "Debug Ummon",
             "type": "python",
             "request": "attach",
