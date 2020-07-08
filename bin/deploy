@@ -13,7 +13,6 @@ generate_secrets(){
             echo "Could not find $script script."
         fi
     done
-
     # TODO: It would be nice to put this into a function. Look at 
     #       generate_password_for in compose.sh as well.
     # Gen any admin passwords
@@ -22,7 +21,7 @@ generate_secrets(){
             continue
         fi
         
-        if docker secret ls | grep -w $secret > /dev/null; then
+        if echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
             continue # Secret already exists.
         fi
 
@@ -46,7 +45,7 @@ generate_secrets(){
         fi
         
         #echo -e "\n\n\nMy secret: $secret"
-        if ! docker secret ls | grep -w $secret > /dev/null; then
+        if ! echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
             echo "Creating secret $secret with default value \"Not yet set.\""
             # TODO: This should use a centralized create secret call.
             echo -e "Not yet set." | docker secret create ${secret} - > /dev/null

@@ -92,7 +92,7 @@ generate_password_for (){
 
 # $1: Secret to check existence of
 secret_exists(){
-    docker secret ls | grep -w $secret > /dev/null
+    echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null
 }
 
 # $1: The service folder name
@@ -210,6 +210,7 @@ get_compose(){
 }
 
 generate_complete_compose() {
+    DOCKER_SECRETS=$(docker secret ls)
     COMPLETE_COMPOSE=$(get_compose)
     if [[ "$COMPLETE_COMPOSE" == "" ]]; then
         >&2 echo "There was an error generating the compose file. Exiting."
