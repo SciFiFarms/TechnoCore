@@ -72,10 +72,11 @@
         {
             "name": "Debug esphome",
             "type": "python",
+            "justMyCode": false,
             "request": "attach",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/esphome/",
+                    "localRoot": "${workspaceFolder}/services/esphome/",
                     "remoteRoot": "/usr/src/app/"
                 }
             ],

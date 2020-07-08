@@ -152,6 +152,14 @@ generate_domain_list(){
     export $env_var=$routing_value
 }
 
+# $1: service-name (folder name in services/...)
+set_debugging(){
+    local env_var
+    env_var=DEBUG_$(bashify $1)
+    # If $STACK_DEBUG is not set, this will remain the case. 
+    export "${env_var}=${!env_var:-$STACK_DEBUG}"
+}
+
 # Outputs the composite compose.yml file. 
 # Loads all defaults.sh files in ./services/*/
 get_compose(){
@@ -180,6 +188,7 @@ get_compose(){
             source $env
             path_prefix $service_name $prefix
             generate_domain_list $service_name $prefix
+            set_debugging $service_name 
 
         else
             echo "No services to load."
