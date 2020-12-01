@@ -26,8 +26,8 @@ echo "path = deploy" >> $gitmodules_path
 echo "url = dummy_string_to_satisfy_vscode" >> $gitmodules_path
 echo "" >> $gitmodules_path
 
-echo "[submodule \"prod-data-esphome\"]" >> $gitmodules_path
-echo "path = prod-data/esphome" >> $gitmodules_path
+echo "[submodule \"data-esphome\"]" >> $gitmodules_path
+echo "path = data/esphome" >> $gitmodules_path
 echo "url = dummy_string_to_satisfy_vscode" >> $gitmodules_path
 echo "" >> $gitmodules_path
 

@@ -8,7 +8,7 @@ repo-template/
 deploy/
 hals/
 ignore/
-prod-data/
+data/
 
 # Everything in the services folder should get included via `technocore generate_gitmodules`. 
 # This allows for different services to be present and visible in VS Code. 
