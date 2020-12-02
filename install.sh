@@ -2,21 +2,13 @@
 # TODO: Replace all the /dev/nulls in install.sh, vault.sh, and host.sh (Other places?). This should really be set in .env.
 debug_output=/dev/null
 
-# Add user permission to use docker if not already setup.
-# https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
-if getent group docker | grep -w "$USER" > /dev/null ; then
-    # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
-    echo "Adding $(logname) to docker group"
-    usermod -a -G docker $(logname)
+# Make sure dependencies are met. 
+# Source: https://askubuntu.com/questions/15853/how-can-a-script-check-if-its-being-run-as-root
+if ! [ $(id -u) = 0 ]; then
+   echo "Not running as root. Try running with sudo prepended to the command. "
+   exit 1
 fi
 
-# Initialize the swarm if it isn't setup.
-# Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
-# would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
-if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
-    echo "Initializing Docker Swarm"
-    docker swarm init > /dev/null
-fi
 
 add_aliases_if_missing()
 {
