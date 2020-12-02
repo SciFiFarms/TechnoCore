@@ -10,7 +10,6 @@ enable_docker () {
     systemctl start docker
 }
 
-
 set_docker_permissions () {
     # Source: https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
     if getent group docker | grep -w "$USER" > /dev/null ; then
@@ -19,7 +18,6 @@ set_docker_permissions () {
         usermod -a -G docker $(logname)
     fi
 }
-
 
 start_docker_swarm () {
     # Initialize the swarm if it isn't setup.
@@ -31,44 +29,34 @@ start_docker_swarm () {
     fi
 }
 
-
 install_docker () {
     # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
     while true; do
         read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
         case $yn in
-            [Yy]* ) curl -fsSL get.docker.com | sh;;
-            [Nn]* ) exit;;
+            [Yy]* ) curl -fsSL get.docker.com | sh;
+                enable_docker
+                set_docker_permissions
+                start_docker_swarm
+                ;;
+            [Nn]* ) echo "Cannot run TechnoCore without Docker. Exitting."; exit;;
             * ) echo "Please answer yes or no.";;
         esac
     done
 }
 
 
-
-if command_exists docker; then
-    #enable_docker
-    #set_docker_permissions
-    #start_docker_swarm
-    echo "made it here"
-else
+if ! command_exists docker; then
     install_docker
-    #enable_docker
-    set_docker_permissions
-    start_docker_swarm
 fi
-
 
 set -a
     TECHNOCORE_ROOT=$(pwd)
     TECHNOCORE_LIB=$TECHNOCORE_ROOT/lib
     TECHNOCORE_SERVICES=$TECHNOCORE_ROOT/services
 
-    # TODO: add to path instead?
-    #TECHNOCORE_BIN=$TECHNOCORE_ROOT/bin
-
     # TODO: I have this nagging feeling that doing it like this will make .env wipe out existing env vars.  
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
-    . $TECHNOCORE_LIB/defaults.env
-    . ./.env
+    . "$TECHNOCORE_LIB/defaults.env"
+    . "./.env"
 set +a
