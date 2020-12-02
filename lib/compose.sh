@@ -86,6 +86,7 @@ generate_password_for (){
                 create_secret ${credential_provider} ${service}_password "$2"
                 create_secret ${service} ${credential_provider}_password "$2"
             fi
+            DOCKER_SECRETS=$(docker secret ls)
         fi
     done
 }

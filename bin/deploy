@@ -16,6 +16,7 @@ generate_secrets(){
     # TODO: It would be nice to put this into a function. Look at 
     #       generate_password_for in compose.sh as well.
     # Gen any admin passwords
+    DOCKER_SECRETS=$(docker secret ls)
     for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
         if [ "$secret" = "-" ]; then
             continue
@@ -34,6 +35,7 @@ generate_secrets(){
             else
                 create_secret ${service} admin_password "$(generate_password 32)"
             fi
+            DOCKER_SECRETS=$(docker secret ls)
         fi
     done
 
