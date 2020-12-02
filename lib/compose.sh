@@ -108,7 +108,7 @@ set_service_flag (){
 
     if [[ "${!service_flag}" != "" ]]; then
         config_location=$TECHNOCORE_SERVICES/${service_name,,}/compose.yml
-        export SERVICE_CONFIG_${service_name/-/_}=$config_location
+        export "SERVICE_CONFIG_${service_name//-/_}=$config_location"
     fi
 }
 
@@ -205,8 +205,10 @@ get_compose(){
         fi
     done
 
-    docker-compose $included_configs config 2> /dev/null
-    #>&2 echo "Included configs: $included_configs"
+    # Using 2> /dev/null to hide warnings that docker-compose doesn't support deploy. That's expected 
+    # as swarm/deploy isn't used until later in the process, so I hid the error. 
+    # If the command fails (denoted by || ), then rerun and actually show the error. 
+    docker-compose $included_configs config 2> /dev/null || docker-compose $included_configs config 
 }
 
 generate_complete_compose() {

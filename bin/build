@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-. ./init.sh
+. init.sh
 
 # $1: Folder to build.
 # $2: Context folder.

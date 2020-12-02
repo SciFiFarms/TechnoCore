@@ -4,7 +4,7 @@
 generate_password(){
     # Inspired from https://raymii.org/s/snippets/OpenSSL_Password_Generator.html
     # Seems like / in a password breaks somethings in Mattermost :/
-    openssl rand -base64 $1 | sed 's/\///'
+    openssl rand -base64 $1 | sed 's/\///g' | sed 's/\=//g'
 }
 
 # $1: The service this secret is for
@@ -48,7 +48,7 @@ create_secret(){
     if docker secret ls | grep -w $secret_name > /dev/null; then
         if docker service ls | grep -w ${STACK_NAME}_$service_name > /dev/null; then
             echo "Updated existing secret $secret_name"
-            create_existing_secret $@
+            create_existing_secret "$@"
         else
             echo "Updated existing secret without service $secret_name"
             docker secret rm $secret_name

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+. init.sh
+
+docker stack rm $STACK_NAME

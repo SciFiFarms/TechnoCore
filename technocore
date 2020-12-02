@@ -4,6 +4,7 @@
 services=
 libs=
 if [ -z $PROD ]; then
+    bin="-v $(pwd)/bin:/usr/local/technocore/bin"
     services="-v $(pwd)/services:/var/lib/technocore/"
     libs="-v $(pwd)/lib:/usr/local/lib/technocore/"
 fi
@@ -17,6 +18,7 @@ docker run \
     --rm \
     -it \
     -v ${WEIRD_WINDOWS_SLASH}$(pwd):/mnt/technocore/ \
+    $bin \
     $services \
     $libs \
     -v ${WEIRD_WINDOWS_SLASH}/var/run/docker.sock:/var/run/docker.sock \
@@ -24,4 +26,4 @@ docker run \
     -e TECHNOCORE_ROOT=$TECHNOCORE_ROOT \
     -e HOST_SERVICES_DIR=${TECHNOCORE_SERVICES} \
     ${image_provider:-scififarms}/technocore:${TAG:-latest} \
-    $@
+    "$@"
