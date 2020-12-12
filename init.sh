@@ -26,6 +26,10 @@ start_docker_swarm () {
     if sudo docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
         echo "Initializing Docker Swarm"
         sudo docker swarm init > /dev/null
+        until ! sudo docker swarm ca | grep "Error response"; do
+            echo "Waiting for swarm to initilize."
+            sleep 1
+        done
     fi
 }
 
