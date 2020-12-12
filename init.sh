@@ -6,8 +6,8 @@ command_exists() {
 
 enable_docker () {
     # TODO: this assumes we the docker daemon can be interacted with systemctl - Update this to be more inclusive of all unix systems
-    systemctl enable docker
-    systemctl start docker
+    sudo systemctl enable docker
+    sudo systemctl start docker
 }
 
 set_docker_permissions () {
@@ -15,7 +15,7 @@ set_docker_permissions () {
     if getent group docker | grep -w "$USER" > /dev/null ; then
         # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
         echo "Adding $(logname) to docker group"
-        usermod -a -G docker $(logname)
+        sudo usermod -a -G docker $(logname)
     fi
 }
 
