@@ -15,7 +15,7 @@ fi
 
 
 if ! id | grep -w "docker" > /dev/null; then
-    SUDO=sudo
+    SUDO="sudo -E "
 else
     SUDO=
 fi
