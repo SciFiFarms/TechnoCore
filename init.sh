@@ -23,9 +23,9 @@ start_docker_swarm () {
     # Initialize the swarm if it isn't setup.
     # Used 2>&1 to include stderr in the pipe to grep as that is where the "Error reponse" 
     # would come from. See the following for more about redirection: https://stackoverflow.com/questions/2342826/how-to-pipe-stderr-and-not-stdout
-    if docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
+    if sudo docker swarm ca 2>&1 | grep "Error response" &> /dev/null ; then
         echo "Initializing Docker Swarm"
-        docker swarm init > /dev/null
+        sudo docker swarm init > /dev/null
     fi
 }
 
@@ -35,8 +35,8 @@ install_docker () {
     case $yn in
         [Yy]* ) curl -fsSL get.docker.com | sh;
             enable_docker
-            set_docker_permissions
             start_docker_swarm
+            set_docker_permissions "$@"
             ;;
         [Nn]* ) echo "Cannot run TechnoCore without Docker. Exitting."; exit;;
         * ) echo "Please answer y or n.";;
@@ -45,7 +45,7 @@ install_docker () {
 
 
 if ! command_exists docker; then
-    install_docker
+    install_docker "$@"
     echo "Finished installing Docker. Running TechnoCore."
 fi
 

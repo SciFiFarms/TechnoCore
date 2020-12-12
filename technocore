@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 # This file is intended to be ran in the host OS and basically just passes the commands onto the TechnoCore service. 
-. ./init.sh
+. ./init.sh "$@"
 services=
 libs=
 if [ -z $PROD ]; then
@@ -14,7 +14,12 @@ fi
 #fi
 
 
-docker run \
+if ! id | grep -w "docker" > /dev/null; then
+    SUDO=sudo
+else
+    SUDO=
+fi
+$SUDO docker run \
     --rm \
     -it \
     -v ${WEIRD_WINDOWS_SLASH}$(pwd):/mnt/technocore/ \
