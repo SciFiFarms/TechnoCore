@@ -12,7 +12,7 @@ enable_docker () {
 
 set_docker_permissions () {
     # Source: https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
-    if getent group docker | grep -w "$USER" > /dev/null ; then
+    if ! getent group docker | grep -w "$USER" > /dev/null ; then
         # Used logname to get username before sudo: https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
         echo "Adding $(logname) to docker group"
         sudo usermod -a -G docker $(logname)
