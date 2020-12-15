@@ -164,11 +164,6 @@ set_debugging(){
 # Outputs the composite compose.yml file. 
 # Loads all defaults.sh files in ./services/*/
 get_compose(){
-    # First load the users .env. 
-    if [ -f ".env" ]; then
-        source .env
-    fi
-    echo 
 
     # Then start setting unset defaults. 
     default_to INGRESS_TYPE subdomain

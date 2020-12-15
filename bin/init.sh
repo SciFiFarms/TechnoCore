@@ -9,5 +9,9 @@ set -a
     if [ -f ".env" ]; then
         . $TECHNOCORE_LIB/defaults.env
         . .env
+        if [ ! -z "$LOAD_STACK" ]; then
+            . "$LOAD_STACK"
+            . .env
+        fi
     fi
 set +a

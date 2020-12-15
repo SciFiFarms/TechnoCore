@@ -62,4 +62,8 @@ set -a
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
     . "$TECHNOCORE_LIB/defaults.env"
     . "./.env"
+    if [ ! -z "$LOAD_STACK" ]; then
+        . "$LOAD_STACK"
+        . "./.env"
+    fi
 set +a
