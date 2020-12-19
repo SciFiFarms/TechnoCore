@@ -61,9 +61,9 @@ set -a
     # TODO: I have this nagging feeling that doing it like this will make .env wipe out existing env vars.  
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
     . "$TECHNOCORE_LIB/defaults.env"
-    . "./.env"
+    . "$TECHNOCORE_ROOT/.env"
     if [ ! -z "$LOAD_STACK" ]; then
-        . "$LOAD_STACK"
-        . "./.env"
+        . "$TECHNOCORE_SERVICES/technocore/$LOAD_STACK"
+        . "$TECHNOCORE_ROOT/.env"
     fi
 set +a

@@ -14,3 +14,4 @@ data/
 # This allows for different services to be present and visible in VS Code. 
 .gitmodules
 services/*/*
+!services/technocore/*
