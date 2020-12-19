@@ -36,6 +36,11 @@ start_docker_swarm () {
 install_docker () {
     # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
     read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
+
+    if [ -z "$INSTALL_DOCKER" ]; then
+        yn=y
+    fi
+
     case $yn in
         [Yy]* ) curl -fsSL get.docker.com | sh;
             enable_docker
@@ -46,12 +51,6 @@ install_docker () {
         * ) echo "Please answer y or n.";;
     esac
 }
-
-
-if ! command_exists docker; then
-    install_docker "$@"
-    echo "Finished installing Docker. Running TechnoCore."
-fi
 
 set -a
     TECHNOCORE_ROOT=$(pwd)
@@ -67,3 +66,8 @@ set -a
         . "$TECHNOCORE_ROOT/.env"
     fi
 set +a
+
+if ! command_exists docker; then
+    install_docker "$@"
+    echo "Finished installing Docker. Running TechnoCore."
+fi
