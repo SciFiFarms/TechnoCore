@@ -33,7 +33,7 @@ build_images() {
     #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
     if [[ $1 ]]; then
         if [[ "$1" == "technocore" ]]; then
-            build_image ../technocore $TECHNOCORE_ROOT true
+            build_image /mnt/technocore /mnt/technocore true
         else
             build_image $TECHNOCORE_SERVICES/$1 $TECHNOCORE_SERVICES/$1
         fi

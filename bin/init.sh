@@ -20,11 +20,11 @@ set -a
 
     # TODO: I have this nagging feeling that doing it like this will make .env wipe out existing env vars.  
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
-    if [ -f ".env" ]; then
+    if [ -f "/mnt/technocore/.env" ]; then
         export_envs $TECHNOCORE_LIB/defaults.env
-        export_envs "$TECHNOCORE_SERVICES/technocore/.env"
+        export_envs "/mnt/technocore/.env"
         if [ ! -z "$LOAD_STACK" ]; then
-            export_envs "$TECHNOCORE_SERVICES/technocore/$LOAD_STACK"
+            export_envs "/mnt/technocore/$LOAD_STACK"
         fi
     fi
 set +a

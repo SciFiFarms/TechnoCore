@@ -11,7 +11,6 @@ RUN pip3 install pipenv
 
 WORKDIR /var/lib/technocore
 COPY ${DEFAULT_DEPLOY_STACK}.stack.sh /var/lib/technocore/stack.sh
-RUN ln -s /mnt/technocore/.env /var/lib/technocore/.env
 RUN /var/lib/technocore/stack.sh
 
 COPY bin/ /usr/local/technocore/bin
