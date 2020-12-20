@@ -34,11 +34,11 @@ start_docker_swarm () {
 }
 
 install_docker () {
-    # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
-    read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
-
     if [ -z "$INSTALL_DOCKER" ]; then
-        yn=y
+        # Source: https://www.shellhacks.com/yes-no-bash-script-prompt-confirmation/
+        read -p "Installing Docker. Do you wish to proceed (y or n)? " yn
+    else
+        yn=$INSTALL_DOCKER
     fi
 
     case $yn in
