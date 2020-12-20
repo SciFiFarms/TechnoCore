@@ -8,3 +8,4 @@ hals/
 !services/*/compose.yml
 !services/*/defaults.sh
 !services/*/secrets.sh
+!services/technocore/*
