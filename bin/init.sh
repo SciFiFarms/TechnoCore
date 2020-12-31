@@ -24,7 +24,7 @@ set -a
         export_envs $TECHNOCORE_LIB/defaults.env
         export_envs "/mnt/technocore/.env"
         if [ ! -z "$LOAD_STACK" ]; then
-            export_envs "/mnt/technocore/$LOAD_STACK"
+            export_envs "/mnt/technocore/stacks/$LOAD_STACK"
         fi
     fi
 set +a

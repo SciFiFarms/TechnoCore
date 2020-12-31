@@ -62,7 +62,7 @@ set -a
     . "$TECHNOCORE_LIB/defaults.env"
     . "$TECHNOCORE_ROOT/.env"
     if [ ! -z "$LOAD_STACK" ]; then
-        . "$TECHNOCORE_ROOT/$LOAD_STACK"
+        . "$TECHNOCORE_ROOT/stacks/$LOAD_STACK"
         . "$TECHNOCORE_ROOT/.env"
     fi
 set +a
