@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+. init.sh
+
+run_in esphome_app mv $1 $2
+run_in esphome_app esphome $2 run --upload-port $(echo "$1" | sed 's/\..*$//')

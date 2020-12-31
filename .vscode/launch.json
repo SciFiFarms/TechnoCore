@@ -4,6 +4,39 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "name": "Debug chasgimqtt in Ummon",
+            "type": "python",
+            "request": "attach",
+            "justMyCode": false,
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/services/chasgimqtt",
+                    "remoteRoot": "/usr/src/app/src/chasgimqtt"
+                }
+            ],
+            "port": 5679,
+            "logToFile": true,
+            //"secret": "my_secret",
+            "host": "localhost"
+        },
+        {
+            "name": "Debug Ummon",
+            "type": "python",
+            "request": "attach",
+            "justMyCode": false,
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/services/ummon/inventorytracker/",
+                    "remoteRoot": "/usr/src/app/inventorytracker/"
+                }
+            ],
+            "port": 5678,
+            "logToFile": true,
+            //"secret": "my_secret",
+            "host": "localhost"
+        },
         {
             "name": "Debug Home Assistant",
             "type": "python",
@@ -23,12 +56,27 @@
             "host": "localhost"
         },
         {
+    "name": "Python: Current File (Integrated Terminal)",
+    "type": "python",
+    "request": "launch",
+    "program": "${file}",
+    "console": "integratedTerminal"
+},
+{
+    "name": "Python: Current File (External Terminal)",
+    "type": "python",
+    "request": "launch",
+    "program": "${file}",
+    "console": "externalTerminal"
+},
+        {
             "name": "Debug esphome",
             "type": "python",
+            "justMyCode": false,
             "request": "attach",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/esphome/",
+                    "localRoot": "${workspaceFolder}/services/esphome/",
                     "remoteRoot": "/usr/src/app/"
                 }
             ],

@@ -1,0 +1,35 @@
+#!/bin/bash
+. init.sh
+source ${TECHNOCORE_LIB}/compose.sh
+
+# $1: The service you wish to clean.
+
+remove_volume() {
+    echo "Removing volume $1."
+    local response # Declare response as a local var.
+    until response=$(docker volume rm $1 2>&1)
+    do 
+        if grep -q 'No such volume' <<< $response; then
+            echo "Volume $1 doesn't exist, so it won't be removed."
+            break
+        fi
+        if grep -q 'volume is in use' <<< $response; then
+            local container=$(echo "$response" | cut -d"[" -f2 | cut -d"]" -f1 | tr "," " " )
+            echo "Volume is in use by container $container. Will stop."
+            docker rm -f $container > /dev/null
+        fi
+        sleep 2
+    done
+}
+
+docker service remove ${STACK_NAME:-technocore}_$1
+
+# Remove all the docker volumes (Dev mounts won't be removed)
+for volume in $(get_compose | yq read - services.${1}.volumes | grep -v "\- \/" | cut -f 1 -d ":" | cut -f 2 -d " "); do 
+    remove_volume ${STACK_NAME:-technocore}_$volume
+done
+
+# Remove all the secrets
+for secret in $(get_compose | yq read - secrets.*.name | grep "${STACK_NAME:-technocore}_${1}" | cut -f 2 -d " "); do 
+    docker secret rm $secret
+done

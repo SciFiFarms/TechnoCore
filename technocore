@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+# This file is intended to be ran in the host OS and basically just passes the commands onto the TechnoCore service. 
+. ./init.sh "$@"
+services=
+libs=
+if [ -z $PROD ]; then
+    bin="-v $(pwd)/bin:/usr/local/technocore/bin"
+    services="-v $(pwd)/services:/var/lib/technocore/"
+    libs="-v $(pwd)/lib:/usr/local/lib/technocore/"
+fi
+# https://stackoverflow.com/questions/42248198/how-to-mount-a-single-file-in-a-volume
+#if [ IS WINDOW]; then
+#    WEIRD_WINDOWS_SLASH=/
+#fi
+
+
+if ! id | grep -w "docker" > /dev/null; then
+    SUDO="sudo -E "
+else
+    SUDO=
+fi
+$SUDO docker run \
+    --rm \
+    -it \
+    -v ${WEIRD_WINDOWS_SLASH}$(pwd):/mnt/technocore/ \
+    $bin \
+    $services \
+    $libs \
+    -v ${WEIRD_WINDOWS_SLASH}/var/run/docker.sock:/var/run/docker.sock \
+    -e SERVER_HOSTNAME=$(ip route get 1 | head -n 1 | cut -f 7 -d " ") \
+    -e TECHNOCORE_ROOT=$TECHNOCORE_ROOT \
+    -e HOST_SERVICES_DIR=${TECHNOCORE_SERVICES} \
+    ${image_provider:-scififarms}/technocore:${TAG:-latest} \
+    "$@"

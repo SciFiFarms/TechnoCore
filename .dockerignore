@@ -1,0 +1,11 @@
+data/*
+services/*/*
+ignore/*
+hals/
+.git/*
+
+# Can include files using !. 
+!services/*/compose.yml
+!services/*/defaults.sh
+!services/*/secrets.sh
+!services/technocore/*

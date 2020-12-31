@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+. init.sh
+
+source ${TECHNOCORE_LIB}/compose.sh
+
+# $1: The compose file.
+generate_secrets(){
+    # Gen secrets from services.
+    for script in $TECHNOCORE_SERVICES/*/secrets.sh; do
+        if [ -f "$script" ]; then
+            source $script "$1"
+        else
+            echo "Could not find $script script."
+        fi
+    done
+    # TODO: It would be nice to put this into a function. Look at 
+    #       generate_password_for in compose.sh as well.
+    # Gen any admin passwords
+    DOCKER_SECRETS=$(docker secret ls)
+    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+        if [ "$secret" = "-" ]; then
+            continue
+        fi
+        
+        if echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
+            continue # Secret already exists.
+        fi
+
+        if [[ "$secret" =~ (${STACK_NAME}_(.*)_admin_password) ]]; then
+            secret=${BASH_REMATCH[1]}
+            service=${BASH_REMATCH[2]}
+            echo "Creating secret $secret for $service"
+            if [ ! -z $TECHNOCORE_ADMIN_PASSWORD ]; then
+                create_secret ${service} admin_password "$TECHNOCORE_ADMIN_PASSWORD"
+            else
+                create_secret ${service} admin_password "$(generate_password 32)"
+            fi
+            DOCKER_SECRETS=$(docker secret ls)
+        fi
+    done
+
+    local last_secret=
+    # Gen any non existent secrets
+    for secret in $(echo "$1" | yq read - 'secrets.*.name') ;do
+        if [ "$secret" = "-" ]; then
+            continue
+        fi
+        
+        #echo -e "\n\n\nMy secret: $secret"
+        if ! echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
+            echo "Creating secret $secret with default value \"Not yet set.\""
+            # TODO: This should use a centralized create secret call.
+            echo -e "Not yet set." | docker secret create ${secret} - > /dev/null
+            last_secret=$secret
+        fi
+    done
+
+    # On slower machines, it seemed like the services were deployed before the 
+    # secrets had been created. This pauses until all the secrets are created to 
+    # account for that.
+    if [ ! -z $last_secret ]; then
+        until docker secret ls | grep $last_secret; do
+            echo "Waiting on creation of last secret: $last_secret"
+            sleep 1
+        done
+    fi
+}
+
+# TODO: Move this to a sidecar. 
+## Update DuckDNS entry with the internal IP address. 
+#ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
+## How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
+#echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
+
+generate_complete_compose
+
+generate_secrets "$COMPLETE_COMPOSE"
+
+echo "$COMPLETE_COMPOSE" | docker stack deploy --compose-file - ${STACK_NAME:-technocore}

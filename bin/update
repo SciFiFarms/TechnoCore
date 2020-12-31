@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+. init.sh
+
+docker image pull ${image_provider:-scififarms}/technocore:${TAG:-latest}
+cd /mnt/technocore git pull
