@@ -66,14 +66,20 @@ generate_secrets(){
     fi
 }
 
-# TODO: Move this to a sidecar. 
-## Update DuckDNS entry with the internal IP address. 
-#ip=$(ping -c 1 ${SERVER_HOSTNAME} | awk -F '[()]' '/PING/{print $2}')
-## How to silence curl: https://unix.stackexchange.com/questions/196549/hide-curl-output
-#echo url="https://www.duckdns.org/update?domains=${DUCKNS_SUBDOMAIN}&token=${DUCKDNS_TOKEN}&ip=${ip}" | curl -s -K - > /dev/null
+generate_data_volumes (){
+    echo "$1" | \
+    yq read - 'services.*.volumes.*' | \
+    grep -o -P "$TECHNOCORE_DATA.*?:" | \
+    sed "s/"${TECHNOCORE_DATA//\//\\/}"\(.*\):/\1/" | \
+    while read -r dir; do
+        # TODO: This should get mounted better?
+        mkdir -p /mnt/technocore/data${dir}
+    done
+}
 
 generate_complete_compose
 
 generate_secrets "$COMPLETE_COMPOSE"
+generate_data_volumes "$COMPLETE_COMPOSE"
 
 echo "$COMPLETE_COMPOSE" | docker stack deploy --compose-file - ${STACK_NAME:-technocore}

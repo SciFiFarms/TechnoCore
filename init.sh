@@ -56,6 +56,7 @@ set -a
     TECHNOCORE_ROOT=$(pwd)
     TECHNOCORE_LIB=$TECHNOCORE_ROOT/lib
     TECHNOCORE_SERVICES=$TECHNOCORE_ROOT/services
+    TECHNOCORE_DATA=$TECHNOCORE_ROOT/data
 
     # TODO: I have this nagging feeling that doing it like this will make .env wipe out existing env vars.  
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
