@@ -62,10 +62,12 @@ set -a
     #       https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
     . "$TECHNOCORE_LIB/defaults.env"
     . "$TECHNOCORE_ROOT/.env"
-    if [ ! -z "$LOAD_STACK" ]; then
-        . "$TECHNOCORE_ROOT/stacks/$LOAD_STACK"
-        . "$TECHNOCORE_ROOT/.env"
-    fi
+    env | grep "^LOAD_ENV" | while read -r env; do 
+        # Trim off the env var name and = char. 
+        . "stacks/$(echo $env | sed "s/.*\?=\(.*\)/\1/")"
+    done
+    # Reloading the .env will allow those options to override the ones loaded by LOAD_ENV.
+    . "$TECHNOCORE_ROOT/.env"
 set +a
 
 if ! command_exists docker; then

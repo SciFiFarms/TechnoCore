@@ -9,7 +9,7 @@ export_envs() {
     [[ $line =~ $isBlank ]] && continue
     key=$(echo "$line" | cut -d '=' -f 1)
     value=$(echo "$line" | cut -d '=' -f 2-)
-    eval "export ${key}=\"$(echo \${value})\""
+    export "${key}=${value}"
   done < <( cat "$envFile" )
 }
 
@@ -23,8 +23,13 @@ set -a
     if [ -f "/mnt/technocore/.env" ]; then
         export_envs $TECHNOCORE_LIB/defaults.env
         export_envs "/mnt/technocore/.env"
-        if [ ! -z "$LOAD_STACK" ]; then
-            export_envs "/mnt/technocore/stacks/$LOAD_STACK"
-        fi
+        while read -r env; do 
+            # Trim off the env var name and = char. 
+            export_envs "/mnt/technocore/stacks/$(echo $env | sed "s/.*\?=\(.*\)/\1/")"
+        # Have to pipe the input like this. Otherwise the loop creates a subprocess 
+        # and varaibles don't get set. http://mywiki.wooledge.org/ProcessSubstitution
+        done < <(env | grep "^LOAD_ENV")
+        # Reloading the .env will allow those options to override the ones loaded by LOAD_ENV.
+        export_envs "/mnt/technocore/.env"
     fi
 set +a
