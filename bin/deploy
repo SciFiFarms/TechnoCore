@@ -13,7 +13,7 @@ generate_secrets(){
             echo "Could not find $script script."
         fi
     done
-    # TODO: It would be nice to put this into a function. Look at 
+    # TODO: It would be nice to put this into a function. Look at
     #       generate_password_for in compose.sh as well.
     # Gen any admin passwords
     DOCKER_SECRETS=$(docker secret ls)
@@ -21,7 +21,7 @@ generate_secrets(){
         if [ "$secret" = "-" ]; then
             continue
         fi
-        
+
         if echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
             continue # Secret already exists.
         fi
@@ -45,7 +45,7 @@ generate_secrets(){
         if [ "$secret" = "-" ]; then
             continue
         fi
-        
+
         #echo -e "\n\n\nMy secret: $secret"
         if ! echo "$DOCKER_SECRETS" | grep -w $secret > /dev/null; then
             echo "Creating secret $secret with default value \"Not yet set.\""
@@ -55,8 +55,8 @@ generate_secrets(){
         fi
     done
 
-    # On slower machines, it seemed like the services were deployed before the 
-    # secrets had been created. This pauses until all the secrets are created to 
+    # On slower machines, it seemed like the services were deployed before the
+    # secrets had been created. This pauses until all the secrets are created to
     # account for that.
     if [ ! -z $last_secret ]; then
         until docker secret ls | grep $last_secret; do
@@ -72,8 +72,11 @@ generate_data_volumes (){
     grep -o -P "$TECHNOCORE_DATA.*?:" | \
     sed "s/"${TECHNOCORE_DATA//\//\\/}"\(.*\):/\1/" | \
     while read -r dir; do
-        # TODO: This should get mounted better?
-        mkdir -p /mnt/technocore/data${dir}
+        if [[ -f "/mnt/technocore/data${dir}" || -d "/mnt/technocore/data${dir}" ]]; then
+            continue
+        fi
+
+        mkdir -p "/mnt/technocore/data${dir}"
     done
 }
 
