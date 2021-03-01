@@ -1,7 +1,7 @@
 {
 	"folders": [
-		// Everything in the services folder should get included via `technocore generate_gitsubmodules`. 
-		// This allows for different services to be present and visible in VS Code. 
+		// Everything in the services folder should get included via `technocore generate_gitsubmodules`.
+		// This allows for different services to be present and visible in VS Code.
 		{
 			"path": "."
 		}
@@ -14,14 +14,26 @@
 			"vsciot-vscode.vscode-arduino",
 			"formulahendry.code-runner",
 			"streetsidesoftware.code-spell-checker",
-			"peterjausovec.vscode-docker",
 			"mikestead.dotenv",
 			"wholroyd.hcl",
 			"yzhang.markdown-all-in-one",
 			"shd101wyy.markdown-preview-enhanced",
 			"mushan.vscode-paste-image",
 			"ms-python.python",
-			"tyriar.sort-lines"
+			"tyriar.sort-lines",
+			"aaron-bond.better-comments",
+			"ms-vscode.cpptools",
+			"streetsidesoftware.code-spell-checker",
+			"ms-azuretools.vscode-docker",
+			"esphome.esphome-vscode",
+			"waderyan.gitblame",
+			"mhutchie.git-graph",
+			"oderwat.indent-rainbow",
+			"felixfbecker.php-pack",
+			"2gua.rainbow-brackets",
+			"timonwong.shellcheck",
+			"tyriar.sort-lines",
+			"adamhartford.vscode-base64",
 		],
 	"unwantedRecommendations": []
 	},

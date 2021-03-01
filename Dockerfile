@@ -4,7 +4,7 @@ ARG DEFAULT_DEPLOY_STACK=technocore
 COPY --from=docker:18.09 / /
 COPY --from=docker/compose:1.24.1 / /
 
-RUN apk add --no-cache bash grep curl coreutils openssl mosquitto-clients git python3 py-jwt-cli jq
+RUN apk add --no-cache bash grep curl coreutils openssl mosquitto-clients git python3 py-jwt-cli jq vim
 RUN curl -L https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 --output /usr/local/bin/yq && \
     chmod -R o+xr /usr/local/bin
 RUN pip3 install pipenv
