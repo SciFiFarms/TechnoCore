@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+. init.sh
+
+run_in signal_api signal-cli --config /home/.local/share/signal-cli --username $SIGNAL_API_SEND_NUMBER "$@"
+run_in signal_api chown -R signal-api /home/.local/share/signal-cli
