@@ -8,27 +8,26 @@ build_image() {
     local dockerfile_folder=$1
     local context_folder=$2
     local dash=-
-    local folder_short=-${dockerfile_folder##*/}
+    local folder_short=${dockerfile_folder##*/}
     if [[ $3 ]]; then
         folder_short=
-    fi 
-
-    echo -e "\nBuilding folder $dockerfile_folder"
-    if [ -f $dockerfile_folder/Dockerfile ]; then
-        docker build -f $dockerfile_folder/Dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
-    else
-        for dockerfile in $(find $dockerfile_folder -name "Dockerfile"); do
-            folder_short=$(dirname "$dockerfile")
-            folder_short=-${folder_short##*/}
-
-            echo "Building Dockerfile: $dockerfile"
-            docker build -f $dockerfile $context_folder -t ${image_provider:-scififarms}/technocore$folder_short:${TAG:-latest}
-        done
     fi
+    local DRONE_SERVICE_NAME="-"${folder_short}
+
+    # We have to play this game because drone in a container, doesn't work quite right unless the path in the container matches the path in the host...
+    # https://discourse.drone.io/t/drone-exec-wont-work-inside-a-docker-image/2203/6
+    mkdir -p $HOST_SERVICES_DIR
+    if [ -f ${HOST_SERVICES_DIR}/${folder_short} ]; then
+        rm ${HOST_SERVICES_DIR}/${folder_short}
+    fi
+    ln -s $dockerfile_folder/ ${HOST_SERVICES_DIR}
+    cd ${HOST_SERVICES_DIR}/$folder_short
+    drone jsonnet -V drone_service_name=$DRONE_SERVICE_NAME --stream --source $TECHNOCORE_LIB/.drone.jsonnet
+    drone exec --trusted --pipeline "amd64_dev" .drone.yml
 }
 
 build_images() {
-    # TODO: Might be able to build only modified services by touching a file (/tmp/${STACK_NAME}_build.time) 
+    # TODO: Might be able to build only modified services by touching a file (/tmp/${STACK_NAME}_build.time)
     #       and then use find -newer /tmp/${STACK_NAME}_build.time to get only the changed files.
     #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
     if [[ $1 ]]; then
