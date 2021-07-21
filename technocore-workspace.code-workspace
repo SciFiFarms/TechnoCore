@@ -39,7 +39,6 @@
 	},
 	"settings": {
 		"scm.providers.visible": 50,
-		"search.useIgnoreFiles": false,
 		"cSpell.words": [
 			"technocore"
 		],

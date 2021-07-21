@@ -1,4 +1,5 @@
 local repo = "scififarms/technocore" + std.extVar("drone_service_name");
+local technocore_version = "1.0";
 
 local pipeline = {
   name: "",
@@ -70,11 +71,14 @@ local host_docker_volumes = [
       name: "amd64_dev",
       platform+: { arch: "amd64"},
       volumes: host_docker_volumes,
+      trigger: {
+        "repo": ["afake/repo"]
+      },
       steps: [
         super.steps[0] + {
           volumes: container_docker_volumes,
           settings+: {
-            tags: ["latest", "local"],
+            tags: ["local"],
           },
         },
       ],
@@ -103,8 +107,12 @@ local host_docker_volumes = [
       steps: [
         super.steps[0] + {
           settings+: {
-            auto_tag: true,
             dry_run: false,
+            tags: [
+              "latest",
+              "v" + technocore_version,
+              "v" + technocore_version + ".${DRONE_BUILD_NUMBER}",
+            ],
             when_var: {event: { exclude: ["pull_request"],}},
           },
         },
