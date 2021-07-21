@@ -2,6 +2,7 @@
 export LOGGING_DRIVER=${LOGGING_DRIVER:-json-file}
 # Could alternatively use ./empty:/opt/.dummy
 export EMPTY_MOUNT=/dev/null:/dev/null
+export EMPTY_MOUNT_2=/dev/null:/dev/null_2
 
 # $1: The setting name
 # $2: The value to be set
@@ -50,15 +51,15 @@ path_prefix (){
     fi
 }
 
-# $1: The service that the credentials are for. 
-# $2: (Optional) The password to set. 
+# $1: The service that the credentials are for.
+# $2: (Optional) The password to set.
 #     This option probably won't be used in production, but is handy for developing and testing.
 #     If it presents any trouble, it should be removed.
 # The secrets are in the format ${STACK_NAME}_${SERVICE_NAME}_${MOUNT_POINT}
-# This takes $SERVICE_NAME and will generate usernames and passwords for any 
-# credentials listed in the generated compose file that start with ${STACK_NAME}_${SERVICE_NAME} 
-# and end in _username or _password. 
-# The exception is if there is an admin username/password. In that case, ${STACK_NAME}_admin... does 
+# This takes $SERVICE_NAME and will generate usernames and passwords for any
+# credentials listed in the generated compose file that start with ${STACK_NAME}_${SERVICE_NAME}
+# and end in _username or _password.
+# The exception is if there is an admin username/password. In that case, ${STACK_NAME}_admin... does
 # not get created because there is no admin service.
 generate_password_for (){
     local credential_provider=$1
@@ -104,7 +105,7 @@ set_service_flag (){
     local service_folder=${2:-$1}
     local service_flag=SERVICE_${service_name//-/_}
 
-    # TODO: Could do some logic to detect if $2 suggests a no response. 
+    # TODO: Could do some logic to detect if $2 suggests a no response.
     default_to $service_flag $2
 
     if [[ "${!service_flag}" != "" ]]; then
@@ -131,11 +132,11 @@ generate_domain_list(){
     env_var=${env_var//-/_}_ROUTING_LABEL
     local prefix=${2:?Need second argument for generate_domain_list}
 
-    # TODO: This can be used to update with traefik 2.0 format. 
+    # TODO: This can be used to update with traefik 2.0 format.
     # local routing_value=$(echo "Host(\`${prefix}.$DOMAIN\`)")
     local routing_value=$(echo "Host:${prefix}.$DOMAIN")
 
-    # This will need to be updated when using traefik 2.0. 
+    # This will need to be updated when using traefik 2.0.
     for domain in $(echo $EXTRA_DOMAINS | tr "," "\t"); do
         routing_value=${routing_value},${prefix}.$domain
     done
@@ -145,7 +146,7 @@ generate_domain_list(){
 
     if [ "$DEFAULT_SERVICE" = "$1" ]; then
         routing_value="${routing_value},$DOMAIN,$EXTRA_DOMAINS"
-        # 1 is the lowest priority. This way, the plain domain gets picked only 
+        # 1 is the lowest priority. This way, the plain domain gets picked only
         # if no other domains get matched.
         export ${env_var}_PRIORITY="1"
     fi
@@ -157,18 +158,18 @@ generate_domain_list(){
 set_debugging(){
     local env_var
     env_var=DEBUG_$(bashify $1)
-    # If $STACK_DEBUG is not set, this will remain the case. 
+    # If $STACK_DEBUG is not set, this will remain the case.
     export "${env_var}=${!env_var:-$STACK_DEBUG}"
 }
 
-# Outputs the composite compose.yml file. 
+# Outputs the composite compose.yml file.
 # Loads all defaults.sh files in ./services/*/
 get_compose(){
 
-    # Then start setting unset defaults. 
+    # Then start setting unset defaults.
     default_to INGRESS_TYPE subdomain
 
-    # These are set by default, but each service can override. 
+    # These are set by default, but each service can override.
     local service_name=
     local prefix=
     for env in $TECHNOCORE_SERVICES/*/defaults.sh; do
@@ -178,21 +179,21 @@ get_compose(){
             service_name=${service_name##*/}
             prefix=$service_name
 
-            # TODO: Have this reference an x-arg in the compose file rather than 
-            # running a script. 
+            # TODO: Have this reference an x-arg in the compose file rather than
+            # running a script.
             # This allows for the service to override service names or path prefixes.
             source $env
             path_prefix $service_name $prefix
             generate_domain_list $service_name $prefix
-            set_debugging $service_name 
+            set_debugging $service_name
 
         else
             echo "No services to load."
         fi
     done
 
-    # Looping like this is prone to issues with whitespaces. I think this case is OK 
-    # because the keys have to be single words and I'm not interested in the values. 
+    # Looping like this is prone to issues with whitespaces. I think this case is OK
+    # because the keys have to be single words and I'm not interested in the values.
     # https://stackoverflow.com/questions/9612090/how-to-loop-through-file-names-returned-by-find
     for config in $(env | grep SERVICE_CONFIG_.*=); do
         env_var=$( echo $config | cut -d "=" -f 1)
@@ -201,10 +202,10 @@ get_compose(){
         fi
     done
 
-    # Using 2> /dev/null to hide warnings that docker-compose doesn't support deploy. That's expected 
-    # as swarm/deploy isn't used until later in the process, so I hid the error. 
-    # If the command fails (denoted by || ), then rerun and actually show the error. 
-    docker-compose $included_configs config 2> /dev/null || docker-compose $included_configs config 
+    # Using 2> /dev/null to hide warnings that docker-compose doesn't support deploy. That's expected
+    # as swarm/deploy isn't used until later in the process, so I hid the error.
+    # If the command fails (denoted by || ), then rerun and actually show the error.
+    docker-compose $included_configs config 2> /dev/null || docker-compose $included_configs config
 }
 
 generate_complete_compose() {
