@@ -1,4 +1,4 @@
-local repo = "scififarms/technocore" + std.extVar("drone_service_name");
+local repo = "scififarms/" + std.extVar("drone_service_name");
 local technocore_version = "1.0";
 
 local pipeline = {

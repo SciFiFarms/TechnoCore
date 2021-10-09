@@ -1,0 +1,161 @@
+---
+{
+   "kind": "pipeline",
+   "name": "amd64_dev",
+   "platform": {
+      "arch": "amd64",
+      "os": "linux"
+   },
+   "steps": [
+      {
+         "image": "plugins/docker",
+         "name": "publish",
+         "pull": "if-not-exists",
+         "settings": {
+            "auto_tag": false,
+            "auto_tag_suffix": "linux-amd64",
+            "dockerfile": "docker/Dockerfile.amd64",
+            "dry_run": true,
+            "password": {
+               "from_secret": "docker_password"
+            },
+            "purge": false,
+            "repo": "scififarms/technocore",
+            "tags": [
+               "local"
+            ],
+            "username": {
+               "from_secret": "docker_username"
+            }
+         },
+         "volumes": [
+            {
+               "name": "docker-login",
+               "path": "/root/.docker/"
+            },
+            {
+               "name": "docker_socket",
+               "path": "/var/run/docker.sock"
+            }
+         ]
+      }
+   ],
+   "trigger": {
+      "repo": [
+         "afake/repo"
+      ]
+   },
+   "volumes": [
+      {
+         "host": {
+            "path": "/root/.docker/"
+         },
+         "name": "docker-login"
+      },
+      {
+         "host": {
+            "path": "/var/run/docker.sock"
+         },
+         "name": "docker_socket"
+      }
+   ]
+}
+---
+{
+   "kind": "pipeline",
+   "name": "amd64_test",
+   "platform": {
+      "arch": "amd64",
+      "os": "linux"
+   },
+   "steps": [
+      {
+         "image": "plugins/docker",
+         "name": "test",
+         "pull": "if-not-exists",
+         "settings": {
+            "auto_tag": false,
+            "auto_tag_suffix": "linux-amd64",
+            "dockerfile": "docker/Dockerfile.amd64",
+            "dry_run": true,
+            "password": {
+               "from_secret": "docker_password"
+            },
+            "purge": false,
+            "repo": "scififarms/technocore",
+            "tags": [
+               "test"
+            ],
+            "username": {
+               "from_secret": "docker_username"
+            },
+            "when": [
+               {
+                  "event": [
+                     "pull_request"
+                  ]
+               }
+            ]
+         }
+      }
+   ],
+   "trigger": {
+      "ref": [
+         "refs/heads/master",
+         "refs/tags/**",
+         "refs/pull/**"
+      ]
+   }
+}
+---
+{
+   "depends_on": [
+      "amd64_test"
+   ],
+   "kind": "pipeline",
+   "name": "amd64_prod",
+   "platform": {
+      "arch": "amd64",
+      "os": "linux"
+   },
+   "steps": [
+      {
+         "image": "plugins/docker",
+         "name": "publish",
+         "pull": "if-not-exists",
+         "settings": {
+            "auto_tag": false,
+            "auto_tag_suffix": "linux-amd64",
+            "dockerfile": "docker/Dockerfile.amd64",
+            "dry_run": false,
+            "password": {
+               "from_secret": "docker_password"
+            },
+            "purge": false,
+            "repo": "scififarms/technocore",
+            "tags": [
+               "latest",
+               "v1.0",
+               "v1.0.${DRONE_BUILD_NUMBER}"
+            ],
+            "username": {
+               "from_secret": "docker_username"
+            },
+            "when_var": {
+               "event": {
+                  "exclude": [
+                     "pull_request"
+                  ]
+               }
+            }
+         }
+      }
+   ],
+   "trigger": {
+      "ref": [
+         "refs/heads/master",
+         "refs/tags/**",
+         "refs/pull/**"
+      ]
+   }
+}

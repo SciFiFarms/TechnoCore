@@ -1,28 +1,31 @@
 #!/usr/bin/env bash
 . init.sh
 
-# $1: Folder to build.
-# $2: Context folder.
-# $3: Wether or not to include a -. If set, do not include dash.
+# $1: Folder to build
 build_image() {
     local dockerfile_folder=$1
-    local context_folder=$2
-    local dash=-
     local folder_short=${dockerfile_folder##*/}
-    if [[ $3 ]]; then
-        folder_short=
+    local host_build_dir=$HOST_SERVICES_DIR
+    if [[ "$folder_short" == "technocore" ]]; then
+        local DRONE_SERVICE_NAME=
+        # We have to go up two folders to remove the pathing for technocore/services
+        # This is because the technocore folder isn't actually in technocore/services.
+        host_build_dir=$HOST_SERVICES_DIR/../../
+    else
+        local DRONE_SERVICE_NAME="-"${folder_short}
     fi
-    local DRONE_SERVICE_NAME="-"${folder_short}
 
     # We have to play this game because drone in a container, doesn't work quite right unless the path in the container matches the path in the host...
     # https://discourse.drone.io/t/drone-exec-wont-work-inside-a-docker-image/2203/6
-    mkdir -p $HOST_SERVICES_DIR
-    if [ -f ${HOST_SERVICES_DIR}/${folder_short} ]; then
-        rm ${HOST_SERVICES_DIR}/${folder_short}
+    mkdir -p $host_build_dir
+    pwd $host_build_dir
+    if [ -f ${host_build_dir}/${folder_short} ]; then
+        rm ${host_build_dir}/${folder_short}
     fi
-    ln -s $dockerfile_folder/ ${HOST_SERVICES_DIR}
-    cd ${HOST_SERVICES_DIR}/$folder_short
-    drone jsonnet -V drone_service_name=$DRONE_SERVICE_NAME --stream --source $TECHNOCORE_LIB/.drone.jsonnet
+    ln -s $dockerfile_folder/ ${host_build_dir}
+    ls -al $host_build_dir
+    cd ${host_build_dir}/$folder_short
+    drone jsonnet -V drone_service_name=technocore$DRONE_SERVICE_NAME --stream --source $TECHNOCORE_LIB/.drone.jsonnet
     drone exec --trusted --pipeline "amd64_dev" .drone.yml
 }
 
@@ -32,9 +35,9 @@ build_images() {
     #       https://stackoverflow.com/questions/848293/shell-script-get-all-files-modified-after-date/848385
     if [[ $1 ]]; then
         if [[ "$1" == "technocore" ]]; then
-            build_image /mnt/technocore /mnt/technocore true
+            build_image /mnt/technocore
         else
-            build_image $TECHNOCORE_SERVICES/$1 $TECHNOCORE_SERVICES/$1
+            build_image $TECHNOCORE_SERVICES/$1
         fi
         exit;
     fi
