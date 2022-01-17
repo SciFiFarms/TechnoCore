@@ -29,6 +29,7 @@ $SUDO docker run \
     $libs \
     -v ${WEIRD_WINDOWS_SLASH}/var/run/docker.sock:/var/run/docker.sock \
     -e SERVER_HOSTNAME=$(ip route get 1 | head -n 1 | cut -f 7 -d " ") \
+    -e HOST_HOSTNAME=$(uname -n) \
     -e TECHNOCORE_ROOT=$TECHNOCORE_ROOT \
     -e "TECHNOCORE_DATA=${TECHNOCORE_DATA}" \
     -e HOST_SERVICES_DIR=${TECHNOCORE_SERVICES} \
