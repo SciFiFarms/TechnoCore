@@ -42,6 +42,8 @@ add_repo_if_missing TechnoCore-Ummon
 add_repo_if_missing TechnoCore-DDclient
 add_repo_if_missing TechnoCore-Drone
 add_repo_if_missing TechnoCore-Monica
+add_repo_if_missing TechnoCore-Duplicacy-GUI
+add_repo_if_missing TechnoCore-Duplicacy-CLI
 
 #add_repo_if_missing TechnoCore-Loki
 

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+. init.sh
+
+CONTAINER_NAME=${STACK_NAME}_duplicacy_cli;
+
+if docker ps -a | grep -w $CONTAINER_NAME > /dev/null; then
+    docker stop $CONTAINER_NAME > /dev/null
+    docker rm $CONTAINER_NAME > /dev/null
+fi
+compose=$(get_compose)
+ENV_VARS=
+
+while IFS= read -r env ; do 
+    variable_name=$(echo $env | cut -f 1 -d ":")
+    let service=duplicacy_cli
+    if echo $env | grep EMAIL_ > /dev/null; then
+        continue;
+    elif echo $env | grep DOCKER-SECRET > /dev/null; then
+        if [ -z $variable_name ]; then
+            read -r -s -p "Please enter the $variable_name for the $service service: " value </dev/tty
+            export ENV_VARS="$ENV_VARS -e $variable_name=$value"
+        else
+            value=${!variable_name}
+            export ENV_VARS="$ENV_VARS -e $variable_name=${!variable_name}"
+        fi
+    else
+        value="$(echo $env | cut -f 2- -d ":" | cut -f 2- -d " " )"
+        export "ENV_VARS=$ENV_VARS -e $variable_name=$value"
+    fi
+done <<< "$(echo "$compose" | yq r - services.duplicacy_cli.environment)"
+
+# TODO: Do volume mounts like ENV_VARS
+VOLUME_MOUNTS=-v\ /:/data/root/:ro
+DAEMON="-d"
+docker run $DAEMON --name ${CONTAINER_NAME} $ENV_VARS $VOLUME_MOUNTS $image_provider/technocore-duplicacy-cli:$TAG 
