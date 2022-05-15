@@ -32,4 +32,6 @@ done <<< "$(echo "$compose" | yq r - services.duplicacy_cli.environment)"
 # TODO: Do volume mounts like ENV_VARS
 VOLUME_MOUNTS=-v\ /:/data/root/:ro
 DAEMON="-d"
+# Make sure the image is up to date.
+docker pull $image_provider/technocore-duplicacy-cli:$TAG 
 docker run $DAEMON --name ${CONTAINER_NAME} $ENV_VARS $VOLUME_MOUNTS $image_provider/technocore-duplicacy-cli:$TAG 
